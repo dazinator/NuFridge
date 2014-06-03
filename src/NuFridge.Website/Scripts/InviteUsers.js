@@ -5,14 +5,14 @@
         var email = $("#emailAddressInput").val();
 
 
-        var request = new FeedManagerWebsite.Services.CreateInviteRequest();
+        var request = new NuFridge.Website.Services.CreateInviteRequest();
         request.EmailAddress = email;
 
         $("#submitMessage").text("");
         $("#submitMessage").hide();
         $("#sendInviteButton").attr("disabled", "true");
 
-        FeedManagerWebsite.Services.UserService.CreateInvite(request, function (response) {
+        NuFridge.Website.Services.UserService.CreateInvite(request, function (response) {
             if (response && response.Success) {
                 $("#submitMessage").text(response.Message);
                 $("#submitMessage").removeClass("alert-danger");

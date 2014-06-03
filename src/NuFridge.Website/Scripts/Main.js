@@ -1,15 +1,5 @@
 ﻿$(function () {
     SetUpLoginButton();
-
-
-
-  //  $("#loginSignIn").click(function () {
-      //  SignIn();
- //   });
-
-   // $('#loginEmailAddress,#loginPassword').keyup(function () {
-   //     EnableDisableSignInButton();
-    //});
 });
 
 function SetUpLoginButton() {
@@ -36,37 +26,3 @@ function SetUpLoginButton() {
         $('.loginStatus').removeClass('active');
     });
 }
-
-//function EnableDisableSignInButton() {
-//    if ($("#loginEmailAddress").val() === '' || $("#loginPassword").val() === '') {
-//        $('#loginSignIn').prop('disabled', 'disabled');
-//    }
-//    else {
-//        $('#loginSignIn').prop('disabled', '');
-//    }
-//}
-
-//function SignIn() {
-//    var request = new FeedManagerWebsite.Services.SignInRequest();
-//    request.EmailAddress = $("#loginEmailAddress").val();
-//    request.Password = $("#loginPassword").val();
-
-//  //  $("#loginEmailAddress").attr("readonly", "readonly");
-//  //  $("#loginPassword").attr("readonly", "readonly");
-
-//    FeedManagerWebsite.Services.UserService.SignIn(request, function (response) {
-//        if (response && response.Success) {
-//            alert("Signed in");
-//        }
-//        else {
-//            alert("Failed to sign in");
-//        }
-//      //  $("#loginEmailAddress").attr("readonly", "");
-//      //  $("#loginPassword").attr("readonly", "");
-//    },
-//     function () {
-//         alert("Failed to sign in");
-//       //  $("#loginEmailAddress").attr("readonly", "");
-//       //  $("#loginPassword").attr("readonly", "");
-//     });
-//}

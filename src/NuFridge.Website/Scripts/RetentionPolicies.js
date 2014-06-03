@@ -94,7 +94,7 @@ function SaveRetentionPolicy() {
         return;
     }
 
-    var request = new FeedManagerWebsite.Services.SaveRetentionPolicyRequest();
+    var request = new NuFridge.Website.Services.SaveRetentionPolicyRequest();
     request.FeedName = feedName;
     request.Enabled = enabledValue;
     request.DaysToKeepPackages = daysToKeep;
@@ -106,7 +106,7 @@ function SaveRetentionPolicy() {
         }
     });
 
-    FeedManagerWebsite.Services.FeedService.SaveRetentionPolicy(request, function (response) {
+    NuFridge.Website.Services.FeedService.SaveRetentionPolicy(request, function (response) {
         if (response && response.Success) {
             DisableSaveRetentionPolicyButton();
             $("#saveRetentionPolicyButtonFailedMessage").hide();
@@ -190,10 +190,10 @@ function ShowFeedDetails(feedRow) {
     $("#feedDetailsName").text("Please wait...");
     $("#feedMoreDetailsPanel .panel-body").hide();
 
-    var request = new FeedManagerWebsite.Services.GetRetentionPolicyRequest();
+    var request = new NuFridge.Website.Services.GetRetentionPolicyRequest();
     request.FeedName = feedName;
 
-    FeedManagerWebsite.Services.FeedService.GetRetentionPolicy(request, function (response) {
+    NuFridge.Website.Services.FeedService.GetRetentionPolicy(request, function (response) {
         if (response && response.Success) {
             $("#feedDetailsName").text(feedName);
             lastFeed = feedName;
@@ -340,7 +340,7 @@ function GetHistory() {
 
     $("#retentionPolicyHistoryTable").dataTable().fnClearTable();
 
-    FeedManagerWebsite.Services.FeedService.GetRetentionPolicyHistoryList(function (response) {
+    NuFridge.Website.Services.FeedService.GetRetentionPolicyHistoryList(function (response) {
         if (response && response.Entries) {
             historyResults = response.Entries;
                 $(response.Entries).each(function (index, history) {
@@ -391,7 +391,7 @@ function showLogPopup(FeedName, logId, Date) {
         }]
     });
     
-    FeedManagerWebsite.Services.FeedService.GetRetentionPolicyHistoryListLog(logId, function (response) {
+    NuFridge.Website.Services.FeedService.GetRetentionPolicyHistoryListLog(logId, function (response) {
         if (response) {
             logMessage = fixNewLines(response);
             setTimeout(function () { $("#" + viewLogFileId).html(logMessage); }, 1200);
@@ -413,7 +413,7 @@ function GetFeeds() {
         {
 
         $("#retentionPolicyTable").dataTable().fnClearTable();
-        FeedManagerWebsite.Services.FeedService.GetFeedNames(function (response) {
+        NuFridge.Website.Services.FeedService.GetFeedNames(function (response) {
             if (response && response.Feeds && response.Success === true) {
 
                 $('#manageFeedMenuCount').text(response.Feeds.length);

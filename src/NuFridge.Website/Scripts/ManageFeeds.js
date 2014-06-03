@@ -26,8 +26,6 @@
     });
 
     $("[data-toggle=tooltip]").tooltip({ placement: 'top' });
-    // $("#deleteFeedButton").hide();
-    //  $("#retentionPolicyMenuItem").hide();
 });
 
 var feedsDataTable;
@@ -231,13 +229,13 @@ function ShowAddFeedModal() {
                 dialog.setClosable(false);
                 dialog.getModalBody().html('Please wait...');
 
-                var request = new FeedManagerWebsite.Services.CreateFeedRequest();
+                var request = new NuFridge.Website.Services.CreateFeedRequest();
                 request.FeedName = feedName;
 
                 var modalHtml = GetFeedNameTextboxPromptHtml(feedName);
                 var message = "There was an error trying to create the feed.";
 
-                FeedManagerWebsite.Services.FeedService.CreateFeed(request, function (response) {
+                NuFridge.Website.Services.FeedService.CreateFeed(request, function (response) {
                     if (response && response.Success) {
                         dialog.close();
                         GetFeeds();
@@ -282,7 +280,7 @@ function ShowImportPackagesModal() {
                 dialog.setClosable(false);
                 dialog.getModalBody().html('Please wait...');
 
-                var request = new FeedManagerWebsite.Services.ImportFeedRequest();
+                var request = new NuFridge.Website.Services.ImportFeedRequest();
                 request.FeedName = feedName;
                 request.SourceFeedUrl = sourceFeedUrl;
                 request.ApiKey = "TODO";
@@ -290,7 +288,7 @@ function ShowImportPackagesModal() {
                 var modalHtml = GetFeedUrlTextboxPromptHtml(feedName);
                 var message = "There was an error scheduling the import of the feed.";
 
-                FeedManagerWebsite.Services.FeedService.ImportFeed(request, function (response) {
+                NuFridge.Website.Services.FeedService.ImportFeed(request, function (response) {
                     if (response && response.Success) {
                         dialog.close();
                     } else {
@@ -345,12 +343,12 @@ function ShowDeleteFeedModal() {
                     dialog.setClosable(false);
                     dialog.getModalBody().html('Please wait...');
 
-                    var request = new FeedManagerWebsite.Services.DeleteFeedRequest();
+                    var request = new NuFridge.Website.Services.DeleteFeedRequest();
                     request.FeedName = feedName;
 
                     var message = "There was an error trying to delete the feed.";
 
-                    FeedManagerWebsite.Services.FeedService.DeleteFeed(request, function (response) {
+                    NuFridge.Website.Services.FeedService.DeleteFeed(request, function (response) {
                         if (response && response.Success) {
                             dialog.close();
                             GetFeeds();
@@ -401,11 +399,11 @@ function ShowFeedDetails(feedRow) {
     $("#feedDetailsName").text("Please wait...");
     $("#feedMoreDetailsPanel .panel-body").hide();
 
-    var request = new FeedManagerWebsite.Services.GetFeedRequest();
+    var request = new NuFridge.Website.Services.GetFeedRequest();
 
     request.FeedName = feedName;
 
-    FeedManagerWebsite.Services.FeedService.GetFeed(request, function (response) {
+    NuFridge.Website.Services.FeedService.GetFeed(request, function (response) {
         if (response && response.Success) {
             $("#feedDetailsName").text(response.Feed.Name);
             $("#feedDetailsBrowsePackages").html(MakeHyperlinkFromUrl(response.Feed.BrowsePackagesUrl));
@@ -439,7 +437,7 @@ function GetFeeds() {
 
     $("#manageFeedTable").dataTable().fnClearTable();
 
-    FeedManagerWebsite.Services.FeedService.GetFeedNames(function (response) {
+    NuFridge.Website.Services.FeedService.GetFeedNames(function (response) {
         if (response && response.Feeds && response.Success === true) {
 
             $('#manageFeedMenuCount').text(response.Feeds.length);

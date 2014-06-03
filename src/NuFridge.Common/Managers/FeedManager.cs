@@ -12,6 +12,7 @@ using NuFridge.DataAccess.Repositories;
 using NuFridge.Common.Jobs;
 using Quartz;
 using Quartz.Impl;
+using System.IO.Compression;
 
 namespace NuFridge.Common.Manager
 {
@@ -94,21 +95,6 @@ namespace NuFridge.Common.Manager
                 return false;
             }
 
-            var klondikeTemplatePath = Path.Combine(site.Applications.First().VirtualDirectories[0].PhysicalPath, "FeedTemplate");
-
-            if (!Directory.Exists(klondikeTemplatePath))
-            {
-                message = "Could not find NuGet feed template directory at path " + klondikeTemplatePath;
-                return false;
-            }
-
-            var files = Directory.GetFiles(klondikeTemplatePath);
-            if (files == null || !files.Any())
-            {
-                message = "No NuGet feed template has been setup at path " + klondikeTemplatePath;
-                return false;
-            }
-
             var binding = site.Bindings.FirstOrDefault();
             if (binding == null)
             {
@@ -123,23 +109,42 @@ namespace NuFridge.Common.Manager
             repository.Insert(new FeedEntity(feedName, string.Format("{0}/Feeds/{1}", rootWebsiteUrl, feedName)));
 
             var feedDirectory = Path.Combine(site.Applications.First().VirtualDirectories[0].PhysicalPath, "Feeds\\", feedName);
-            //if (!Directory.Exists(feedDirectory))
-            //{
-            //    message = "The feed package folder does not exist at " + feedDirectory;
-            //    return false;
-            //}
+
+            if (Directory.Exists(feedDirectory))
+            {
+                throw new Exception("A directory already exists for the " + feedName + " feed.");
+            }
 
             try
             {
                 Directory.CreateDirectory(feedDirectory);
 
-                //Now Create all of the directories
-                foreach (string dirPath in Directory.GetDirectories(klondikeTemplatePath, "*", SearchOption.AllDirectories))
-                    Directory.CreateDirectory(dirPath.Replace(klondikeTemplatePath, feedDirectory));
+                var resource = FileResources.Klondike;
 
-                //Copy all the files & Replaces any files with the same name
-                foreach (string newPath in Directory.GetFiles(klondikeTemplatePath, "*.*", SearchOption.AllDirectories))
-                    File.Copy(newPath, newPath.Replace(klondikeTemplatePath, feedDirectory), true);
+                MemoryStream stream = new MemoryStream(resource);
+
+                ZipArchive archive = new ZipArchive(stream);
+
+
+                foreach (var entry in archive.Entries)
+                {
+                    var directoryPath = Path.Combine(feedDirectory, Path.GetDirectoryName(entry.FullName));
+
+                    if (!Directory.Exists(directoryPath))
+                    {
+                        Directory.CreateDirectory(directoryPath);
+                    }
+
+                    var fileName = Path.Combine(directoryPath, entry.Name);
+
+                    using (var entryStream = entry.Open())
+                    {
+                        using (var outputStream = File.Create(fileName))
+                        {
+                            entryStream.CopyTo(outputStream);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {

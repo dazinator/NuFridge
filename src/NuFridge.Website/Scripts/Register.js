@@ -16,13 +16,13 @@ function CreateAccount() {
     $("#lastNameInput").attr("readonly", "readonly");
     $("#passwordInput").attr("readonly", "readonly");
 
-    var request = new FeedManagerWebsite.Services.CreateAccountRequest();
+    var request = new NuFridge.Website.Services.CreateAccountRequest();
     request.InviteToken = getParameterByName("token");
     request.FirstName = $("#firstNameInput").val();
     request.LastName = $("#lastNameInput").val();
     request.Password = $("#passwordInput").val();
 
-    FeedManagerWebsite.Services.UserService.CreateAccount(request, function (response) {
+    NuFridge.Website.Services.UserService.CreateAccount(request, function (response) {
         if (response && response.Success) {
             redirectToHomeWithPopup(true);
         }
@@ -61,10 +61,10 @@ function AdjustPage() {
 
 function LoadInvite() {
 
-    var request = new FeedManagerWebsite.Services.GetInviteRequest();
+    var request = new NuFridge.Website.Services.GetInviteRequest();
     request.InviteToken = getParameterByName("token");
 
-    FeedManagerWebsite.Services.UserService.GetInvite(request, function (response) {
+    NuFridge.Website.Services.UserService.GetInvite(request, function (response) {
         if (response && response.Success) {
             if (response.IsValidInvite) {
                 if (response.EmailAddress) {
