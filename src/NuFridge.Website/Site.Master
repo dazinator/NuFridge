@@ -87,7 +87,6 @@
                                 <li id="retentionPolicyMenuItem" runat="server"><a href="/RetentionPolicies.aspx"><i class="glyphicon glyphicon-cog"></i>&nbsp;Retention
                                     Policies</a></li>
                             <li id="inviteUsersMenuItem" runat="server"><a href="/InviteUsers.aspx"><i class="glyphicon glyphicon-user"></i>&nbsp;Invite Users</a></li>
-                                 <li id="liCrystalQuartsPanelMenuItem" runat="server"><a href="/scheduler/index.ashx"><i class="glyphicon glyphicon-time"></i>&nbsp;Scheduler</a></li>
                             </ul>
                         </li>
                     </ul>

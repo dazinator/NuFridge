@@ -21,13 +21,11 @@ namespace NuFridge.Website
             if (WebSecurity.IsAuthenticated)
             {
                 inviteUsersMenuItem.Visible = true;
-                liCrystalQuartsPanelMenuItem.Visible = true;
                 //  retentionPolicyMenuItem.Visible = true;
             }
             else
             {
                 inviteUsersMenuItem.Visible = false;
-                liCrystalQuartsPanelMenuItem.Visible = false;
                 //   retentionPolicyMenuItem.Visible = false;
             }
         }
