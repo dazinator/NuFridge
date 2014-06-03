@@ -1,0 +1,65 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuFridge.Website", "NuFridge.Website\NuFridge.Website.csproj", "{1C2DCBF2-6A22-4979-AAEF-94FF8A1E98FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuFridge.WindowsService", "NuFridge.WindowsService\NuFridge.WindowsService.csproj", "{DB43B4BB-C5DF-4BE5-9943-606A89A02095}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuFridge.DataAccess", "NuFridge.DataAccess\NuFridge.DataAccess.csproj", "{81DA5570-9DD9-4281-8D94-CA5EDDE46144}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuFridge.Common", "NuFridge.Common\NuFridge.Common.csproj", "{EDF3AE48-9747-45AD-8AB5-5D83F0822701}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuFridge.Tests", "NuFridge.Tests\NuFridge.Tests.csproj", "{C38F4542-1A22-4682-874C-BA592BD3A911}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 6
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://hv-sb-tfserver:8080/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = NuFridge.Website\\NuFridge.Website.csproj
+		SccProjectName1 = NuFridge.Website
+		SccLocalPath1 = NuFridge.Website
+		SccProjectUniqueName2 = NuFridge.DataAccess\\NuFridge.DataAccess.csproj
+		SccProjectName2 = NuFridge.DataAccess
+		SccLocalPath2 = NuFridge.DataAccess
+		SccProjectUniqueName3 = NuFridge.Common\\NuFridge.Common.csproj
+		SccProjectName3 = NuFridge.Common
+		SccLocalPath3 = NuFridge.Common
+		SccProjectUniqueName4 = NuFridge.WindowsService\\NuFridge.WindowsService.csproj
+		SccProjectName4 = NuFridge.WindowsService
+		SccLocalPath4 = NuFridge.WindowsService
+		SccProjectUniqueName5 = NuFridge.Tests\\NuFridge.Tests.csproj
+		SccProjectName5 = NuFridge.Tests
+		SccLocalPath5 = NuFridge.Tests
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1C2DCBF2-6A22-4979-AAEF-94FF8A1E98FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C2DCBF2-6A22-4979-AAEF-94FF8A1E98FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C2DCBF2-6A22-4979-AAEF-94FF8A1E98FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C2DCBF2-6A22-4979-AAEF-94FF8A1E98FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB43B4BB-C5DF-4BE5-9943-606A89A02095}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB43B4BB-C5DF-4BE5-9943-606A89A02095}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB43B4BB-C5DF-4BE5-9943-606A89A02095}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB43B4BB-C5DF-4BE5-9943-606A89A02095}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81DA5570-9DD9-4281-8D94-CA5EDDE46144}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81DA5570-9DD9-4281-8D94-CA5EDDE46144}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81DA5570-9DD9-4281-8D94-CA5EDDE46144}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81DA5570-9DD9-4281-8D94-CA5EDDE46144}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDF3AE48-9747-45AD-8AB5-5D83F0822701}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDF3AE48-9747-45AD-8AB5-5D83F0822701}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDF3AE48-9747-45AD-8AB5-5D83F0822701}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDF3AE48-9747-45AD-8AB5-5D83F0822701}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C38F4542-1A22-4682-874C-BA592BD3A911}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C38F4542-1A22-4682-874C-BA592BD3A911}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C38F4542-1A22-4682-874C-BA592BD3A911}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C38F4542-1A22-4682-874C-BA592BD3A911}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
