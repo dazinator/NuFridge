@@ -102,7 +102,6 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="FeedManagerWindowsService.nuspec" />
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>
