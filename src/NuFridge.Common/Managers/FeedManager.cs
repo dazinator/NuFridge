@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -18,8 +17,10 @@ namespace NuFridge.Common.Manager
 {
     public class FeedManager
     {
-      
-        readonly IScheduler scheduler = StdSchedulerFactory.GetDefaultScheduler();
+
+
+
+        //readonly IScheduler scheduler = StdSchedulerFactory.GetDefaultScheduler();
 
         public FeedManager()
         {
@@ -38,15 +39,8 @@ namespace NuFridge.Common.Manager
                 throw new ArgumentNullException("Only alphanumeric characters are allowed in the feed name");
             }
 
-
-
-
-
             var runOnceImmediatelyTrigger = ScheduleManager.RunOnceImmediatelyTrigger<ImportPackagesJob>().Build();
-
-            jobName = string.Format("Import Packages to {0} {1}", importToFeedName,
-                                           DateTime.Now.ToString("dd-MM-yyyy hhmmssfff tt"));
-
+            jobName = string.Format("Import Packages to {0} {1}", importToFeedName, DateTime.Now.ToString("dd-MM-yyyy hhmmssfff tt"));
 
             IJobDetail job = JobBuilder.Create<ImportPackagesJob>()
               .WithIdentity(jobName, "PackageImport")
@@ -56,122 +50,129 @@ namespace NuFridge.Common.Manager
             .Build();
 
             ScheduleManager.Schedule<ImportPackagesJob>(job, runOnceImmediatelyTrigger);
-
         }
 
         public static bool CreateFeed(string feedName, out string message)
         {
 
-            if (string.IsNullOrWhiteSpace(feedName))
-            {
-                message = "Feed name is mandatory";
-                return false;
-            }
-
-            if (!Regex.IsMatch(feedName, "^[a-zA-Z0-9.-]+$"))
-            {
-                message = "Only alphanumeric characters are allowed in the feed name";
-                return false;
-            }
-
-            var klondikeWebsiteName = ConfigurationManager.AppSettings["KlondikeWebsiteName"];
-
-
-
-
-            ServerManager mgr = new ServerManager();
-
-            var site = mgr.Sites.FirstOrDefault(st => st.Name == klondikeWebsiteName);
-            if (site == null)
-            {
-                message = "IIS Website not found for " + klondikeWebsiteName;
-                return false;
-            }
-
-            var application = site.Applications.FirstOrDefault(st => st.Path.ToLower() == string.Format("/feeds/{0}", feedName.ToLower()));
-            if (application != null)
-            {
-                message = "A feed already exists for " + feedName;
-                return false;
-            }
-
-            var binding = site.Bindings.FirstOrDefault();
-            if (binding == null)
-            {
-                throw new Exception("No IIS bindings found for " + klondikeWebsiteName);
-            }
-
-
-            var rootWebsiteUrl = string.Format("{0}://{1}:{2}", binding.Protocol, Environment.MachineName, binding.EndPoint.Port);
-
-
-            MongoDbRepository<FeedEntity> repository = new MongoDbRepository<FeedEntity>();
-            repository.Insert(new FeedEntity(feedName, string.Format("{0}/Feeds/{1}", rootWebsiteUrl, feedName)));
-
-            var feedDirectory = Path.Combine(site.Applications.First().VirtualDirectories[0].PhysicalPath, "Feeds\\", feedName);
-
-            if (Directory.Exists(feedDirectory))
-            {
-                throw new Exception("A directory already exists for the " + feedName + " feed.");
-            }
-
             try
             {
-                Directory.CreateDirectory(feedDirectory);
 
-                var resource = FileResources.Klondike;
-
-                MemoryStream stream = new MemoryStream(resource);
-
-                ZipArchive archive = new ZipArchive(stream);
-
-
-                foreach (var entry in archive.Entries)
+                if (string.IsNullOrWhiteSpace(feedName))
                 {
-                    var directoryPath = Path.Combine(feedDirectory, Path.GetDirectoryName(entry.FullName));
+                    message = "Feed name is mandatory";
+                    return false;
+                }
 
-                    if (!Directory.Exists(directoryPath))
+                if (!Regex.IsMatch(feedName, "^[a-zA-Z0-9.-]+$"))
+                {
+                    message = "Only alphanumeric characters are allowed in the feed name";
+                    return false;
+                }
+
+                var klondikeWebsiteName = ConfigurationManager.AppSettings["KlondikeWebsiteName"];
+                var klondikeWebsitePortNumberConfig = ConfigurationManager.AppSettings["KlondikeWebsitePort"];
+                int klondikeWebsitePortNumber;
+                if (!int.TryParse(klondikeWebsitePortNumberConfig, out klondikeWebsitePortNumber))
+                {
+                    klondikeWebsitePortNumber = WebsiteManager.DefaultWebsitePortNumber;
+                }
+
+                var websiteManager = new WebsiteManager();
+                bool exists = websiteManager.WebsiteExists(klondikeWebsiteName);
+                if (!exists)
+                {
+                    var websitePath = Path.GetDirectoryName(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile);
+                    var websiteInfo = new CreateWebsiteArgs(klondikeWebsiteName, websitePath);
+                    websiteInfo.HostName = "*";
+                    websiteInfo.PortNumber = klondikeWebsitePortNumber;
+                    websiteManager.CreateWebsite(websiteInfo);
+                }
+
+                var appPath = string.Format("/feeds/{0}", feedName.ToLower());
+                var applicationExists = websiteManager.ApplicationExists(klondikeWebsiteName, appPath);
+                if (applicationExists)
+                {
+                    throw new Exception("Feed allready exists at: " + appPath);
+                }
+
+                var website = websiteManager.GetWebsite(klondikeWebsiteName);
+                var binding = website.Bindings.FirstOrDefault();
+                if (binding == null)
+                {
+                    throw new Exception("No IIS bindings found for " + klondikeWebsiteName);
+                }
+               
+                var rootWebsiteUrl = string.Format("{0}://{1}:{2}", binding.Protocol, binding.GetFriendlyHostName(), binding.EndPoint.Port);
+                
+                var repository = new MongoDbRepository<FeedEntity>();
+                repository.Insert(new FeedEntity(feedName, string.Format("{0}/Feeds/{1}", rootWebsiteUrl, feedName)));
+
+                var feedDirectory = Path.Combine(website.Applications.First().VirtualDirectories[0].PhysicalPath, "Feeds\\", feedName);
+
+                if (Directory.Exists(feedDirectory))
+                {
+                    throw new Exception("A directory already exists for the " + feedName + " feed.");
+                }
+
+                try
+                {
+                    Directory.CreateDirectory(feedDirectory);
+
+                    var resource = FileResources.Klondike;
+
+                    var stream = new MemoryStream(resource);
+                    var archive = new ZipArchive(stream);
+
+                    foreach (var entry in archive.Entries)
                     {
-                        Directory.CreateDirectory(directoryPath);
-                    }
+                        var directoryPath = Path.Combine(feedDirectory, Path.GetDirectoryName(entry.FullName));
 
-                    var fileName = Path.Combine(directoryPath, entry.Name);
-
-                    using (var entryStream = entry.Open())
-                    {
-                        using (var outputStream = File.Create(fileName))
+                        if (!Directory.Exists(directoryPath))
                         {
-                            entryStream.CopyTo(outputStream);
+                            Directory.CreateDirectory(directoryPath);
+                        }
+
+                        var fileName = Path.Combine(directoryPath, entry.Name);
+
+                        using (var entryStream = entry.Open())
+                        {
+                            using (var outputStream = File.Create(fileName))
+                            {
+                                entryStream.CopyTo(outputStream);
+                            }
                         }
                     }
                 }
+                catch (Exception ex)
+                {
+                    message = "An exception was thrown when creating the feed directory: " + ex.Message;
+                    return false;
+                }
+
+                try
+                {
+                    string path = "/Feeds/" + feedName;
+                    websiteManager.CreateApplication(klondikeWebsiteName, path, feedDirectory);
+                }
+                catch (Exception ex)
+                {
+                    message = "An exception was thrown when adding the IIS application: " + ex.Message;
+                    return false;
+                }
+
+                //RetentionPolicyManager.Instance.RefreshRetentionPolicies();
+                message = "Successfully created a feed called " + feedName;
+                return true;
+
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                message = "An exception was thrown when creating the feed directory: " + ex.Message;
+                message = e.Message;
                 return false;
             }
-
-            try
-            {
-                site.Applications.Add("/Feeds/" + feedName, feedDirectory);
-                mgr.CommitChanges();
-            }
-            catch (Exception ex)
-            {
-                message = "An exception was thrown when adding the IIS application: " + ex.Message;
-                return false;
-            }
-
-
-
-
-
-            //RetentionPolicyManager.Instance.RefreshRetentionPolicies();
-
-            message = "Successfully created a feed called " + feedName;
-            return true;
         }
+
 
         public static bool DeleteFeed(string feedName, out string message)
         {

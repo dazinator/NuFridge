@@ -118,10 +118,17 @@
     <Compile Include="Jobs\CCNet\Octo\OctoReleasePlanItem.cs" />
     <Compile Include="Jobs\CCNet\TFS\TFSHelper.cs" />
     <Compile Include="Jobs\ImportPackagesJob.cs" />
+    <Compile Include="IIS\ApplicationInfo.cs" />
+    <Compile Include="IIS\BindingInfo.cs" />
+    <Compile Include="IIS\CreateWebsiteArgs.cs" />
     <Compile Include="Managers\FeedManager.cs" />
+    <Compile Include="IIS\HttpProtocol.cs" />
     <Compile Include="Managers\InviteManager.cs" />
     <Compile Include="Managers\AccountManager.cs" />
     <Compile Include="Managers\ScheduleManager.cs" />
+    <Compile Include="IIS\VirtualDirectoryInfo.cs" />
+    <Compile Include="IIS\WebsiteInfo.cs" />
+    <Compile Include="Managers\WebsiteManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Managers\RetentionPolicyManager.cs" />
     <Compile Include="Scheduler.cs" />
@@ -184,6 +191,7 @@
       <LastGenOutput>FileResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
