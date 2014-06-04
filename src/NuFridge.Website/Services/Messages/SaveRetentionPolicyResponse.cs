@@ -1,6 +1,6 @@
-﻿using System.Runtime.Serialization;
+using System.Runtime.Serialization;
 
-namespace NuFridge.Website.Services
+namespace NuFridge.Website.Services.Messages
 {
     public class SaveRetentionPolicyResponse
     {

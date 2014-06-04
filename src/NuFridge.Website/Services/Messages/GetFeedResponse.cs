@@ -1,7 +1,7 @@
-﻿using System.Runtime.Serialization;
+using System.Runtime.Serialization;
 using NuFridge.DataAccess.Entity;
 
-namespace NuFridge.Website.Services
+namespace NuFridge.Website.Services.Messages
 {
     public class GetFeedResponse
     {

@@ -94,7 +94,7 @@ function SaveRetentionPolicy() {
         return;
     }
 
-    var request = new NuFridge.Website.Services.SaveRetentionPolicyRequest();
+    var request = new NuFridge.Website.Services.Messages.SaveRetentionPolicyRequest();
     request.FeedName = feedName;
     request.Enabled = enabledValue;
     request.DaysToKeepPackages = daysToKeep;
@@ -190,7 +190,7 @@ function ShowFeedDetails(feedRow) {
     $("#feedDetailsName").text("Please wait...");
     $("#feedMoreDetailsPanel .panel-body").hide();
 
-    var request = new NuFridge.Website.Services.GetRetentionPolicyRequest();
+    var request = new NuFridge.Website.Services.Messages.GetRetentionPolicyRequest();
     request.FeedName = feedName;
 
     NuFridge.Website.Services.FeedService.GetRetentionPolicy(request, function (response) {

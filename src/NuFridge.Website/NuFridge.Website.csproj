@@ -182,10 +182,6 @@
     <Compile Include="RetentionPolicies.aspx.designer.cs">
       <DependentUpon>RetentionPolicies.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Services\CreateFeedRequest.cs" />
-    <Compile Include="Services\CreateFeedResponse.cs" />
-    <Compile Include="Services\DeleteFeedRequest.cs" />
-    <Compile Include="Services\DeleteFeedResponse.cs" />
     <Compile Include="Services\FeedService.asmx.cs">
       <DependentUpon>FeedService.asmx</DependentUpon>
       <SubType>Component</SubType>
@@ -201,15 +197,19 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\GetFeedRequest.cs" />
-    <Compile Include="Services\GetFeedResponse.cs" />
-    <Compile Include="Services\GetFeedsResponse.cs" />
-    <Compile Include="Services\GetRetentionPolicyHistoryResponse.cs" />
-    <Compile Include="Services\GetRetentionPolicyRequest.cs" />
-    <Compile Include="Services\GetRetentionPolicyResponse.cs" />
-    <Compile Include="Services\ImportFeedRequest.cs" />
-    <Compile Include="Services\SaveRetentionPolicyRequest.cs" />
-    <Compile Include="Services\SaveRetentionPolicyResponse.cs" />
+    <Compile Include="Services\Messages\CreateFeedRequest.cs" />
+    <Compile Include="Services\Messages\CreateFeedResponse.cs" />
+    <Compile Include="Services\Messages\DeleteFeedRequest.cs" />
+    <Compile Include="Services\Messages\DeleteFeedResponse.cs" />
+    <Compile Include="Services\Messages\GetFeedRequest.cs" />
+    <Compile Include="Services\Messages\GetFeedResponse.cs" />
+    <Compile Include="Services\Messages\GetFeedsResponse.cs" />
+    <Compile Include="Services\Messages\GetRetentionPolicyHistoryResponse.cs" />
+    <Compile Include="Services\Messages\GetRetentionPolicyRequest.cs" />
+    <Compile Include="Services\Messages\GetRetentionPolicyResponse.cs" />
+    <Compile Include="Services\Messages\ImportFeedRequest.cs" />
+    <Compile Include="Services\Messages\SaveRetentionPolicyRequest.cs" />
+    <Compile Include="Services\Messages\SaveRetentionPolicyResponse.cs" />
     <Compile Include="Services\UserService.asmx.cs">
       <DependentUpon>UserService.asmx</DependentUpon>
       <SubType>Component</SubType>
@@ -222,9 +222,7 @@
       <DependentUpon>Site.Master</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\Messages\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Site.Master" />
   </ItemGroup>

@@ -6,10 +6,10 @@ function SetUpLoginButton() {
     $('.loginStatus').click(function (e) {
         //Conditional states allow the dropdown box appear and disappear 
         if ($('#signin-dropdown').is(":visible")) {
-            $('#signin-dropdown').hide()
+            $('#signin-dropdown').hide();
             $('.loginStatus').removeClass('active'); // When the dropdown is not visible removes the class "active"
         } else {
-            $('#signin-dropdown').show()
+            $('#signin-dropdown').show();
             $('.loginStatus').addClass('active'); // When the dropdown is visible add class "active"
             $("#loginEmailAddress").focus();
         }

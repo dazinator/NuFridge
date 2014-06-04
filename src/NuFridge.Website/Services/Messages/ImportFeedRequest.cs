@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System;
 using System.Runtime.Serialization;
-using System.Text;
 
-namespace NuFridge.Website.Services
+namespace NuFridge.Website.Services.Messages
 {
     [Serializable]
     [DataContract]

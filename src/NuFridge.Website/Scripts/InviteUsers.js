@@ -5,7 +5,7 @@
         var email = $("#emailAddressInput").val();
 
 
-        var request = new NuFridge.Website.Services.CreateInviteRequest();
+        var request = new NuFridge.Website.Services.Messages.CreateInviteRequest();
         request.EmailAddress = email;
 
         $("#submitMessage").text("");

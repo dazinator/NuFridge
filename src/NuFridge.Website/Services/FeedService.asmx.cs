@@ -8,6 +8,7 @@ using NuFridge.DataAccess.Entity;
 using NuFridge.Common.Manager;
 using NuFridge.DataAccess.Repositories;
 using MongoDB.Driver;
+using NuFridge.Website.Services.Messages;
 
 namespace NuFridge.Website.Services
 {

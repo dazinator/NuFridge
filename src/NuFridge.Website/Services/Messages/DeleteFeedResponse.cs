@@ -1,22 +1,24 @@
-﻿using System.Runtime.Serialization;
+using System;
+using System.Runtime.Serialization;
 
-namespace NuFridge.Website.Services
+namespace NuFridge.Website.Services.Messages
 {
+    [Serializable]
     [DataContract]
-    public class CreateFeedResponse
+    public class DeleteFeedResponse
     {
         [DataMember]
         public bool Success { get; set; }
-
         [DataMember]
         public string Message { get; set; }
-        public CreateFeedResponse(bool success, string message)
+
+        public DeleteFeedResponse(bool success, string message)
         {
             Success = success;
             Message = message;
         }
 
-        public CreateFeedResponse()
+        public DeleteFeedResponse()
         {
 
         }

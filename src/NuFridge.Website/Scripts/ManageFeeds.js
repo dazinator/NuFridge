@@ -229,7 +229,7 @@ function ShowAddFeedModal() {
                 dialog.setClosable(false);
                 dialog.getModalBody().html('Please wait...');
 
-                var request = new NuFridge.Website.Services.CreateFeedRequest();
+                var request = new NuFridge.Website.Services.Messages.CreateFeedRequest();
                 request.FeedName = feedName;
 
                 var modalHtml = GetFeedNameTextboxPromptHtml(feedName);
@@ -280,7 +280,7 @@ function ShowImportPackagesModal() {
                 dialog.setClosable(false);
                 dialog.getModalBody().html('Please wait...');
 
-                var request = new NuFridge.Website.Services.ImportFeedRequest();
+                var request = new NuFridge.Website.Services.Messages.ImportFeedRequest();
                 request.FeedName = feedName;
                 request.SourceFeedUrl = sourceFeedUrl;
                 request.ApiKey = "TODO";
@@ -343,7 +343,7 @@ function ShowDeleteFeedModal() {
                     dialog.setClosable(false);
                     dialog.getModalBody().html('Please wait...');
 
-                    var request = new NuFridge.Website.Services.DeleteFeedRequest();
+                    var request = new NuFridge.Website.Services.Messages.DeleteFeedRequest();
                     request.FeedName = feedName;
 
                     var message = "There was an error trying to delete the feed.";
@@ -399,7 +399,7 @@ function ShowFeedDetails(feedRow) {
     $("#feedDetailsName").text("Please wait...");
     $("#feedMoreDetailsPanel .panel-body").hide();
 
-    var request = new NuFridge.Website.Services.GetFeedRequest();
+    var request = new NuFridge.Website.Services.Messages.GetFeedRequest();
 
     request.FeedName = feedName;
 

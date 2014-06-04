@@ -16,7 +16,7 @@ function CreateAccount() {
     $("#lastNameInput").attr("readonly", "readonly");
     $("#passwordInput").attr("readonly", "readonly");
 
-    var request = new NuFridge.Website.Services.CreateAccountRequest();
+    var request = new NuFridge.Website.Services.Messages.CreateAccountRequest();
     request.InviteToken = getParameterByName("token");
     request.FirstName = $("#firstNameInput").val();
     request.LastName = $("#lastNameInput").val();
@@ -61,7 +61,7 @@ function AdjustPage() {
 
 function LoadInvite() {
 
-    var request = new NuFridge.Website.Services.GetInviteRequest();
+    var request = new NuFridge.Website.Services.Messages.GetInviteRequest();
     request.InviteToken = getParameterByName("token");
 
     NuFridge.Website.Services.UserService.GetInvite(request, function (response) {

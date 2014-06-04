@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using NuFridge.DataAccess.Entity;
 
-namespace NuFridge.Website.Services
+namespace NuFridge.Website.Services.Messages
 {
     [DataContract]
     public class GetRetentionPolicyHistoryResponse
