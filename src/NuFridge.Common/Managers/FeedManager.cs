@@ -70,37 +70,37 @@ namespace NuFridge.Common.Manager
                     return false;
                 }
 
-                var klondikeWebsiteName = ConfigurationManager.AppSettings["KlondikeWebsiteName"];
-                var klondikeWebsitePortNumberConfig = ConfigurationManager.AppSettings["KlondikeWebsitePort"];
-                int klondikeWebsitePortNumber;
-                if (!int.TryParse(klondikeWebsitePortNumberConfig, out klondikeWebsitePortNumber))
+                var nuFridgeWebsiteName = ConfigurationManager.AppSettings["NuFridge.Website.Name"];
+                var nuFridgePort = ConfigurationManager.AppSettings["NuFridge.Website.PortNumber"];
+                int nuFridgePortNumber;
+                if (!int.TryParse(nuFridgePort, out nuFridgePortNumber))
                 {
-                    klondikeWebsitePortNumber = WebsiteManager.DefaultWebsitePortNumber;
+                    nuFridgePortNumber = WebsiteManager.DefaultWebsitePortNumber;
                 }
 
                 var websiteManager = new WebsiteManager();
-                bool exists = websiteManager.WebsiteExists(klondikeWebsiteName);
+                bool exists = websiteManager.WebsiteExists(nuFridgeWebsiteName);
                 if (!exists)
                 {
                     var websitePath = Path.GetDirectoryName(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile);
-                    var websiteInfo = new CreateWebsiteArgs(klondikeWebsiteName, websitePath);
+                    var websiteInfo = new CreateWebsiteArgs(nuFridgeWebsiteName, websitePath);
                     websiteInfo.HostName = "*";
-                    websiteInfo.PortNumber = klondikeWebsitePortNumber;
+                    websiteInfo.PortNumber = nuFridgePortNumber;
                     websiteManager.CreateWebsite(websiteInfo);
                 }
 
                 var appPath = string.Format("/feeds/{0}", feedName.ToLower());
-                var applicationExists = websiteManager.ApplicationExists(klondikeWebsiteName, appPath);
+                var applicationExists = websiteManager.ApplicationExists(nuFridgeWebsiteName, appPath);
                 if (applicationExists)
                 {
                     throw new Exception("Feed allready exists at: " + appPath);
                 }
 
-                var website = websiteManager.GetWebsite(klondikeWebsiteName);
+                var website = websiteManager.GetWebsite(nuFridgeWebsiteName);
                 var binding = website.Bindings.FirstOrDefault();
                 if (binding == null)
                 {
-                    throw new Exception("No IIS bindings found for " + klondikeWebsiteName);
+                    throw new Exception("No IIS bindings found for " + nuFridgeWebsiteName);
                 }
                
                 var rootWebsiteUrl = string.Format("{0}://{1}:{2}", binding.Protocol, binding.GetFriendlyHostName(), binding.EndPoint.Port);
@@ -153,7 +153,7 @@ namespace NuFridge.Common.Manager
                 try
                 {
                     string path = "/Feeds/" + feedName;
-                    websiteManager.CreateApplication(klondikeWebsiteName, path, feedDirectory);
+                    websiteManager.CreateApplication(nuFridgeWebsiteName, path, feedDirectory);
                 }
                 catch (Exception ex)
                 {
@@ -182,16 +182,16 @@ namespace NuFridge.Common.Manager
                 message = "Feed name is mandatory";
                 return false;
             }
-            var klondikeWebsiteName = ConfigurationManager.AppSettings["KlondikeWebsiteName"];
+            var nuFridgeWebsiteName = ConfigurationManager.AppSettings["NuFridge.Website.Name"];
 
 
 
             ServerManager mgr = new ServerManager();
 
-            var site = mgr.Sites.FirstOrDefault(st => st.Name == klondikeWebsiteName);
+            var site = mgr.Sites.FirstOrDefault(st => st.Name == nuFridgeWebsiteName);
             if (site == null)
             {
-                message = "IIS Website not found for " + klondikeWebsiteName;
+                message = "IIS Website not found for " + nuFridgeWebsiteName;
                 return false;
             }
 

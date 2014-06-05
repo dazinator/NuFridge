@@ -56,21 +56,21 @@ namespace NuFridge.Common.Managers
             }
 
 
-            var klondikeWebsiteName = ConfigurationManager.AppSettings["KlondikeWebsiteName"];
+            var nuFridgeWebsiteName = ConfigurationManager.AppSettings["NuFridge.Website.Name"];
 
             ServerManager mgr = new ServerManager();
 
-            var site = mgr.Sites.FirstOrDefault(st => st.Name == klondikeWebsiteName);
+            var site = mgr.Sites.FirstOrDefault(st => st.Name == nuFridgeWebsiteName);
             if (site == null)
             {
-                message = "IIS Website not found for " + klondikeWebsiteName;
+                message = "IIS Website not found for " + nuFridgeWebsiteName;
                 return false;
             }
 
             var binding = site.Bindings.FirstOrDefault();
             if (binding == null)
             {
-                throw new Exception("No IIS bindings found for " + klondikeWebsiteName);
+                throw new Exception("No IIS bindings found for " + nuFridgeWebsiteName);
             }
 
             MongoDbRepository<AccountInviteEntity> repository = new MongoDbRepository<AccountInviteEntity>();

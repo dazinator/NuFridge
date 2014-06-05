@@ -43,21 +43,21 @@ namespace NuFridge.Common.Manager
                 return true;
             }
 
-            var klondikeWebsiteName = ConfigurationManager.AppSettings["KlondikeWebsiteName"];
+            var nuFridgeWebsiteName = ConfigurationManager.AppSettings["NuFridge.Website.Name"];
 
             var mgr = new ServerManager();
 
-            var site = mgr.Sites.FirstOrDefault(st => st.Name == klondikeWebsiteName);
+            var site = mgr.Sites.FirstOrDefault(st => st.Name == nuFridgeWebsiteName);
             if (site == null)
             {
-                message = "IIS Website not found for " + klondikeWebsiteName;
+                message = "IIS Website not found for " + nuFridgeWebsiteName;
                 return false;
             }
 
             var binding = site.Bindings.FirstOrDefault();
             if (binding == null)
             {
-                message = "No IIS bindings found for " + klondikeWebsiteName;
+                message = "No IIS bindings found for " + nuFridgeWebsiteName;
                 return false;
             }
 
