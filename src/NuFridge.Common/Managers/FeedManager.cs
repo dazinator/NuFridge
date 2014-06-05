@@ -89,11 +89,11 @@ namespace NuFridge.Common.Manager
                     websiteManager.CreateWebsite(websiteInfo);
                 }
 
-                var appPath = string.Format("/feeds/{0}", feedName.ToLower());
+                var appPath = string.Format("/feeds/{0}", feedName);
                 var applicationExists = websiteManager.ApplicationExists(nuFridgeWebsiteName, appPath);
                 if (applicationExists)
                 {
-                    throw new Exception("Feed allready exists at: " + appPath);
+                    throw new Exception("Feed already exists at: " + appPath);
                 }
 
                 var website = websiteManager.GetWebsite(nuFridgeWebsiteName);
@@ -108,7 +108,13 @@ namespace NuFridge.Common.Manager
                 var repository = new MongoDbRepository<FeedEntity>();
                 repository.Insert(new FeedEntity(feedName, string.Format("{0}/Feeds/{1}", rootWebsiteUrl, feedName)));
 
-                var feedDirectory = Path.Combine(website.Applications.First().VirtualDirectories[0].PhysicalPath, "Feeds\\", feedName);
+                var feedRootFolder = ConfigurationManager.AppSettings["NuFridge.Feeds.Folder"];
+                if (!Path.IsPathRooted(feedRootFolder))
+                {
+                    feedRootFolder = Path.Combine(website.Applications[0].VirtualDirectories[0].PhysicalPath, feedRootFolder);
+                }
+
+                var feedDirectory = Path.Combine(feedRootFolder, feedName);
 
                 if (Directory.Exists(feedDirectory))
                 {

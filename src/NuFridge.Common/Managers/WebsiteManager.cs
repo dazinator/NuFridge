@@ -91,7 +91,7 @@ namespace NuFridge.Common.Manager
                     return false;
                 }
 
-                return website.Applications.Any(st => st.Path.ToLower() == path);
+                return website.Applications.Any(st => st.Path.ToLower() == path.ToLower());
 
             }
 
