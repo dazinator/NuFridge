@@ -6,7 +6,6 @@ using System.Web;
 using Quartz;
 using Quartz.Impl;
 using NuFridge.Common.Jobs;
-using NuFridge.Common.Jobs.CCNet;
 
 namespace NuFridge.WindowsService
 {
@@ -64,15 +63,6 @@ namespace NuFridge.WindowsService
                                              .Build();
 
             AddJob<ApplyRetentionPoliciesJob>("Maintenance", retentionPolicyTrigger);
-
-
-
-            ITrigger CCNetTrigger = TriggerBuilder.Create()
-                                             .WithIdentity("CCNetJob", "Integration")
-                                             .WithSimpleSchedule(s => s.RepeatForever().WithIntervalInSeconds(13).WithMisfireHandlingInstructionIgnoreMisfires()).Build();
-
-            AddJob<CCNetJob>("Integration", CCNetTrigger);
-
         }
 
         private void AddJob<T>(string group, ITrigger trigger) where T : IJob

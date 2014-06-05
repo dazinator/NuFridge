@@ -257,67 +257,13 @@ namespace NuFridge.Common.Manager
 
             RetentionPolicyManager.DeleteRetentionPolicy(feedName);
 
-            var files = Directory.GetFiles(feedDirectory);
+            //Delete files with checks on whether files are locked & with retries
+            FileHelper.DeleteFilesInFolder(feedDirectory);
 
-            var lockedFiles = new List<string>();
-                
-                Parallel.ForEach(files, file =>
-                {
-                    if (FileHelper.IsFileLocked(file))
-                    {
-                        lockedFiles.Add(file);
-                    }
-                    else
-                    {
-                        File.Delete(file);
-                    }
-                });
-
-            foreach (var lockedFile in lockedFiles)
-            {
-                if (FileHelper.IsFileLocked(lockedFile))
-                {
-                    Thread.Sleep(100);
-                }
-                File.Delete(lockedFile);
-            }
-
-           Directory.Delete(feedDirectory, true);
+            Directory.Delete(feedDirectory, true);
 
             message = "Successfully removed the feed and deleted all packages for " + feedName;
             return true;
-        }
-
-        private static void DeleteFilesInFolder(string[] parentFolders)
-        {
-            foreach (string dirPath in parentFolders)
-            {
-                if (!dirPath.Contains("\\Lucene\\Users"))
-                {
-                    DeleteFilesInDirectory(dirPath);
-                }
-
-                var childFolders = Directory.GetDirectories(dirPath, "*", SearchOption.TopDirectoryOnly);
-                DeleteFilesInFolder(childFolders);
-            }
-        }
-
-        private static void DeleteFilesInDirectory(string dirPath)
-        {
-            foreach (string newPath in Directory.GetFiles(dirPath, "*.*", SearchOption.TopDirectoryOnly))
-            {
-                if (!dirPath.Contains("\\Lucene\\Users"))
-                {
-                    FileInfo fi = new FileInfo(newPath);
-                    try
-                    {
-                        fi.Delete();
-                    }
-                    catch (IOException)
-                    {
-                    }
-                }
-            }
         }
 
         public static FeedEntity FindFeed(string feedName)
