@@ -99,6 +99,7 @@ function ConnectToSignalROnFeed(baseurl) {
         });
 
         isConnecting = true;
+        hub.connection.url = baseurl + "/api/signalr"; 
         hub.connection.start().done(function () {
             // console.log('Connection Established.');
             isConnecting = false;
