@@ -1,11 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Security;
+using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
 using Microsoft.Web.Administration;
 using System.Configuration;
+using NuFridge.Common.Helpers;
 using NuFridge.DataAccess.Entity;
 using NuFridge.DataAccess.Entity.Feeds;
 using NuFridge.DataAccess.Repositories;
@@ -58,7 +61,6 @@ namespace NuFridge.Common.Manager
 
             try
             {
-
                 if (string.IsNullOrWhiteSpace(feedName))
                 {
                     message = "Feed name is mandatory";
@@ -120,6 +122,14 @@ namespace NuFridge.Common.Manager
                 if (Directory.Exists(feedDirectory))
                 {
                     throw new Exception("A directory already exists for the " + feedName + " feed.");
+                }
+
+                var identityName = WindowsIdentity.GetCurrent().Name;
+
+                var hasWriteAccess = DirectoryHelper.HasWriteAccess(feedRootFolder, identityName);
+                if (!hasWriteAccess)
+                {
+                    throw new SecurityException(string.Format("The '{0}' user does not have write access to the '{1}' directory.", identityName, feedRootFolder));
                 }
 
                 try
@@ -214,6 +224,14 @@ namespace NuFridge.Common.Manager
             {
                 message = "The feed package folder does not exist at " + feedDirectory;
                 return false;
+            }
+
+            var identityName = WindowsIdentity.GetCurrent().Name;
+
+            var hasWriteAccess = DirectoryHelper.HasDeleteRights(feedDirectory, identityName);
+            if (!hasWriteAccess)
+            {
+                throw new SecurityException(string.Format("The '{0}' user does not have write access to the '{1}' directory.", identityName, feedDirectory));
             }
 
             MongoDbRepository<FeedEntity> repository = new MongoDbRepository<FeedEntity>();

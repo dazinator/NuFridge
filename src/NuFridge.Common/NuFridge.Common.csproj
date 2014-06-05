@@ -129,6 +129,7 @@
     <Compile Include="IIS\VirtualDirectoryInfo.cs" />
     <Compile Include="IIS\WebsiteInfo.cs" />
     <Compile Include="Managers\WebsiteManager.cs" />
+    <Compile Include="Helpers\DirectoryHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Managers\RetentionPolicyManager.cs" />
     <Compile Include="Scheduler.cs" />
