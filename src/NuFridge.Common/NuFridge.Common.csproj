@@ -109,6 +109,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>FileResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Jobs\ApplyRetentionPoliciesJob.cs" />
     <Compile Include="Jobs\CCNet\CCNetJob.cs" />
     <Compile Include="Jobs\CCNet\Octo\OctoHelper.cs" />

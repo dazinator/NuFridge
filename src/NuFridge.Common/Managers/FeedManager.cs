@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security;
 using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Web.Administration;
 using System.Configuration;
@@ -255,44 +257,32 @@ namespace NuFridge.Common.Manager
 
             RetentionPolicyManager.DeleteRetentionPolicy(feedName);
 
-            DirectoryInfo di = new DirectoryInfo(feedDirectory);
-            //Append the opposite of the read only attribute to the directory
-            di.Attributes &= ~FileAttributes.ReadOnly;
+            var files = Directory.GetFiles(feedDirectory);
 
-            foreach (string dirPath in Directory.GetDirectories(feedDirectory, "*", SearchOption.AllDirectories))
+            var lockedFiles = new List<string>();
+                
+                Parallel.ForEach(files, file =>
+                {
+                    if (FileHelper.IsFileLocked(file))
+                    {
+                        lockedFiles.Add(file);
+                    }
+                    else
+                    {
+                        File.Delete(file);
+                    }
+                });
+
+            foreach (var lockedFile in lockedFiles)
             {
-                DirectoryInfo directoryInfo = new DirectoryInfo(dirPath);
-                directoryInfo.Attributes &= ~FileAttributes.ReadOnly;
+                if (FileHelper.IsFileLocked(lockedFile))
+                {
+                    Thread.Sleep(100);
+                }
+                File.Delete(lockedFile);
             }
 
-            //Copy all the files & Replaces any files with the same name
-            foreach (string newPath in Directory.GetFiles(feedDirectory, "*.*", SearchOption.AllDirectories))
-            {
-                FileInfo fi = new FileInfo(newPath);
-                fi.Attributes &= ~FileAttributes.ReadOnly;
-            }
-
-
-
-            var parentFolders = Directory.GetDirectories(feedDirectory, "*", SearchOption.TopDirectoryOnly);
-
-            DeleteFilesInFolder(parentFolders);
-            Thread.Sleep(2500);
-
-            try
-            {
-                Directory.Delete(feedDirectory, true);
-            }
-            catch (IOException ex)
-            {
-                message = "An exception was thrown when deleting the feed directory: " + ex.Message;
-                return false;
-            }
-
-
-
-            //RefreshFeeds();
-            // RetentionPolicyManager.Instance.RefreshRetentionPolicies();
+           Directory.Delete(feedDirectory, true);
 
             message = "Successfully removed the feed and deleted all packages for " + feedName;
             return true;
