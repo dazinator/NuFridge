@@ -111,13 +111,6 @@
     </Compile>
     <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Jobs\ApplyRetentionPoliciesJob.cs" />
-    <Compile Include="Jobs\CCNet\CCNetJob.cs" />
-    <Compile Include="Jobs\CCNet\Octo\OctoHelper.cs" />
-    <Compile Include="Jobs\CCNet\Octo\OctoPackageVersionResolver.cs" />
-    <Compile Include="Jobs\CCNet\Octo\OctoProject.cs" />
-    <Compile Include="Jobs\CCNet\Octo\OctoReleasePlan.cs" />
-    <Compile Include="Jobs\CCNet\Octo\OctoReleasePlanItem.cs" />
-    <Compile Include="Jobs\CCNet\TFS\TFSHelper.cs" />
     <Compile Include="Jobs\ImportPackagesJob.cs" />
     <Compile Include="IIS\ApplicationInfo.cs" />
     <Compile Include="IIS\BindingInfo.cs" />
@@ -136,40 +129,7 @@
     <Compile Include="Scheduler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Jobs\CCNet\TFS\bin\Microsoft.TeamFoundation.Client.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Jobs\CCNet\TFS\bin\Microsoft.TeamFoundation.Common.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Jobs\CCNet\TFS\bin\Microsoft.TeamFoundation.Common.Library.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Jobs\CCNet\TFS\bin\Microsoft.TeamFoundation.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Jobs\CCNet\TFS\bin\Microsoft.TeamFoundation.VersionControl.Client.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Jobs\CCNet\TFS\bin\Microsoft.TeamFoundation.VersionControl.Common.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Jobs\CCNet\TFS\bin\Microsoft.TeamFoundation.VersionControl.Common.Integration.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Jobs\CCNet\TFS\bin\Microsoft.TeamFoundation.VersionControl.Controls.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Jobs\CCNet\TFS\bin\TF.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="app.config" />
-    <Content Include="Jobs\CCNet\Octo\bin\Octo.exe.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Jobs\CCNet\TFS\bin\TF.exe.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -181,11 +141,6 @@
       <Project>{81da5570-9dd9-4281-8d94-ca5edde46144}</Project>
       <Name>FeedManagerDataAccess</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Jobs\CCNet\Octo\bin\Octo.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FileResources.resx">
