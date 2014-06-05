@@ -18,5 +18,9 @@ namespace NuFridge.Common.Manager
             return Host;
         }
 
+        public string Url {
+            get { return string.Format("{0}://{1}:{2}", Protocol, GetFriendlyHostName(), EndPoint.Port); }
+        }
+
     }
 }

@@ -58,65 +58,56 @@ namespace NuFridge.Common.Manager
 
         public static bool CreateFeed(string feedName, out string message)
         {
+            var websiteManager = new WebsiteManager();
 
             try
             {
-                if (string.IsNullOrWhiteSpace(feedName))
-                {
-                    message = "Feed name is mandatory";
-                    return false;
-                }
-
-                if (!Regex.IsMatch(feedName, "^[a-zA-Z0-9.-]+$"))
-                {
-                    message = "Only alphanumeric characters are allowed in the feed name";
-                    return false;
-                }
+                if (!IsFeedNameValid(feedName, out message)) return false;
 
                 var nuFridgeWebsiteName = ConfigurationManager.AppSettings["NuFridge.Website.Name"];
                 var nuFridgePort = ConfigurationManager.AppSettings["NuFridge.Website.PortNumber"];
+
                 int nuFridgePortNumber;
                 if (!int.TryParse(nuFridgePort, out nuFridgePortNumber))
                 {
                     nuFridgePortNumber = WebsiteManager.DefaultWebsitePortNumber;
                 }
 
-                var websiteManager = new WebsiteManager();
+                WebsiteInfo website;
                 bool exists = websiteManager.WebsiteExists(nuFridgeWebsiteName);
                 if (!exists)
                 {
                     var websitePath = Path.GetDirectoryName(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile);
-                    var websiteInfo = new CreateWebsiteArgs(nuFridgeWebsiteName, websitePath);
-                    websiteInfo.HostName = "*";
-                    websiteInfo.PortNumber = nuFridgePortNumber;
-                    websiteManager.CreateWebsite(websiteInfo);
+                    var websiteInfo = new CreateWebsiteArgs(nuFridgeWebsiteName, websitePath)
+                        {
+                            HostName = "*",
+                            PortNumber = nuFridgePortNumber
+                        };
+                    website = websiteManager.CreateWebsite(websiteInfo);
+                }
+                else
+                {
+                    website = websiteManager.GetWebsite(nuFridgeWebsiteName);
                 }
 
-                var appPath = string.Format("/feeds/{0}", feedName);
+                var appPath = string.Format("/Feeds/{0}", feedName);
+
                 var applicationExists = websiteManager.ApplicationExists(nuFridgeWebsiteName, appPath);
                 if (applicationExists)
                 {
                     throw new Exception("Feed already exists at: " + appPath);
                 }
 
-                var website = websiteManager.GetWebsite(nuFridgeWebsiteName);
                 var binding = website.Bindings.FirstOrDefault();
                 if (binding == null)
                 {
                     throw new Exception("No IIS bindings found for " + nuFridgeWebsiteName);
                 }
-               
-                var rootWebsiteUrl = string.Format("{0}://{1}:{2}", binding.Protocol, binding.GetFriendlyHostName(), binding.EndPoint.Port);
-                
+
                 var repository = new MongoDbRepository<FeedEntity>();
-                repository.Insert(new FeedEntity(feedName, string.Format("{0}/Feeds/{1}", rootWebsiteUrl, feedName)));
+                repository.Insert(new FeedEntity(feedName, string.Format("{0}/Feeds/{1}", binding.Url, feedName)));
 
-                var feedRootFolder = ConfigurationManager.AppSettings["NuFridge.Feeds.Folder"];
-                if (!Path.IsPathRooted(feedRootFolder))
-                {
-                    feedRootFolder = Path.Combine(website.Applications[0].VirtualDirectories[0].PhysicalPath, feedRootFolder);
-                }
-
+                var feedRootFolder = GetRootFeedFolder(website);
                 var feedDirectory = Path.Combine(feedRootFolder, feedName);
 
                 if (Directory.Exists(feedDirectory))
@@ -132,61 +123,75 @@ namespace NuFridge.Common.Manager
                     throw new SecurityException(string.Format("The '{0}' user does not have write access to the '{1}' directory.", identityName, feedRootFolder));
                 }
 
-                try
-                {
-                    Directory.CreateDirectory(feedDirectory);
+                CreateFilesInFeed(feedDirectory);
 
-                    var resource = FileResources.Klondike;
+                websiteManager.CreateApplication(nuFridgeWebsiteName, appPath, feedDirectory);
 
-                    var stream = new MemoryStream(resource);
-                    var archive = new ZipArchive(stream);
-
-                    foreach (var entry in archive.Entries)
-                    {
-                        var directoryPath = Path.Combine(feedDirectory, Path.GetDirectoryName(entry.FullName));
-
-                        if (!Directory.Exists(directoryPath))
-                        {
-                            Directory.CreateDirectory(directoryPath);
-                        }
-
-                        var fileName = Path.Combine(directoryPath, entry.Name);
-
-                        using (var entryStream = entry.Open())
-                        {
-                            using (var outputStream = File.Create(fileName))
-                            {
-                                entryStream.CopyTo(outputStream);
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    message = "An exception was thrown when creating the feed directory: " + ex.Message;
-                    return false;
-                }
-
-                try
-                {
-                    string path = "/Feeds/" + feedName;
-                    websiteManager.CreateApplication(nuFridgeWebsiteName, path, feedDirectory);
-                }
-                catch (Exception ex)
-                {
-                    message = "An exception was thrown when adding the IIS application: " + ex.Message;
-                    return false;
-                }
-
-                //RetentionPolicyManager.Instance.RefreshRetentionPolicies();
                 message = "Successfully created a feed called " + feedName;
+
                 return true;
 
             }
             catch (Exception e)
             {
-                message = e.Message;
+                message = e.Message + Environment.NewLine + (e.StackTrace ?? "");
                 return false;
+            }
+        }
+
+        private static string GetRootFeedFolder(WebsiteInfo website)
+        {
+            var feedRootFolder = ConfigurationManager.AppSettings["NuFridge.Feeds.Folder"];
+            if (!Path.IsPathRooted(feedRootFolder))
+            {
+                feedRootFolder = Path.Combine(website.Applications[0].VirtualDirectories[0].PhysicalPath, feedRootFolder);
+            }
+            return feedRootFolder;
+        }
+
+        private static bool IsFeedNameValid(string feedName, out string message)
+        {
+            if (string.IsNullOrWhiteSpace(feedName))
+            {
+                message = "Feed name is mandatory";
+                return false;
+            }
+
+            if (!Regex.IsMatch(feedName, "^[a-zA-Z0-9.-]+$"))
+            {
+                message = "Only alphanumeric characters are allowed in the feed name";
+                return false;
+            }
+            return true;
+        }
+
+        private static void CreateFilesInFeed(string feedDirectory)
+        {
+            Directory.CreateDirectory(feedDirectory);
+
+            var resource = FileResources.Klondike;
+
+            var stream = new MemoryStream(resource);
+            var archive = new ZipArchive(stream);
+
+            foreach (var entry in archive.Entries)
+            {
+                var directoryPath = Path.Combine(feedDirectory, Path.GetDirectoryName(entry.FullName));
+
+                if (!Directory.Exists(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
+
+                var fileName = Path.Combine(directoryPath, entry.Name);
+
+                using (var entryStream = entry.Open())
+                {
+                    using (var outputStream = File.Create(fileName))
+                    {
+                        entryStream.CopyTo(outputStream);
+                    }
+                }
             }
         }
 
