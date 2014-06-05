@@ -96,6 +96,27 @@ namespace NuFridge.Common.Manager
             }
 
         }
+
+        public void DeleteApplication(string websiteName, string appPath)
+        {
+            using (var manager = new ServerManager())
+            {
+                var website = manager.Sites.FirstOrDefault(w => w.Name == websiteName);
+                if (website == null)
+                {
+                    throw new InvalidOperationException("A website with the name: " + websiteName + " doesn't exist.");
+                }
+
+                var application = website.Applications.FirstOrDefault(app => app.Path == appPath);
+                if (application == null)
+                {
+                    throw new InvalidOperationException("An application with the path: " + appPath + " doesn't exist.");
+                }
+
+                website.Applications.Remove(application);
+                manager.CommitChanges();
+            }
+        }
         
         public void CreateApplication(string websiteName, string path, string physicalPath)
         {

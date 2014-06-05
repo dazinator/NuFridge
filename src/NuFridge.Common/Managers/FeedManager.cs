@@ -203,20 +203,28 @@ namespace NuFridge.Common.Manager
         {
             if (!IsFeedNameValid(feedName, out message)) return false;
 
+            var websiteManager = new WebsiteManager();
+
             var nuFridgeWebsiteName = ConfigurationManager.AppSettings["NuFridge.Website.Name"];
 
-
-
-            ServerManager mgr = new ServerManager();
-
-            var site = mgr.Sites.FirstOrDefault(st => st.Name == nuFridgeWebsiteName);
-            if (site == null)
+            bool exists = websiteManager.WebsiteExists(nuFridgeWebsiteName);
+            if (!exists)
             {
-                message = "IIS Website not found for " + nuFridgeWebsiteName;
+                message = "Could not find a NuFridge website in IIS called '" + nuFridgeWebsiteName + "'";
                 return false;
             }
 
-            var application = site.Applications.FirstOrDefault(st => st.Path.ToLower() == string.Format("/feeds/{0}", feedName.ToLower()));
+            var website = websiteManager.GetWebsite(nuFridgeWebsiteName);
+            var appPath = string.Format("/Feeds/{0}", feedName);
+
+            var applicationExists = websiteManager.ApplicationExists(nuFridgeWebsiteName, appPath);
+            if (!applicationExists)
+            {
+                message = "No IIS application found for " + feedName;
+                return false;
+            }
+
+            var application = website.Applications.FirstOrDefault(app => app.Path == appPath);
             if (application == null)
             {
                 message = "No IIS application found for " + feedName;
@@ -232,37 +240,20 @@ namespace NuFridge.Common.Manager
 
             var identityName = WindowsIdentity.GetCurrent().Name;
 
-            var hasWriteAccess = DirectoryHelper.HasDeleteRights(feedDirectory, identityName);
-            if (!hasWriteAccess)
+            var hasDeleteAccess = DirectoryHelper.HasDeleteRights(feedDirectory, identityName);
+            if (!hasDeleteAccess)
             {
-                throw new SecurityException(string.Format("The '{0}' user does not have write access to the '{1}' directory.", identityName, feedDirectory));
+                throw new SecurityException(string.Format("The '{0}' user does not have delete rights for the '{1}' directory.", identityName, feedDirectory));
             }
 
             MongoDbRepository<FeedEntity> repository = new MongoDbRepository<FeedEntity>();
             var feed = repository.Get(fd => fd.Name == feedName).FirstOrDefault();
             repository.Delete(feed);
 
-            try
-            {
-                site.Applications.Remove(application);
-                mgr.CommitChanges();
-            }
-            catch (Exception ex)
-            {
-                message = "An exception was thrown when removing the IIS application (no packages have been deleted): " + ex.Message;
-                return false;
-            }
 
-            try
-            {
-                RetentionPolicyManager.DeleteRetentionPolicy(feedName);
-            }
-            catch (Exception ex)
-            {
-                message = "An exception was thrown when deleting the retention policy for the + " + feedName + " feed: " + ex.Message;
-                return false;
-            }
+            websiteManager.DeleteApplication(website.Name, appPath);
 
+            RetentionPolicyManager.DeleteRetentionPolicy(feedName);
 
             DirectoryInfo di = new DirectoryInfo(feedDirectory);
             //Append the opposite of the read only attribute to the directory
