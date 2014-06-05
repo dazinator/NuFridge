@@ -151,6 +151,8 @@ namespace NuFridge.Common.Manager
 
         private static bool IsFeedNameValid(string feedName, out string message)
         {
+            message = null;
+
             if (string.IsNullOrWhiteSpace(feedName))
             {
                 message = "Feed name is mandatory";
@@ -162,6 +164,7 @@ namespace NuFridge.Common.Manager
                 message = "Only alphanumeric characters are allowed in the feed name";
                 return false;
             }
+
             return true;
         }
 
@@ -198,12 +201,8 @@ namespace NuFridge.Common.Manager
 
         public static bool DeleteFeed(string feedName, out string message)
         {
+            if (!IsFeedNameValid(feedName, out message)) return false;
 
-            if (string.IsNullOrWhiteSpace(feedName))
-            {
-                message = "Feed name is mandatory";
-                return false;
-            }
             var nuFridgeWebsiteName = ConfigurationManager.AppSettings["NuFridge.Website.Name"];
 
 
