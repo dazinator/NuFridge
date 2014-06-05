@@ -26,27 +26,17 @@ namespace NuFridge.Common.Helpers
 
         public static bool DeleteFilesInFolder(string folder)
         {
-            var files = Directory.GetFiles(folder);
+            var files = Directory.GetFiles(folder, "*", SearchOption.AllDirectories);
 
             var lockedFiles = new List<string>();
 
             Parallel.ForEach(files, file =>
             {
-                if (FileHelper.IsFileLocked(file))
-                {
-                    lockedFiles.Add(file);
-                }
-                else
-                {
-                    File.Delete(file);
-                }
-
                 var success = DeleteFile(file, 0 , 1);
                 if (!success)
                 {
-                    
+                    lockedFiles.Add(file);
                 }
-
             });
 
             foreach (var lockedFile in lockedFiles)
@@ -63,7 +53,7 @@ namespace NuFridge.Common.Helpers
             {
                 currentRetryCount++;
 
-                if (currentRetryCount >= maxRetryCount)
+                if (currentRetryCount > maxRetryCount)
                 {
                     return false;
                 }
