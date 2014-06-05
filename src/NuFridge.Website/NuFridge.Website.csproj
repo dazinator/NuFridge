@@ -125,26 +125,58 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App\main.js" />
+    <Content Include="App\viewmodels\signin\signin.js" />
+    <Content Include="App\views\shell.html" />
+    <Content Include="App\viewmodels\shell.js" />
+    <Content Include="App\views\signin\signin.html" />
     <Content Include="Content\bootstrap-dialog.min.css" />
     <Content Include="Content\bootstrap-dialog.min.js" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.min.js" />
+    <Content Include="Content\durandal.css" />
     <Content Include="Content\jquery.dataTables.js" />
     <Content Include="Content\jquery.min.js" />
     <Content Include="Content\jquery.tooltipster.min.js" />
     <Content Include="Content\tooltipster.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Index.html" />
     <Content Include="InviteUsers.aspx" />
     <Content Include="Register.aspx" />
     <Content Include="RetentionPolicies.aspx" />
+    <Content Include="Scripts\almond-custom.js" />
+    <Content Include="Scripts\durandal\activator.js" />
+    <Content Include="Scripts\durandal\app.js" />
+    <Content Include="Scripts\durandal\binder.js" />
+    <Content Include="Scripts\durandal\composition.js" />
+    <Content Include="Scripts\durandal\events.js" />
+    <Content Include="Scripts\durandal\plugins\dialog.js" />
+    <Content Include="Scripts\durandal\plugins\history.js" />
+    <Content Include="Scripts\durandal\plugins\http.js" />
+    <Content Include="Scripts\durandal\plugins\observable.js" />
+    <Content Include="Scripts\durandal\plugins\router.js" />
+    <Content Include="Scripts\durandal\plugins\serializer.js" />
+    <Content Include="Scripts\durandal\plugins\widget.js" />
+    <Content Include="Scripts\durandal\system.js" />
+    <Content Include="Scripts\durandal\transitions\entrance.js" />
+    <Content Include="Scripts\durandal\viewEngine.js" />
+    <Content Include="Scripts\durandal\viewLocator.js" />
     <Content Include="Scripts\FeedServiceDebug.js" />
     <Content Include="Content\jquery.signalR-1.2.1.js" />
     <Content Include="Scripts\InviteUsers.js" />
+    <None Include="Scripts\jquery-1.9.1.intellisense.js" />
+    <Content Include="Scripts\jquery-1.9.1.js" />
+    <Content Include="Scripts\jquery-1.9.1.min.js" />
+    <Content Include="Scripts\knockout-2.3.0.debug.js" />
+    <Content Include="Scripts\knockout-2.3.0.js" />
     <Content Include="Scripts\Main.js" />
     <Content Include="Scripts\ManageFeeds.js" />
     <Content Include="Scripts\modernizr-2.7.2.js" />
+    <Content Include="Scripts\r.js" />
     <Content Include="Scripts\Register.js" />
+    <Content Include="Scripts\require.js" />
     <Content Include="Scripts\RetentionPolicies.js" />
+    <Content Include="Scripts\text.js" />
     <Content Include="Scripts\UserServiceDebug.js" />
     <Content Include="Services\FeedService.asmx" />
     <Content Include="Content\Site.css" />
@@ -230,6 +262,7 @@
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="Scripts\jquery-1.9.1.min.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
