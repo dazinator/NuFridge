@@ -126,10 +126,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\main.js" />
-    <Content Include="app\viewmodels\signin\signin.js" />
+    <Content Include="app\viewmodels\inviteusers.js" />
+    <Content Include="app\viewmodels\managefeeds.js" />
+    <Content Include="app\viewmodels\retentionpolicies.js" />
+    <Content Include="app\viewmodels\signin.js" />
+    <Content Include="app\views\inviteusers.html" />
+    <Content Include="app\views\managefeeds.html" />
+    <Content Include="app\views\retentionpolicies.html" />
     <Content Include="app\views\shell.html" />
     <Content Include="app\viewmodels\shell.js" />
-    <Content Include="app\views\signin\signin.html" />
+    <Content Include="app\views\signin.html" />
     <Content Include="Content\bootstrap-dialog.min.css" />
     <Content Include="Content\bootstrap-dialog.min.js" />
     <Content Include="Content\bootstrap.min.css" />
@@ -176,6 +182,7 @@
     <Content Include="lib\jquery\jquery-1.9.1.min.js" />
     <Content Include="lib\knockout\knockout-3.1.0.debug.js" />
     <Content Include="lib\knockout\knockout-3.1.0.js" />
+    <Content Include="lib\knockout\knockout.validation.js" />
     <Content Include="lib\require\almond-custom.js" />
     <Content Include="lib\require\r.js" />
     <Content Include="lib\require\require.js" />

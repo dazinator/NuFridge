@@ -8,8 +8,10 @@
         },
         activate: function () {
             router.map([
-                { route: '', title: 'Welcome', moduleId: 'viewmodels/signin/signin', nav: true },
-                { route: 'flickr', moduleId: 'viewmodels/flickr', nav: true }
+                 { route: '', title: 'Sign In', moduleId: 'viewmodels/signin', nav: false },
+                { route: 'Manage Feeds', moduleId: 'viewmodels/managefeeds', nav: true },
+            { route: 'Retention Policies', moduleId: 'viewmodels/retentionpolicies', nav: true },
+                        { route: 'Invite Users', moduleId: 'viewmodels/inviteusers', nav: true }
             ]).buildNavigationModel();
 
             return router.activate();
