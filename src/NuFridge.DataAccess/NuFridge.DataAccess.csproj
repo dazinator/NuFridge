@@ -67,10 +67,11 @@
     <Compile Include="Entity\AccountEntity.cs" />
     <Compile Include="Entity\AccountInviteEntity.cs" />
     <Compile Include="Entity\CCNet\CCNetProject.cs" />
+    <Compile Include="Entity\Feeds\IFeedEntity.cs" />
     <Compile Include="Entity\ImportPackagesHistoryEntity.cs" />
     <Compile Include="Entity\IEntityBase.cs" />
     <Compile Include="Entity\ExcludedPackageEntity.cs" />
-    <Compile Include="Entity\FeedEntity.cs" />
+    <Compile Include="Entity\Feeds\FeedEntity.cs" />
     <Compile Include="Entity\RetentionPolicyEntity.cs" />
     <Compile Include="Entity\RetentionPolicyHistoryEntity.cs" />
     <Compile Include="Repositories\IRepository.cs" />

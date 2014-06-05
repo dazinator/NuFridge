@@ -6,6 +6,7 @@ using System.Web.Services;
 
 using NuFridge.DataAccess.Entity;
 using NuFridge.Common.Manager;
+using NuFridge.DataAccess.Entity.Feeds;
 using NuFridge.DataAccess.Repositories;
 using MongoDB.Driver;
 using NuFridge.Website.Services.Messages;

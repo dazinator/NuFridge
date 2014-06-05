@@ -1,5 +1,6 @@
 using System.Runtime.Serialization;
 using NuFridge.DataAccess.Entity;
+using NuFridge.DataAccess.Entity.Feeds;
 
 namespace NuFridge.Website.Services.Messages
 {

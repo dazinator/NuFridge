@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 
-namespace NuFridge.DataAccess.Entity
+namespace NuFridge.DataAccess.Entity.Feeds
 {
     [Serializable]
-    public class FeedEntity : IEntityBase
+    public class FeedEntity : IEntityBase, IFeedEntity
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -32,6 +30,8 @@ namespace NuFridge.DataAccess.Entity
         {
             get { return BaseUrl + "/api/symbols"; }
         }
+
+       
 
         public FeedEntity(string name, string url)
         {

@@ -7,6 +7,7 @@ using System.Web;
 using Microsoft.Web.Administration;
 using System.Configuration;
 using NuFridge.DataAccess.Entity;
+using NuFridge.DataAccess.Entity.Feeds;
 using NuFridge.DataAccess.Repositories;
 using NuFridge.Common.Jobs;
 using Quartz;
