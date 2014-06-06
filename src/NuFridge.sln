@@ -11,28 +11,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuFridge.Common", "NuFridge
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuFridge.Tests", "NuFridge.Tests\NuFridge.Tests.csproj", "{C38F4542-1A22-4682-874C-BA592BD3A911}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuFridge.Website.MVC", "NuFridge.Website.MVC\NuFridge.Website.MVC.csproj", "{701F44F8-E838-4EA0-9581-0F9C96E823A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuFridge.Website.MVC.Tests", "NuFridge.Website.MVC.Tests\NuFridge.Website.MVC.Tests.csproj", "{05B65F33-2FF7-4E9A-A3D4-B78483ECF9F4}"
+EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 6
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://hv-sb-tfserver:8080/
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = NuFridge.Website\\NuFridge.Website.csproj
-		SccProjectName1 = NuFridge.Website
-		SccLocalPath1 = NuFridge.Website
-		SccProjectUniqueName2 = NuFridge.DataAccess\\NuFridge.DataAccess.csproj
-		SccProjectName2 = NuFridge.DataAccess
-		SccLocalPath2 = NuFridge.DataAccess
-		SccProjectUniqueName3 = NuFridge.Common\\NuFridge.Common.csproj
-		SccProjectName3 = NuFridge.Common
-		SccLocalPath3 = NuFridge.Common
-		SccProjectUniqueName4 = NuFridge.WindowsService\\NuFridge.WindowsService.csproj
-		SccProjectName4 = NuFridge.WindowsService
-		SccLocalPath4 = NuFridge.WindowsService
-		SccProjectUniqueName5 = NuFridge.Tests\\NuFridge.Tests.csproj
-		SccProjectName5 = NuFridge.Tests
-		SccLocalPath5 = NuFridge.Tests
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -58,6 +41,14 @@ Global
 		{C38F4542-1A22-4682-874C-BA592BD3A911}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C38F4542-1A22-4682-874C-BA592BD3A911}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C38F4542-1A22-4682-874C-BA592BD3A911}.Release|Any CPU.Build.0 = Release|Any CPU
+		{701F44F8-E838-4EA0-9581-0F9C96E823A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{701F44F8-E838-4EA0-9581-0F9C96E823A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{701F44F8-E838-4EA0-9581-0F9C96E823A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{701F44F8-E838-4EA0-9581-0F9C96E823A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05B65F33-2FF7-4E9A-A3D4-B78483ECF9F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05B65F33-2FF7-4E9A-A3D4-B78483ECF9F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05B65F33-2FF7-4E9A-A3D4-B78483ECF9F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05B65F33-2FF7-4E9A-A3D4-B78483ECF9F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
