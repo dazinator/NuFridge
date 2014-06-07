@@ -15,14 +15,13 @@ using Quartz.Impl;
 
 namespace NuFridge.Tests
 {
+    [Category("Integration Test")]
     [TestFixture]
     public class QuartzRemotingTests
     {
 
         private Process _Process = null;
         private ISchedulerFactory _SchedulerFactory = null;
-
-
 
         [TestFixtureSetUp]
         public void SetUp()
@@ -33,7 +32,7 @@ namespace NuFridge.Tests
             dirInfo = dirInfo.Parent;
 
             var path = System.IO.Path.Combine(dirInfo.FullName,
-                                              @"FeedManagerService\bin\Debug\FeedManagerWindowsService.exe");
+                                              @"NuFridge.WindowsService\bin\Debug\NuFridge.WindowsService.exe");
 
             var startInfo = new ProcessStartInfo(path);
             _Process = Process.Start(startInfo);
@@ -61,49 +60,6 @@ namespace NuFridge.Tests
             IScheduler sched = _SchedulerFactory.GetScheduler();
             Assert.That(sched, Is.Not.Null);
         }
-
-        [Test]
-        public void CanCreateJob()
-        {
-
-            var mock = new Mock<IJob>();
-
-            int executeCount = 0;
-
-            mock.Setup(framework => framework.Execute(It.IsAny<IJobExecutionContext>()));
-
-            // construct a scheduler factory
-            ISchedulerFactory schedFact = new StdSchedulerFactory();
-
-            // get a scheduler
-            IScheduler sched = schedFact.GetScheduler();
-            sched.Start();
-
-            IJobDetail job = JobBuilder.Create<ImportPackagesJob>()
-                .WithIdentity("importpackages", "group1") // name "myJob", group "group1"
-                .UsingJobData("nugetfeedurl", "http://somepackage/nuget")
-                .Build();
-
-            ITrigger trigger = TriggerBuilder.Create()
-              .WithIdentity("importpackagestrigger", "group1")
-              .StartNow()
-              .WithSimpleSchedule(x => x
-                  .WithRepeatCount(0))
-              .Build();
-
-            sched.ScheduleJob(job, trigger);
-
-            // give job time to run.
-            Thread.Sleep(5000);
-
-            mock.Verify(x => x.Execute(It.IsAny<IJobExecutionContext>()), Times.AtMost(1));
-
-
-
-
-
-        }
-
 
         [TestFixtureTearDown]
         public void TearDown()

@@ -122,6 +122,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />
+    <Content Include="css\jasmine.css" />
+    <Content Include="ViewModels\ExampleModelTest.js" />
+    <Content Include="Scripts\jasmine-html.js" />
+    <Content Include="Scripts\jasmine.js" />
+    <Content Include="ViewModels\ExampleModel.js" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

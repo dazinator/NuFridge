@@ -139,7 +139,7 @@
   <ItemGroup>
     <ProjectReference Include="..\NuFridge.DataAccess\NuFridge.DataAccess.csproj">
       <Project>{81da5570-9dd9-4281-8d94-ca5edde46144}</Project>
-      <Name>FeedManagerDataAccess</Name>
+      <Name>NuFridge.DataAccess</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

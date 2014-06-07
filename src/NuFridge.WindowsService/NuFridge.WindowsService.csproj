@@ -113,11 +113,11 @@
   <ItemGroup>
     <ProjectReference Include="..\NuFridge.Common\NuFridge.Common.csproj">
       <Project>{edf3ae48-9747-45ad-8ab5-5d83f0822701}</Project>
-      <Name>FeedManagerCommon</Name>
+      <Name>NuFridge.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\NuFridge.DataAccess\NuFridge.DataAccess.csproj">
       <Project>{81da5570-9dd9-4281-8d94-ca5edde46144}</Project>
-      <Name>FeedManagerDataAccess</Name>
+      <Name>NuFridge.DataAccess</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
