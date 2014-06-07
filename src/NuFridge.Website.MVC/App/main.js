@@ -3,7 +3,9 @@
         'text': '../Scripts/text',
         'durandal': '../Scripts/durandal',
         'plugins': '../Scripts/durandal/plugins',
-        'transitions': '../Scripts/durandal/transitions'
+        'transitions': '../Scripts/durandal/transitions',
+        'knockout': '../Scripts/knockout-2.3.0',
+        'jQuery': '../Scripts/jquery-1.9.1'
     }
 });
 
@@ -15,7 +17,7 @@ define(['durandal/system', 'durandal/app', 'durandal/viewLocator'],  function (s
     system.debug(true);
     //>>excludeEnd("build");
 
-    app.title = 'Durandal Starter Kit';
+    app.title = 'NuFridge';
 
     app.configurePlugins({
         router: true,

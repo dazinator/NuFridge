@@ -8,11 +8,11 @@
         },
         activate: function () {
             router.map([
-                { route: '', title:'Welcome', moduleId: 'viewmodels/welcome', nav: true },
-                { route: 'flickr', moduleId: 'viewmodels/flickr', nav: true }
+                { route: '', title:'Sign In', moduleId: 'viewmodels/signin', nav: false },
+                { route: 'feeds', moduleId: 'viewmodels/feeds', nav: true }
             ]).buildNavigationModel();
 
-            return router.activate();
+            return router.activate('signin', 'entrance');
         }
     };
 });

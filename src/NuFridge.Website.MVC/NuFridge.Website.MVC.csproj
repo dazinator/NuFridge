@@ -202,14 +202,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App\main.js" />
-    <Content Include="App\viewmodels\flickr.js" />
+    <Content Include="App\viewmodels\feeds.js" />
     <Content Include="App\viewmodels\shell.js" />
-    <Content Include="App\viewmodels\welcome.js" />
-    <None Include="App\views\detail.cshtml" />
-    <None Include="App\views\flickr.cshtml" />
+    <Content Include="App\viewmodels\signin.js" />
+    <None Include="App\views\feeds.cshtml" />
     <None Include="App\views\shell.cshtml" />
     <Content Include="App\views\Web.config" />
-    <None Include="App\views\welcome.cshtml" />
+    <None Include="App\views\signin.cshtml" />
     <Content Include="Content\bootstrap-responsive.css" />
     <Content Include="Content\bootstrap-responsive.min.css" />
     <Content Include="Content\bootstrap.css" />

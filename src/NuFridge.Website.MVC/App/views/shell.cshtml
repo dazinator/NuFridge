@@ -1,9 +1,9 @@
 ﻿<div>
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
-            <a class="brand" data-bind="attr: { href: router.navigationModel()[0].hash }">
+            <a class="brand" data-bind="attr: { href: '' }">
                 <i class="icon-home"></i>
-                <span>Durandal</span>
+                <span>NuFridge</span>
             </a>
             <ul class="nav" data-bind="foreach: router.navigationModel">
                 <li data-bind="css: { active: isActive }">
@@ -13,8 +13,8 @@
             <div class="loader pull-right" data-bind="css: { active: router.isNavigating }">
                 <i class="icon-spinner icon-2x icon-spin"></i>
             </div>
-            <form class="navbar-search pull-right" data-bind="submit:search">
-                <input type="text" class="search-query" placeholder="Search">
+            <form class="nav pull-right">
+                      <p style="padding:10px 15px 10px;">Welcome, <a href="#">Anonymous</a></p>
             </form>
         </div>
     </div>
