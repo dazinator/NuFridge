@@ -135,3 +135,13 @@ width:1170px;
         top: 0;
     }
 }
+
+li.active {
+font-weight:bold;
+}
+
+#nufridgeLogo {
+vertical-align: top;
+width: 125px;
+margin: 5px;
+}
