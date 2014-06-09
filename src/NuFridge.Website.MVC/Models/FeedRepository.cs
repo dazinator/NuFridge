@@ -12,9 +12,9 @@ namespace NuFridge.Website.MVC.Models
 
         public FeedRepository()
         {
-            Add(new Feed { Name = "Test Feed 1" });
-            Add(new Feed { Name = "Test Feed 2" });
-            Add(new Feed { Name = "Test Feed 3" });
+            Add(new Feed { Id = "3ddcf354-8743-49ba-9858-19bd9472c7ce", Name = "Test Feed 1" });
+            Add(new Feed { Id = "66c79086-38df-4a75-8f2e-4c6c974243ac", Name = "Test Feed 2" });
+            Add(new Feed { Id = "4590252a-4b95-43c3-a5d3-330838021833", Name = "Test Feed 3" });
         }
 
         public IEnumerable<Feed> GetAll()
