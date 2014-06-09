@@ -12,8 +12,7 @@
         },
         activate: function () {
             router.map([
-                { route: '', title: 'Home', moduleId: 'viewmodels/home', nav: false },
-                { route: 'home', title: 'Home', moduleId: 'viewmodels/home', nav: true, glyph: 'glyphicon glyphicon-home' },
+                { route: '', title: 'Home', moduleId: 'viewmodels/home', nav: true, glyph: 'glyphicon glyphicon-home' },
                 { route: 'signin', title:'Sign In', moduleId: 'viewmodels/signin', nav: false },
                 { route: 'feeds', title: 'Feeds', moduleId: 'viewmodels/viewfeeds', nav: true, glyph: 'glyphicon glyphicon-list' },
                 { route: 'feeds/edit/:id', title: 'Edit Feed', moduleId: 'viewmodels/editfeed', nav: false },
