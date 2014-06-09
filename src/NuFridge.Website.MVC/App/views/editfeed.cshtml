@@ -3,7 +3,14 @@
         <h3 data-bind="text: FeedName()"></h3>
     </div>
     <div class="modal-body">
-        <p>Hello!</p> 
+     <form role="form">
+  <div class="form-group">
+    <p>Feed Name:</p>
+    <input type="text" class="form-control" id="feedNameInput" data-bind="value: FeedName()">
+  </div>
+           <button type="submit" class="btn btn-danger" data-bind="click: Cancel">Cancel</button>
+  <button type="submit" class="btn btn-primary" data-bind="click: SaveChanges">Save</button>
+</form>
     </div>
 </div>
     </section>

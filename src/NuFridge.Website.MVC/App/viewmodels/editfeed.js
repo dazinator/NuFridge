@@ -31,6 +31,14 @@
 
     }
 
+    ctor.prototype.SaveChanges = function () {
+        router.navigate('#feeds');
+    };
+
+    ctor.prototype.Cancel = function () {
+        router.navigate('#feeds');
+    }
+
 
 
     return ctor;
