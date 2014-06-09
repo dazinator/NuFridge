@@ -1,0 +1,12 @@
+﻿<section>
+    <h2 data-bind="html: DisplayName"></h2>
+    <div class="row-fluid">
+        <ul class="thumbnails" data-bind="foreach: Feeds()">
+            <li>
+                <a href="#" class="thumbnail" data-bind="attr: { href: EditUrl, title: Name }, text: Name">
+                  
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>

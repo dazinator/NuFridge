@@ -9,10 +9,11 @@
         activate: function () {
             router.map([
                 { route: '', title:'Sign In', moduleId: 'viewmodels/signin', nav: false },
-                { route: 'feeds', moduleId: 'viewmodels/feeds', nav: true }
+                { route: 'feeds', moduleId: 'viewmodels/viewfeeds', nav: true },
+                {route: 'feeds/edit/:id', moduleId: 'viewmodels/editfeed', nav: false}
             ]).buildNavigationModel();
 
-            return router.activate('signin', 'entrance');
+            return router.activate('viewmodels/signin', 'entrance');
         }
     };
 });

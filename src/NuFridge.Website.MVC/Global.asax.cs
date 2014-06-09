@@ -31,12 +31,7 @@ namespace NuFridge.Website.MVC
 
         public static void RegisterRoutes(RouteCollection routes)
         {
-
-            routes.MapRoute(
-    name: "Durandal App Views",
-    url: "App/views/{viewName}.html",
-    defaults: new { controller = "DurandalView", action = "Get" }
-);
+            routes.MapRoute(name: "Durandal App Views", url: "App/views/{viewName}.html", defaults: new { controller = "DurandalView", action = "Get" });
         }
     }
 }

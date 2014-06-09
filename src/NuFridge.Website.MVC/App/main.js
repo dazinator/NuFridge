@@ -5,6 +5,7 @@
         'plugins': '../Scripts/durandal/plugins',
         'transitions': '../Scripts/durandal/transitions',
         'knockout': '../Scripts/knockout-2.3.0',
+        'knockoutmapping': '../Scripts/knockout.mapping',
         'jQuery': '../Scripts/jquery-1.9.1'
     }
 });
@@ -12,7 +13,10 @@
 define('jquery', function() { return jQuery; });
 define('knockout', ko);
 
-define(['durandal/system', 'durandal/app', 'durandal/viewLocator'],  function (system, app, viewLocator) {
+define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'knockoutmapping'], function (system, app, viewLocator, komapping) {
+
+    ko.mapping = komapping;
+
     //>>excludeStart("build", true);
     system.debug(true);
     //>>excludeEnd("build");
