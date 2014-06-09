@@ -11,18 +11,23 @@ namespace NuFridge.Website.MVC.Controllers
 {
     public class FeedsController : ApiController
     {
-        static readonly IFeedRepository repository = new FeedRepository();
+        private IFeedRepository _repository;
+
+        public FeedsController(IFeedRepository repository)
+        {
+            _repository = repository;
+        }
 
                 [System.Web.Mvc.HttpGet]
         public IEnumerable<Feed> GetAllFeeds()
         {
-            return repository.GetAll();
+            return _repository.GetAll();
         }
 
         [System.Web.Mvc.HttpGet]
         public Feed GetFeed(string id)
         {
-            Feed item = repository.Get(id);
+            Feed item = _repository.Get(id);
             if (item == null)
             {
                     throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -33,7 +38,7 @@ namespace NuFridge.Website.MVC.Controllers
         [System.Web.Mvc.HttpPost]
         public HttpResponseMessage PostFeed(Feed item)
         {
-            item = repository.Add(item);
+            item = _repository.Add(item);
             var response = Request.CreateResponse<Feed>(HttpStatusCode.Created, item);
 
             string uri = Url.Link("DefaultApi", new { id = item.Id });
@@ -45,7 +50,7 @@ namespace NuFridge.Website.MVC.Controllers
         public void PutFeed(string id, Feed feed)
         {
             feed.Id = id;
-            if (!repository.Update(feed))
+            if (!_repository.Update(feed))
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
@@ -54,13 +59,13 @@ namespace NuFridge.Website.MVC.Controllers
         [System.Web.Mvc.HttpDelete]
         public void DeleteFeed(string id)
         {
-            Feed item = repository.Get(id);
+            Feed item = _repository.Get(id);
             if (item == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            repository.Remove(id);
+            _repository.Remove(id);
         }
     }
 }

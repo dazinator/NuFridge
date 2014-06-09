@@ -1,6 +1,11 @@
-﻿using System;
+﻿using Ninject;
+using Ninject.Web.Common;
+using NuFridge.Website.MVC.App_Start;
+using NuFridge.Website.MVC.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
@@ -12,8 +17,9 @@ namespace NuFridge.Website.MVC
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
 
-    public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : HttpApplication
     {
+
         protected void Application_Start()
         {
             RegisterRoutes(RouteTable.Routes);
@@ -25,13 +31,12 @@ namespace NuFridge.Website.MVC
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AuthConfig.RegisterAuth();
-
-
         }
 
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.MapRoute(name: "Durandal App Views", url: "App/views/{viewName}.html", defaults: new { controller = "DurandalView", action = "Get" });
         }
+
     }
 }
