@@ -1,4 +1,4 @@
-﻿define(['plugins/router', 'durandal/app'], function (router, app) {
+﻿define(['plugins/router', 'durandal/app', 'viewmodels/shell'], function (router, app, shell) {
     
     var ctor = function () {
         this.DisplayName = ko.observable('View Feeds');
@@ -18,6 +18,7 @@
     };
 
     ctor.prototype.activate = function () {
+        shell.ShowNavigation(true);
         var self = this;
 
         $.ajax({
@@ -29,5 +30,8 @@
         });
 
     }
+
+
+
     return ctor;
 });

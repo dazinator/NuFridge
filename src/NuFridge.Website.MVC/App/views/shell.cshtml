@@ -1,23 +1,34 @@
 ﻿<div>
-    <div class="navbar navbar-fixed-top">
-        <div class="navbar-inner">
-            <a class="brand" data-bind="attr: { href: '' }">
-                <i class="icon-home"></i>
-                <span>NuFridge</span>
-            </a>
-            <ul class="nav" data-bind="foreach: router.navigationModel">
+<nav class="navbar navbar-default" role="navigation" data-bind="visible: ShowNavigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span><span
+                    class="icon-bar"></span><span class="icon-bar"></span>
+            </button>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                 <ul class="nav navbar-nav navbar-center"" data-bind="foreach: router.navigationModel">
                 <li data-bind="css: { active: isActive }">
-                    <a data-bind="attr: { href: hash }, html: title"></a>
+                    <a data-bind="attr: { href: hash }"><span data-bind="css: glyph"></span><span data-bind="html: title"></span></a>
                 </li>
             </ul>
-            <div class="loader pull-right" data-bind="css: { active: router.isNavigating }">
-                <img src="~/Content/images/spin.GIF" width="25" height="25" />
-            </div>
-            <form class="nav pull-right">
-                      <p style="padding:10px 15px 10px;">Welcome, <a href="#">Anonymous</a></p>
-            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><span
+                    class="glyphicon glyphicon-user"></span>Administrator<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#settings"><span class="glyphicon glyphicon-cog"></span>Settings</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#logout"><span class="glyphicon glyphicon-off"></span>Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
         </div>
-    </div>
-    <br />
-    <div class="container-fluid page-host" data-bind="router: { transition:'entrance', cacheViews:true }"></div>
+        <!-- /.navbar-collapse -->
+    </nav>
+    <h2 id="pageTitle" data-bind="text: PageTitle()">Test</h2>
+      <div class="container">
+    <div class="container-fluid page-host" data-bind="router: { transition: 'entrance', cacheViews: true }"></div>
+      </div>
 </div>

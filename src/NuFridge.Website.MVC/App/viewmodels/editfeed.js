@@ -1,4 +1,4 @@
-﻿define(['plugins/router', 'durandal/app'], function (router, app) {
+﻿define(['plugins/router', 'durandal/app', 'viewmodels/shell'], function (router, app, shell) {
 
     var ctor = function () {
         this.FeedId = ko.observable();
@@ -6,6 +6,8 @@
     };
 
     ctor.prototype.activate = function () {
+
+        shell.ShowNavigation(true);
 
         var self = this;
 
@@ -24,11 +26,15 @@
                 self.FeedName(item.Name);
 
             });
-                    };
+        };
 
 
     }
 
+
+
     return ctor;
+
+
 
 });

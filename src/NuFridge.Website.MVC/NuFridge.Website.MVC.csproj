@@ -229,11 +229,15 @@
   <ItemGroup>
     <Content Include="App\main.js" />
     <Content Include="App\viewmodels\editfeed.js" />
+    <Content Include="App\viewmodels\home.js" />
+    <Content Include="App\viewmodels\viewretentionpolicies.js" />
     <Content Include="App\viewmodels\shell.js" />
     <Content Include="App\viewmodels\signin.js" />
     <Content Include="App\viewmodels\viewfeeds.js" />
     <Content Include="App\views\editfeed.cshtml" />
     <None Include="App\views\shell.cshtml" />
+    <None Include="App\views\home.cshtml" />
+    <None Include="App\views\viewretentionpolicies.cshtml" />
     <Content Include="App\views\Web.config" />
     <None Include="App\views\signin.cshtml" />
     <Content Include="Content\bootstrap-responsive.css" />
@@ -252,7 +256,6 @@
     <Content Include="Content\images\icon.png" />
     <Content Include="Content\images\ios-startup-image-landscape.png" />
     <Content Include="Content\images\ios-startup-image-portrait.png" />
-    <Content Include="Content\starterkit.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -335,6 +338,7 @@
     <Content Include="weyland-config.js" />
     <Content Include="readme.md" />
     <Content Include="App\views\viewfeeds.cshtml" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

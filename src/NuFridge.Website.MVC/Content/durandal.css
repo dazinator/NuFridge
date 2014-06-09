@@ -69,3 +69,69 @@
     -moz-border-radius: 6px;
     border-radius: 6px;
 }
+
+.label,.glyphicon { margin-right:5px; }
+
+#loginModal .modal-body {
+height:250px;
+}
+
+.navbar-collapse.collapse {
+        text-align: center; /* Set this */
+        display: block !important;
+        height: auto !important;
+        padding-bottom: 0;
+        overflow: visible !important;
+}
+
+/* This should be around line 4866 in your bootstrap.css */
+.navbar-nav {
+    display: inline-block;
+    float: none;
+    margin: 0;
+}
+
+#pageTitle {
+margin-right: auto;
+margin-left: auto;
+padding-left: 25px;
+padding-right: 15px;
+width:1170px;
+}
+
+.splash {
+    text-align: center;
+    margin: 10% 0 0 0;
+}
+
+.splash .message {
+    font-size: 5em;
+    line-height: 1.5em;
+    -webkit-text-shadow: rgba(0, 0, 0, 0.5) 0 0 15px;
+    text-shadow: rgba(0, 0, 0, 0.5) 0 0 15px;
+    text-transform: uppercase;
+}
+
+.splash .icon-spinner {
+    text-align: center;
+    display: inline-block;
+    font-size: 5em;
+    margin-top: 50px;
+}
+
+
+
+.loader {
+    margin: 6px 8px 4px 8px;
+    visibility: hidden;
+}
+
+.loader.active {
+    visibility: visible;
+}
+
+@media (max-width: 979px) {
+    .page-host {
+        top: 0;
+    }
+}

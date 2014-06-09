@@ -1,19 +1,21 @@
-﻿define(['plugins/router', 'durandal/app', 'knockout'], function (router, app, ko) {
+﻿define(['plugins/router', 'durandal/app', 'knockout', 'viewmodels/shell'], function (router, app, ko, shell) {
     var ctor = function () {
         var self = this;
         self.SignInVisible = ko.observable(true);
 
         self.SignIn = function () {
-            router.navigate('feeds');
+            router.navigate('home');
         }
 
         self.Register = function () {
-            router.navigate('feeds');
+            router.navigate('home');
         }
 
         self.GetHelp = function () {
-            router.navigate('feeds');
+            router.navigate('home');
         }
+
+        shell.ShowNavigation(false);
     };
 
     //Note: This module exports a function. That means that you, the developer, can create multiple instances.

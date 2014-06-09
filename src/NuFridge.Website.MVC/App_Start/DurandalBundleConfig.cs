@@ -21,7 +21,6 @@ namespace NuFridge.Website.MVC {
           .Include("~/Content/bootstrap-responsive.min.css")
           .Include("~/Content/font-awesome.min.css")
 		  .Include("~/Content/durandal.css")
-          .Include("~/Content/starterkit.css")
         );
     }
 

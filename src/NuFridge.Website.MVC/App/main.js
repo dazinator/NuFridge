@@ -17,6 +17,22 @@ define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'knockoutmapp
 
     ko.mapping = komapping;
 
+    ko.bindingHandlers.href = {
+        update: function (element, valueAccessor) {
+            ko.bindingHandlers.attr.update(element, function () {
+                return { href: valueAccessor() }
+            });
+        }
+    };
+
+    ko.bindingHandlers.src = {
+        update: function (element, valueAccessor) {
+            ko.bindingHandlers.attr.update(element, function () {
+                return { src: valueAccessor() }
+            });
+        }
+    };
+
     //>>excludeStart("build", true);
     system.debug(true);
     //>>excludeEnd("build");

@@ -1,16 +1,23 @@
-﻿define(['plugins/router', 'durandal/app'], function (router, app) {
+﻿define(['plugins/router', 'durandal/app', 'knockout'], function (router, app, ko) {
     return {
+        ShowNavigation: ko.observable(true),
         router: router,
-        search: function() {
-            //It's really easy to show a message box.
-            //You can add custom options too. Also, it returns a promise for the user's response.
-            app.showMessage('Search not yet implemented...');
+        PageTitle: function() {
+            var activeInstruction = router.activeInstruction();
+            if (activeInstruction)
+            {
+                return activeInstruction.config.title;
+            }
+            return null;
         },
         activate: function () {
             router.map([
-                { route: '', title:'Sign In', moduleId: 'viewmodels/signin', nav: false },
-                { route: 'feeds', moduleId: 'viewmodels/viewfeeds', nav: true },
-                {route: 'feeds/edit/:id', moduleId: 'viewmodels/editfeed', nav: false}
+                { route: '', title: 'Home', moduleId: 'viewmodels/home', nav: false },
+                { route: 'home', title: 'Home', moduleId: 'viewmodels/home', nav: true, glyph: 'glyphicon glyphicon-home' },
+                { route: 'signin', title:'Sign In', moduleId: 'viewmodels/signin', nav: false },
+                { route: 'feeds', title: 'Feeds', moduleId: 'viewmodels/viewfeeds', nav: true, glyph: 'glyphicon glyphicon-list' },
+                { route: 'feeds/edit/:id', title: 'Edit Feed', moduleId: 'viewmodels/editfeed', nav: false },
+                { route: 'retentionpolicies', title: 'Retention Policies', moduleId: 'viewmodels/viewretentionpolicies', nav: true, glyph: 'glyphicon glyphicon-calendar' }
             ]).buildNavigationModel();
 
             return router.activate('viewmodels/signin', 'entrance');
