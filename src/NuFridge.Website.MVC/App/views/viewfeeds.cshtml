@@ -1,11 +1,10 @@
 ﻿<section>
-    <div class="row-fluid">
-        <ul class="thumbnails" data-bind="foreach: Feeds()">
+    <div class="row">
+        <ul class="ds-btn" data-bind="foreach: Feeds()">
             <li>
-                <a href="#" class="thumbnail" data-bind="attr: { href: EditUrl, title: Name }, text: Name">
-                  
-                </a>
+                <a class="btn btn-lg btn-primary" data-bind="attr: { href: EditUrl, title: Name }">
+                    <i class="glyphicon glyphicon-briefcase pull-left"></i><span><span data-bind="text: Name"></span></span></a>
+
             </li>
         </ul>
-    </div>
 </section>
