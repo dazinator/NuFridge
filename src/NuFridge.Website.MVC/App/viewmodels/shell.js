@@ -15,7 +15,8 @@
                 { route: '', title: 'Home', moduleId: 'viewmodels/home', nav: true, glyph: 'glyphicon glyphicon-home' },
                 { route: 'signin', title:'Sign In', moduleId: 'viewmodels/signin', nav: false },
                 { route: 'feeds', title: 'Feeds', moduleId: 'viewmodels/viewfeeds', nav: true, glyph: 'glyphicon glyphicon-list' },
-                { route: 'feeds/edit/:id', title: 'Edit Feed', moduleId: 'viewmodels/editfeed', nav: false },
+                { route: 'feeds/edit/:id', title: 'Edit Feed', moduleId: 'viewmodels/addeditfeed', nav: false },
+                { route: 'feeds/create', title: 'Add Feed', moduleId: 'viewmodels/addeditfeed', nav: false },
                 { route: 'retentionpolicies', title: 'Retention Policies', moduleId: 'viewmodels/viewretentionpolicies', nav: true, glyph: 'glyphicon glyphicon-calendar' }
             ]).buildNavigationModel();
 

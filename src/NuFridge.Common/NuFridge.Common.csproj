@@ -43,9 +43,6 @@
     <Reference Include="Common.Logging.Core">
       <HintPath>..\packages\Common.Logging.Core.2.2.0\lib\net40\Common.Logging.Core.dll</HintPath>
     </Reference>
-    <Reference Include="ExtendedMongoMembership">
-      <HintPath>..\packages\ExtMongoMembership.1.7.0-beta\lib\ExtendedMongoMembership.dll</HintPath>
-    </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
@@ -118,7 +115,7 @@
     <Compile Include="Managers\FeedManager.cs" />
     <Compile Include="IIS\HttpProtocol.cs" />
     <Compile Include="Managers\InviteManager.cs" />
-    <Compile Include="Managers\AccountManager.cs" />
+    <None Include="Managers\AccountManager.cs" />
     <Compile Include="Managers\ScheduleManager.cs" />
     <Compile Include="IIS\VirtualDirectoryInfo.cs" />
     <Compile Include="IIS\WebsiteInfo.cs" />

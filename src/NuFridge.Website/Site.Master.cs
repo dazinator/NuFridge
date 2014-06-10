@@ -32,7 +32,7 @@ namespace NuFridge.Website
 
         protected void btnSignIn_Click(object sender, EventArgs e)
         {
-            new AccountManager().SignIn(loginEmailAddress.Text, loginPassword.Text, loginRememberMe.Checked);
+           // new AccountManager().SignIn(loginEmailAddress.Text, loginPassword.Text, loginRememberMe.Checked);
 
             Response.Redirect(Request.Url.ToString());
         }

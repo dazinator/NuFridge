@@ -1,10 +1,20 @@
-﻿<section>
+﻿<section class="viewFeedsSection">
     <div class="row">
+        <p>This page allows you to manage the feeds available on NuFridge.</p>
+        <button type="submit" class="btn btn-info addFeedButton" data-bind="click: AddFeed">Add Feed</button>
+    </div>
+    <div class="row">
+        <!-- ko if: Feeds().length > 0 -->
         <ul class="ds-btn" data-bind="foreach: Feeds()">
             <li>
                 <a class="btn btn-lg btn-primary" data-bind="attr: { href: EditUrl, title: Name }">
                     <i class="glyphicon glyphicon-briefcase pull-left"></i><span><span data-bind="text: Name"></span></span></a>
-
             </li>
         </ul>
+        <!-- /ko -->
+        <!-- ko if: Feeds().length <= 0 -->
+        <br />
+        <p>No feeds could be found.</p>
+        <!-- /ko -->
+    </div>
 </section>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using NuFridge.DataAccess.Repositories;
 using NuFridge.Website.MVC.Models;
 using System;
 using System.Collections.Generic;
@@ -11,22 +12,22 @@ namespace NuFridge.Website.MVC.Tests.Controllers
     [TestClass]
     public class FeedsControllerTest
     {
-        private Mock<IFeedRepository> _repository;
+        private Mock<IRepository<Feed>> _repository;
         private List<Feed> feedsInMemory;
 
         [TestInitialize]
         public void Configure()
         {
-            _repository = new Mock<IFeedRepository>();
+            _repository = new Mock<IRepository<Feed>>();
 
             feedsInMemory = new List<Feed>()
             {
-                new Feed() {Id = Guid.NewGuid().ToString(), Name = "Test Feed 1"},
-                new Feed() {Id = Guid.NewGuid().ToString(), Name = "Test Feed 2"},
-                new Feed() {Id = Guid.NewGuid().ToString(), Name = "Test Feed 3"},
-                new Feed() {Id = Guid.NewGuid().ToString(), Name = "Test Feed 4"},
-                new Feed() {Id = Guid.NewGuid().ToString(), Name = "Test Feed 5"},
-                new Feed() {Id = Guid.NewGuid().ToString(), Name = "Test Feed 6"}
+                new Feed() {Id = Guid.NewGuid(), Name = "Test Feed 1"},
+                new Feed() {Id = Guid.NewGuid(), Name = "Test Feed 2"},
+                new Feed() {Id = Guid.NewGuid(), Name = "Test Feed 3"},
+                new Feed() {Id = Guid.NewGuid(), Name = "Test Feed 4"},
+                new Feed() {Id = Guid.NewGuid(), Name = "Test Feed 5"},
+                new Feed() {Id = Guid.NewGuid(), Name = "Test Feed 6"}
             };
         }
 
@@ -34,7 +35,7 @@ namespace NuFridge.Website.MVC.Tests.Controllers
         [TestMethod]
         public void AddFeedTest()
         {
-            _repository.Setup(rep => rep.Add(It.IsAny<Feed>())).Callback((Feed fd) => 
+            _repository.Setup(rep => rep.Insert(It.IsAny<Feed>())).Callback((Feed fd) => 
                 {
                     feedsInMemory.Add(fd);
                 });
@@ -42,10 +43,10 @@ namespace NuFridge.Website.MVC.Tests.Controllers
             var beforeAddCountOfFeeds = feedsInMemory.Count();
 
             Feed feed = new Feed();
-            feed.Id = Guid.NewGuid().ToString();
+            feed.Id = Guid.NewGuid();
             feed.Name = "Add Feed Test";
 
-            _repository.Object.Add(feed);
+            _repository.Object.Insert(feed);
 
             var afterAddCountOfFeeds = feedsInMemory.Count();
 
@@ -69,9 +70,9 @@ namespace NuFridge.Website.MVC.Tests.Controllers
         [TestMethod]
         public void GetFeedTest()
         {
-            _repository.Setup(rep => rep.Get(It.IsAny<string>())).Returns((string i) => feedsInMemory.Single(fd => fd.Id == i));
+            _repository.Setup(rep => rep.GetById(It.IsAny<Guid>())).Returns((Guid i) => feedsInMemory.Single(fd => fd.Id == i));
 
-            var returnedFeed = _repository.Object.Get(feedsInMemory.First().Id);
+            var returnedFeed = _repository.Object.GetById(feedsInMemory.First().Id);
 
             Assert.IsNotNull(returnedFeed);
         }
@@ -80,24 +81,24 @@ namespace NuFridge.Website.MVC.Tests.Controllers
         [TestMethod]
         public void DeleteFeedTest()
         {
-            _repository.Setup(rep => rep.Get(It.IsAny<string>())).Returns((string i) => feedsInMemory.FirstOrDefault(fd => fd.Id == i));
+            _repository.Setup(rep => rep.GetById(It.IsAny<Guid>())).Returns((Guid i) => feedsInMemory.FirstOrDefault(fd => fd.Id == i));
 
 
-            _repository.Setup(rep => rep.Remove(It.IsAny<string>())).Callback((string id) =>
+            _repository.Setup(rep => rep.Delete(It.IsAny<Feed>())).Callback((Guid id) =>
             {
                 var feed = feedsInMemory.Single(fd => fd.Id == id);
                 feedsInMemory.Remove(feed);
             });
 
-            var returnedFeed = _repository.Object.Get(feedsInMemory.Last().Id);
+            var returnedFeed = _repository.Object.GetById(feedsInMemory.Last().Id);
 
-            _repository.Object.Remove(returnedFeed.Id);
+            _repository.Object.Delete(returnedFeed);
 
-            var deletedReturnedFeed = _repository.Object.Get(returnedFeed.Id);
+            var deletedReturnedFeed = _repository.Object.GetById(returnedFeed.Id);
 
             Assert.IsNull(deletedReturnedFeed);
 
-            _repository.Verify(x => x.Remove(It.IsAny<string>()), Times.Once);
+            _repository.Verify(x => x.Delete(It.IsAny<Feed>()), Times.Once);
         }
     }
 }

@@ -27,7 +27,8 @@ namespace NuFridge.Website.Services
             try
             {
                 string message;
-                bool result = new AccountManager().SignIn(request.EmailAddress, request.Password, request.Persistant);
+                bool result = false;
+               // bool result = new AccountManager().SignIn(request.EmailAddress, request.Password, request.Persistant);
 
                 if (result)
                 {
@@ -55,9 +56,9 @@ namespace NuFridge.Website.Services
         {
             try
             {
-                string message;
-                bool result = new AccountManager().CreateAccount(request.InviteToken, request.FirstName, request.LastName, request.Password, out message);
-                return new CreateAccountResponse(result, message);
+                string message = "";
+                //bool result = new AccountManager().CreateAccount(request.InviteToken, request.FirstName, request.LastName, request.Password, out message);
+                return new CreateAccountResponse(false, message);
             }
             catch (Exception ex)
             {

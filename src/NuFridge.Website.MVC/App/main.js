@@ -20,7 +20,7 @@ define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'knockoutmapp
     ko.bindingHandlers.href = {
         update: function (element, valueAccessor) {
             ko.bindingHandlers.attr.update(element, function () {
-                return { href: valueAccessor() }
+                return { href: valueAccessor() };
             });
         }
     };
@@ -28,7 +28,7 @@ define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'knockoutmapp
     ko.bindingHandlers.src = {
         update: function (element, valueAccessor) {
             ko.bindingHandlers.attr.update(element, function () {
-                return { src: valueAccessor() }
+                return { src: valueAccessor() };
             });
         }
     };

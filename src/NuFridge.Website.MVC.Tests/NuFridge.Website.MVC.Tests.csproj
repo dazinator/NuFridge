@@ -143,6 +143,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NuFridge.DataAccess\NuFridge.DataAccess.csproj">
+      <Project>{81da5570-9dd9-4281-8d94-ca5edde46144}</Project>
+      <Name>NuFridge.DataAccess</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NuFridge.Website.MVC\NuFridge.Website.MVC.csproj">
       <Project>{701F44F8-E838-4EA0-9581-0F9C96E823A8}</Project>
       <Name>NuFridge.Website.MVC</Name>

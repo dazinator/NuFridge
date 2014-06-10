@@ -17,6 +17,10 @@
         }
     };
 
+    ctor.prototype.AddFeed = function() {
+        router.navigate('#feeds/create');
+    };
+
     ctor.prototype.activate = function() {
         shell.ShowNavigation(true);
         var self = this;
