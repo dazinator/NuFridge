@@ -17,21 +17,18 @@
         }
     };
 
-    ctor.prototype.activate = function () {
+    ctor.prototype.activate = function() {
         shell.ShowNavigation(true);
         var self = this;
 
         $.ajax({
-            url: "http://localhost:34313/api/feeds/GetAllFeeds",
+            url: "/api/feeds/GetAllFeeds",
             cache: false,
             dataType: 'json'
-        }).then(function (data) {
+        }).then(function(data) {
             ko.mapping.fromJS(data, ctor.mapping, self.Feeds);
         });
-
-    }
-
-
+    };
 
     return ctor;
 });

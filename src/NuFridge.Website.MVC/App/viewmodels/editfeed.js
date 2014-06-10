@@ -1,11 +1,12 @@
 ﻿define(['plugins/router', 'durandal/app', 'viewmodels/shell'], function (router, app, shell) {
 
     var ctor = function () {
-        this.FeedId = ko.observable();
-        this.FeedName = ko.observable();
+        this.Feed = ko.observable();
+        this.FeedLoaded = ko.observable(false);
+        this.FeedFailedToLoad = ko.observable(false);
     };
 
-    ctor.prototype.activate = function () {
+    ctor.prototype.activate = function() {
 
         shell.ShowNavigation(true);
 
@@ -18,31 +19,43 @@
         if (match) {
 
             $.ajax({
-                url: "http://localhost:34313/api/feeds/GetFeed/" + match[1],
+                url: "/api/feeds/GetFeed/" + match[1],
                 cache: false
-            }).then(function (item) {
-
-                self.FeedId(item.Id);
-                self.FeedName(item.Name);
-
+            }).then(function(item) {
+                self.Feed(item);
+                self.FeedLoaded(true);
+            }).fail(function() {
+                self.FeedFailedToLoad(true);
             });
-        };
-
-
-    }
+        }
+    };
 
     ctor.prototype.SaveChanges = function () {
+
+        var self = this;
+
+        var json = JSON.stringify(self.Feed());
+        
+        $.ajax({
+            url: "/api/feeds/PutFeed/" + self.Feed().Id,
+            type: 'PUT',
+            data: json,
+            dataType: 'jsonp',
+            success: function (result) {
+                router.navigate('#feeds');
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+        
+
+      
+    };
+
+    ctor.prototype.Cancel = function() {
         router.navigate('#feeds');
     };
 
-    ctor.prototype.Cancel = function () {
-        router.navigate('#feeds');
-    }
-
-
-
     return ctor;
-
-
-
 });

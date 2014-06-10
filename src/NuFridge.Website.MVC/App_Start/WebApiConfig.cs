@@ -13,6 +13,8 @@ namespace NuFridge.Website.MVC
             config.Routes.MapHttpRoute("API Default", "api/{controller}/{action}/{id}",
                 new { id = RouteParameter.Optional });
 
+    
+
             //config.Routes.MapHttpRoute(
             //    name: "WithActionApi",
             //    routeTemplate: "api/{controller}/{action}/{id}", defaults: new { id = RouteParameter.Optional });
