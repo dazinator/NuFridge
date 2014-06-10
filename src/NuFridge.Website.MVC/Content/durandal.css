@@ -152,7 +152,8 @@ vertical-align:bottom;
 }
 
 .ds-btn li{ list-style:none; float:left; padding:10px; }
-.ds-btn li a span{padding-left:15px;padding-right:5px;width:100%;display:inline-block; text-align:left;}
+.ds-btn li a span{padding-left: 2px;width:100%;display:inline-block; text-align:left;}
+.ds-btn li a .glyphicon{ margin-top:2px;}
 .ds-btn li a span small{width:100%; display:inline-block; text-align:left;}
 .viewFeedsSection {padding-left: 20px;}
 .addFeedButton { margin-left: 50px;}
