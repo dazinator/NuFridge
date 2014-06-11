@@ -1,28 +1,23 @@
 ﻿<section class="viewFeedsSection">
     <div class="row">
         <p>This page allows you to manage the feeds available on NuFridge.</p>
-        <button type="submit" class="btn btn-info addFeedButton" data-bind="click: AddFeed">Add Feed</button>
+        <div data-bind="visible: ShowNoFeedsFound">
+            <p>No feeds were found, click the 'Add Feed' button to get started.</p>
+        </div>
+        <button type="submit" class="btn btn-info addFeedButton" data-bind="click: AddFeed, visible: !ShowError()">Add Feed</button>
     </div>
     <div class="row">
-        <!-- ko if: Feeds().length > 0 -->
-        <ul class="ds-btn" data-bind="foreach: Feeds()">
-            <li>
-                <a class="btn btn-lg btn-primary" data-bind="attr: { href: EditUrl, title: Name }">
-                    <i class="glyphicon glyphicon-briefcase pull-left"></i><span><span data-bind="text: Name"></span></span></a>
-            </li>
-        </ul>
-        <!-- /ko -->
-        <!-- ko if: ShowNoFeedsFound() -->
-        <br />
-        <p>No feeds were found. Click the Add Feed button to get started.</p>
-        <!-- /ko -->
-        <!-- ko if:  ShowFeedsLoading() -->
-        <br />
-        <h2>Loading feeds...</h2>
-        <!-- /ko -->
-         <!-- ko if:  ShowError() -->
-        <br />
-        <p class="bg-danger">There was an error loading the feeds.</p>
-        <!-- /ko -->
+        <div data-bind="visible: Feeds().length > 0">
+            <ul class="ds-btn" data-bind="foreach: Feeds()">
+                <li>
+                    <a class="btn btn-lg btn-primary" data-bind="attr: { href: EditUrl, title: Name }">
+                        <i class="glyphicon glyphicon-briefcase pull-left"></i><span><span data-bind="text: Name"></span></span></a>
+                </li>
+            </ul>
+        </div>
+        <div data-bind="visible: ShowError">
+            <br />
+            <p class="bg-danger">There was an error loading the feeds.</p>
+        </div>
     </div>
 </section>
