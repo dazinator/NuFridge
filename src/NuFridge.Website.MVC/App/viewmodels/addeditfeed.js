@@ -4,6 +4,7 @@
         this.Feed = {};
         this.Feed.Name = ko.observable();
         this.Feed.Id = ko.observable();
+        this.ShowDeleteButton = ko.observable(true);
     };
 
     ctor.prototype.activate = function() {
@@ -11,9 +12,7 @@
         shell.ShowNavigation(true);
 
         var self = this;
-        
-
-
+       
         var re = new RegExp("([a-z0-9]{8}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{12})");
 
         var match = re.exec(document.location.href);
@@ -25,10 +24,20 @@
             }).then(function(item) {
                 self.Feed.Name(item.Name);
                 self.Feed.Id(item.Id);
-            }).fail(function() {
+            }).fail(function () {
+                self.ShowDeleteButton(false);
                 alert("An error occurred loading the feed.");
             });
+        } else {
+            self.ShowDeleteButton(false);
         }
+    };
+
+    ctor.prototype.Delete = function() {
+        var self = this;
+        
+        app.showMessage('Are you sure you want to delete this feed? You will lose all packages stored in this feed.', 'Delete Feed', ['Yes', 'No']);
+
     };
 
     ctor.prototype.SaveChanges = function () {

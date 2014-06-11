@@ -157,3 +157,5 @@ vertical-align:bottom;
 .ds-btn li a span small{width:100%; display:inline-block; text-align:left;}
 .viewFeedsSection {padding-left: 20px;}
 .addFeedButton { margin-left: 50px;}
+.float-right { float: right;}
+.messageBox .modal-body p.message { color: #000;}
