@@ -1,8 +1,25 @@
 ﻿define(['plugins/router', 'durandal/app', 'viewmodels/shell'], function (router, app, shell) {
     
     var ctor = function () {
+        var self = this;
+
         this.DisplayName = ko.observable('View Feeds');
         this.Feeds = ko.mapping.fromJS([]);
+        
+        this.IsLoadingFeeds = ko.observable(true);
+        this.Error = ko.observable(false);
+
+        this.ShowNoFeedsFound = ko.computed(function() {
+            return this.Feeds != null && this.Feeds.length <= 0 && !this.IsLoadingFeed && !this.Error;
+        });
+        
+        this.ShowFeedsLoading = ko.computed(function () {
+            return this.IsLoadingFeeds && !this.Error();
+        });
+
+        this.ShowError = ko.computed (function() {
+            return this.Error() && !this.IsLoadingFeeds;
+        });
     };
 
     ctor.mapping = {
@@ -29,8 +46,13 @@
             url: "/api/feeds/GetAllFeeds",
             cache: false,
             dataType: 'json'
-        }).then(function(data) {
+        }).then(function (data) {
+            self.IsLoadingFeeds(false);
+            self.Error(false);
             ko.mapping.fromJS(data, ctor.mapping, self.Feeds);
+        }).fail(function () {
+            self.IsLoadingFeeds(false);
+            self.Error(true);
         });
     };
 

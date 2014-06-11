@@ -12,9 +12,17 @@
             </li>
         </ul>
         <!-- /ko -->
-        <!-- ko if: Feeds().length <= 0 -->
+        <!-- ko if: ShowNoFeedsFound() -->
         <br />
-        <p>No feeds could be found.</p>
+        <p>No feeds were found. Click the Add Feed button to get started.</p>
+        <!-- /ko -->
+        <!-- ko if:  ShowFeedsLoading() -->
+        <br />
+        <h2>Loading feeds...</h2>
+        <!-- /ko -->
+         <!-- ko if:  ShowError() -->
+        <br />
+        <p class="bg-danger">There was an error loading the feeds.</p>
         <!-- /ko -->
     </div>
 </section>
