@@ -7,7 +7,7 @@
         <button type="submit" class="btn btn-info addFeedButton" data-bind="click: AddFeed, visible: !ShowError()">Add Feed</button>
     </div>
     <div class="row">
-        <div data-bind="visible: Feeds().length > 0">
+        <div data-bind="visible: Feeds() != null && Feeds().length > 0">
             <ul class="ds-btn" data-bind="foreach: Feeds()">
                 <li>
                     <a class="btn btn-lg btn-primary" data-bind="attr: { href: EditUrl, title: Name }">

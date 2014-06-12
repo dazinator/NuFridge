@@ -4,13 +4,13 @@
         var self = this;
 
         this.DisplayName = ko.observable('View Feeds');
-        this.Feeds = ko.mapping.fromJS([]);
+        this.Feeds = ko.observable();
         
         this.IsLoadingFeeds = ko.observable(false);
         this.LoadError = ko.observable(false);
 
         this.ShowNoFeedsFound = ko.computed(function() {
-            return self.IsLoadingFeeds() == false && self.LoadError() == false;
+            return self.IsLoadingFeeds() == false && self.LoadError() == false && (self.Feeds() == null || self.Feeds().length <= 0);
         });
         
         this.ShowError = ko.computed(function () {
