@@ -1,4 +1,4 @@
-﻿define(['plugins/router', 'durandal/app', 'viewmodels/shell'], function (router, app, shell) {
+﻿define(['plugins/router', 'durandal/app', 'viewmodels/shell', 'plugins/dialog'], function (router, app, shell, dialog) {
 
     var ctor = function () {
         this.Feed = {};
@@ -35,9 +35,26 @@
 
     ctor.prototype.Delete = function() {
         var self = this;
-        
-        app.showMessage('Are you sure you want to delete this feed? You will lose all packages stored in this feed.', 'Delete Feed', ['Yes', 'No']);
 
+        var result = self.ConfirmDeleteMessage().then(function (data) {
+            if (data == "Yes") {
+                $.ajax({
+                    type: 'DELETE',
+                    url: "/api/feeds/DeleteFeed/" + self.Feed.Id(),
+                    cache: false
+                }).then(function (item) {
+                    router.navigate('#feeds');
+                }).fail(function (data) {
+                    self.ShowDeleteButton(false);
+                    alert("An error occurred deleting the feed.");
+                    router.navigate('#feeds');
+                });
+            }
+        });
+    };
+
+    ctor.prototype.ConfirmDeleteMessage = function () {
+        return app.showMessage('Are you sure you want to delete this feed? You will lose all packages stored in this feed.', 'Delete Feed', ['No', 'Yes']);
     };
 
     ctor.prototype.SaveChanges = function () {
