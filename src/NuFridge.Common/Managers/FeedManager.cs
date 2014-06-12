@@ -94,7 +94,7 @@ namespace NuFridge.Common.Manager
                     website = websiteManager.GetWebsite(nuFridgeWebsiteName);
                 }
 
-                var appPath = string.Format("/Feeds/{0}", feedName);
+                var appPath = string.Format("/{0}", feedName);
 
                 var applicationExists = websiteManager.ApplicationExists(nuFridgeWebsiteName, appPath);
                 if (applicationExists)
@@ -218,7 +218,7 @@ namespace NuFridge.Common.Manager
             }
 
             var website = websiteManager.GetWebsite(nuFridgeWebsiteName);
-            var appPath = string.Format("/Feeds/{0}", feedName);
+            var appPath = string.Format("/{0}", feedName);
 
             var applicationExists = websiteManager.ApplicationExists(nuFridgeWebsiteName, appPath);
             if (!applicationExists)
