@@ -58,6 +58,8 @@ namespace NuFridge.Common.Manager
             ScheduleManager.Schedule<ImportPackagesJob>(job, runOnceImmediatelyTrigger);
         }
 
+       
+
         public static bool CreateFeed(string feedName, out string message)
         {
             var websiteManager = new WebsiteManager();
@@ -66,8 +68,9 @@ namespace NuFridge.Common.Manager
             {
                 if (!IsFeedNameValid(feedName, out message)) return false;
 
-                var nuFridgeWebsiteName = ConfigurationManager.AppSettings["NuFridge.Website.Name"];
-                var nuFridgePort = ConfigurationManager.AppSettings["NuFridge.Website.PortNumber"];
+                var nuFridgeWebsiteName = ConfigurationManager.AppSettings["IIS.FeedWebsite.Name"];
+                var nuFridgePort = ConfigurationManager.AppSettings["IIS.FeedWebsite.PortNumber"];
+                var nuFridgeFeedDirectory = ConfigurationManager.AppSettings["IIS.FeedWebsite.RootDirectory"];
 
                 int nuFridgePortNumber;
                 if (!int.TryParse(nuFridgePort, out nuFridgePortNumber))
@@ -79,8 +82,7 @@ namespace NuFridge.Common.Manager
                 bool exists = websiteManager.WebsiteExists(nuFridgeWebsiteName);
                 if (!exists)
                 {
-                    var websitePath = Path.GetDirectoryName(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile);
-                    var websiteInfo = new CreateWebsiteArgs(nuFridgeWebsiteName, websitePath)
+                    var websiteInfo = new CreateWebsiteArgs(nuFridgeWebsiteName, nuFridgeFeedDirectory)
                         {
                             HostName = "*",
                             PortNumber = nuFridgePortNumber
@@ -105,9 +107,6 @@ namespace NuFridge.Common.Manager
                 {
                     throw new Exception("No IIS bindings found for " + nuFridgeWebsiteName);
                 }
-
-                var repository = new MongoDbRepository<FeedEntity>();
-                repository.Insert(new FeedEntity(feedName, string.Format("{0}/Feeds/{1}", binding.Url, feedName)));
 
                 var feedRootFolder = GetRootFeedFolder(website);
                 var feedDirectory = Path.Combine(feedRootFolder, feedName);
@@ -143,12 +142,14 @@ namespace NuFridge.Common.Manager
 
         private static string GetRootFeedFolder(WebsiteInfo website)
         {
-            var feedRootFolder = ConfigurationManager.AppSettings["NuFridge.Feeds.Folder"];
-            if (!Path.IsPathRooted(feedRootFolder))
-            {
-                feedRootFolder = Path.Combine(website.Applications[0].VirtualDirectories[0].PhysicalPath, feedRootFolder);
-            }
-            return feedRootFolder;
+            return website.Applications[0].VirtualDirectories[0].PhysicalPath;
+
+            //var feedRootFolder = ConfigurationManager.AppSettings["NuFridge.Feeds.Folder"];
+            //if (!Path.IsPathRooted(feedRootFolder))
+            //{
+            //    feedRootFolder = Path.Combine(website.Applications[0].VirtualDirectories[0].PhysicalPath, feedRootFolder);
+            //}
+            //return feedRootFolder;
         }
 
         private static bool IsFeedNameValid(string feedName, out string message)
@@ -207,12 +208,12 @@ namespace NuFridge.Common.Manager
 
             var websiteManager = new WebsiteManager();
 
-            var nuFridgeWebsiteName = ConfigurationManager.AppSettings["NuFridge.Website.Name"];
+            var nuFridgeWebsiteName = ConfigurationManager.AppSettings["IIS.FeedWebsite.Name"];
 
             bool exists = websiteManager.WebsiteExists(nuFridgeWebsiteName);
             if (!exists)
             {
-                message = "Could not find a NuFridge website in IIS called '" + nuFridgeWebsiteName + "'";
+                message = "Could not find a feed website in IIS called '" + nuFridgeWebsiteName + "'";
                 return false;
             }
 
@@ -247,11 +248,6 @@ namespace NuFridge.Common.Manager
             {
                 throw new SecurityException(string.Format("The '{0}' user does not have delete rights for the '{1}' directory.", identityName, feedDirectory));
             }
-
-            MongoDbRepository<FeedEntity> repository = new MongoDbRepository<FeedEntity>();
-            var feed = repository.Get(fd => fd.Name == feedName).FirstOrDefault();
-            repository.Delete(feed);
-
 
             websiteManager.DeleteApplication(website.Name, appPath);
 

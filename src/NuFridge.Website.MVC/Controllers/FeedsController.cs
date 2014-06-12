@@ -1,4 +1,5 @@
-﻿using NuFridge.DataAccess.Repositories;
+﻿using NuFridge.Common.Manager;
+using NuFridge.DataAccess.Repositories;
 using NuFridge.Website.MVC.Models;
 using System;
 using System.Collections.Generic;
@@ -39,11 +40,19 @@ namespace NuFridge.Website.MVC.Controllers
         [System.Web.Mvc.HttpPost]
         public HttpResponseMessage PostFeed(Feed item)
         {
-            _repository.Insert(item);
+            string message;
+            var result = FeedManager.CreateFeed(item.Name, out message);
 
-            var response = Request.CreateResponse<Feed>(HttpStatusCode.Created, item);
+            if (result)
+            {
+                _repository.Insert(item);
 
-            return response;
+                return Request.CreateResponse<Feed>(HttpStatusCode.Created, item);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, message);
+            }
         }
 
         [System.Web.Mvc.HttpPut]
@@ -65,7 +74,17 @@ namespace NuFridge.Website.MVC.Controllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            _repository.Delete(item);
+            string message;
+            var result = FeedManager.DeleteFeed(item.Name, out message);
+
+            if (result)
+            {
+                _repository.Delete(item);
+            }
+            else
+            {
+                throw new HttpResponseException(HttpStatusCode.InternalServerError);
+            }
         }
     }
 }
