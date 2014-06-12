@@ -56,12 +56,28 @@ namespace NuFridge.Website.MVC.Controllers
         }
 
         [System.Web.Mvc.HttpPut]
-        public void PutFeed(Guid id, Feed feed)
+        public void PutFeed(Guid id, Feed newFeed)
         {
-            feed.Id = id;
-            if (!_repository.Update(feed))
+            newFeed.Id = id;
+
+            var currentFeed = _repository.GetById(id);
+            if (currentFeed == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            if (newFeed.Name != currentFeed.Name)
+            {
+                string message;
+                var result = FeedManager.UpdateFeed(currentFeed.Name, newFeed.Name, out message);
+                if (result)
+                {
+                    _repository.Update(newFeed);
+                }
+                else
+                {
+                    throw new HttpResponseException(HttpStatusCode.InternalServerError);
+                }
             }
         }
 

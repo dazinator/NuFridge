@@ -11,6 +11,7 @@ using System.Web;
 using Microsoft.Web.Administration;
 using System.Configuration;
 using NuFridge.Common.Helpers;
+using NuFridge.Common.IIS;
 using NuFridge.DataAccess.Entity;
 using NuFridge.DataAccess.Entity.Feeds;
 using NuFridge.DataAccess.Repositories;
@@ -58,7 +59,83 @@ namespace NuFridge.Common.Manager
             ScheduleManager.Schedule<ImportPackagesJob>(job, runOnceImmediatelyTrigger);
         }
 
-       
+        public static bool UpdateFeed(string oldFeedName, string newFeedName, out string message)
+        {
+            var websiteManager = new WebsiteManager();
+
+            if (!IsFeedNameValid(newFeedName, out message)) return false;
+
+            var nuFridgeWebsiteName = ConfigurationManager.AppSettings["IIS.FeedWebsite.Name"];
+
+            bool exists = websiteManager.WebsiteExists(nuFridgeWebsiteName);
+            if (!exists)
+            {
+                message = "Failed to find the feed website";
+                return false;
+            }
+
+            string newAppPath;
+            string oldAppPath;
+            GetApplicationPathsForRename(oldFeedName, newFeedName, websiteManager, nuFridgeWebsiteName, out newAppPath, out oldAppPath);
+
+            var app = websiteManager.GetApplication(nuFridgeWebsiteName, oldAppPath);
+
+            string oldPath;
+            string newPath;
+            GetApplicationDirectoryPathsForRename(newFeedName, app, out oldPath, out newPath);
+
+            //Update the app path
+            app.Path = newAppPath;
+            app.VirtualDirectories[0].PhysicalPath = newPath;
+
+            //Save the application
+            websiteManager.UpdateApplication(nuFridgeWebsiteName, app);
+
+            Directory.Move(oldPath, newPath);
+
+            return true;
+        }
+
+        private static void GetApplicationDirectoryPathsForRename(string newFeedName, ApplicationInfo app, out string oldPath,
+                                                                  out string newPath)
+        {
+            oldPath = app.VirtualDirectories[0].PhysicalPath;
+
+            if (!Directory.Exists(oldPath))
+            {
+                throw new DirectoryNotFoundException("Could not find a directory at " + oldPath + " for the feed");
+            }
+
+            var parentPath = Directory.GetParent(app.VirtualDirectories[0].PhysicalPath);
+
+            newPath = Path.Combine(parentPath.FullName, newFeedName);
+
+            if (Directory.Exists(newPath))
+            {
+                throw new Exception("A folder already exists for the new feed name at " + newPath);
+            }
+        }
+
+        private static void GetApplicationPathsForRename(string oldFeedName, string newFeedName, WebsiteManager websiteManager,
+                                                         string nuFridgeWebsiteName, out string newAppPath,
+                                                         out string oldAppPath)
+        {
+            newAppPath = string.Format("/{0}", newFeedName);
+
+            var newApplicationExists = websiteManager.ApplicationExists(nuFridgeWebsiteName, newAppPath);
+            if (newApplicationExists)
+            {
+                throw new Exception("Can not rename the feed as a different feed already exists at: " + newAppPath);
+            }
+
+            oldAppPath = string.Format("/{0}", oldFeedName);
+
+            var oldApplicationExists = websiteManager.ApplicationExists(nuFridgeWebsiteName, oldAppPath);
+            if (!oldApplicationExists)
+            {
+                throw new Exception("Could not find a feed to update at: " + oldAppPath);
+            }
+        }
 
         public static bool CreateFeed(string feedName, out string message)
         {
