@@ -1,20 +1,15 @@
 ﻿using System;
 using Quartz;
-using Quartz.Impl;
 
-namespace NuFridge.Common.Manager
+namespace NuFridge.Common.Managers
 {
 
-    public sealed class ScheduleManager
+    public static class ScheduleManager
     {
 
         // Grab the Scheduler instance from the Factory 
-     
 
-        private ScheduleManager()
-        {
-        }
-        
+
         public static void Schedule<T>(IJobDetail jobDetail, ITrigger trigger) where T : IJob
         {
             Scheduler.Instance.QuartzScheduler.ScheduleJob(jobDetail, trigger);

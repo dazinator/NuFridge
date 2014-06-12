@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Web.WebPages.OAuth;
-using NuFridge.Website.MVC.Models;
-
-namespace NuFridge.Website.MVC
+﻿namespace NuFridge.Website.MVC
 {
     public static class AuthConfig
     {

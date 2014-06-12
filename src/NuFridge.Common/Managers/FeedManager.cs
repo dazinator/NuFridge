@@ -12,6 +12,8 @@ using Microsoft.Web.Administration;
 using System.Configuration;
 using NuFridge.Common.Helpers;
 using NuFridge.Common.IIS;
+using NuFridge.Common.Managers;
+using NuFridge.Common.Managers.IIS;
 using NuFridge.DataAccess.Entity;
 using NuFridge.DataAccess.Entity.Feeds;
 using NuFridge.DataAccess.Repositories;
@@ -61,38 +63,79 @@ namespace NuFridge.Common.Manager
 
         public static bool UpdateFeed(string oldFeedName, string newFeedName, out string message)
         {
-            var websiteManager = new WebsiteManager();
-
             if (!IsFeedNameValid(newFeedName, out message)) return false;
 
-            var nuFridgeWebsiteName = ConfigurationManager.AppSettings["IIS.FeedWebsite.Name"];
+            string feedWebsiteName;
+            if (!GetFeedWebsiteName(ref message, out feedWebsiteName)) 
+                return false;
 
-            bool exists = websiteManager.WebsiteExists(nuFridgeWebsiteName);
+            //Create the website and application managers which interact with IIS
+            var feedWebsiteManager = new WebsiteManager(feedWebsiteName);
+            var feedApplicationManager = new ApplicationManager(feedWebsiteManager);
+
+            //Check the feed website has been created before we try to add to it
+            if (!DoesFeedWebsiteExist(ref message, feedWebsiteManager))
+                return false;
+
+            //Check the old app path to see if it already exists, if it doesn't return false as we can't continue
+            string oldAppPath;
+            var isOldPathValid = GetApplicationPathForFeed(feedApplicationManager, oldFeedName, true, out oldAppPath);
+            if (!isOldPathValid)
+            {
+                message = "Could not find an application with a path of " + oldAppPath;
+                return false;
+            }
+
+            //Check the new app path to see if it already exists, if it does return false as we can't continue
+            string newAppPath;
+            var isNewPathValid = GetApplicationPathForFeed(feedApplicationManager, newFeedName, false, out newAppPath);
+            if (!isNewPathValid)
+            {
+                message = "An existing application was already found at " + newAppPath;
+                return false;
+            }
+
+            //Get the existing IIS application for the feed to change
+            var application = feedApplicationManager.GetApplication(oldAppPath);
+
+            //Get the IIS application physical paths for the old feed name and the new feed name
+            string oldPath;
+            string newPath;
+            GetApplicationDirectoryPathsForRename(newFeedName, application, out oldPath, out newPath);
+
+            //Update the app path and physical path with the new values
+            application.Path = newAppPath;
+            application.VirtualDirectories[0].PhysicalPath = newPath;
+
+            //Save the application in IIS
+            feedApplicationManager.UpdateApplication(application);
+
+            //Move the directory from the old directory folder to the new one
+            Directory.Move(oldPath, newPath);
+
+            return true;
+        }
+
+        private static bool DoesFeedWebsiteExist(ref string message, WebsiteManager feedWebsiteManager)
+        {
+            bool exists = feedWebsiteManager.WebsiteExists();
             if (!exists)
             {
                 message = "Failed to find the feed website";
                 return false;
             }
+            return true;
+        }
 
-            string newAppPath;
-            string oldAppPath;
-            GetApplicationPathsForRename(oldFeedName, newFeedName, websiteManager, nuFridgeWebsiteName, out newAppPath, out oldAppPath);
+        private static bool GetFeedWebsiteName(ref string message, out string nuFridgeWebsiteName)
+        {
+            nuFridgeWebsiteName = ConfigurationManager.AppSettings["IIS.FeedWebsite.Name"];
 
-            var app = websiteManager.GetApplication(nuFridgeWebsiteName, oldAppPath);
-
-            string oldPath;
-            string newPath;
-            GetApplicationDirectoryPathsForRename(newFeedName, app, out oldPath, out newPath);
-
-            //Update the app path
-            app.Path = newAppPath;
-            app.VirtualDirectories[0].PhysicalPath = newPath;
-
-            //Save the application
-            websiteManager.UpdateApplication(nuFridgeWebsiteName, app);
-
-            Directory.Move(oldPath, newPath);
-
+            if (string.IsNullOrWhiteSpace(nuFridgeWebsiteName))
+            {
+                message = "The IIS.FeedWebsite.Name app setting has not been configured.";
+                return false;
+            }
             return true;
         }
 
@@ -116,118 +159,108 @@ namespace NuFridge.Common.Manager
             }
         }
 
-        private static void GetApplicationPathsForRename(string oldFeedName, string newFeedName, WebsiteManager websiteManager,
-                                                         string nuFridgeWebsiteName, out string newAppPath,
-                                                         out string oldAppPath)
+        private static bool GetApplicationPathForFeed(ApplicationManager applicationManager, string feedName, bool shouldExistAsApplication, out string appPath)
         {
-            newAppPath = string.Format("/{0}", newFeedName);
+            appPath = string.Format("/{0}", feedName);
 
-            var newApplicationExists = websiteManager.ApplicationExists(nuFridgeWebsiteName, newAppPath);
-            if (newApplicationExists)
-            {
-                throw new Exception("Can not rename the feed as a different feed already exists at: " + newAppPath);
-            }
+            var applicationExists = applicationManager.ApplicationExists(appPath);
 
-            oldAppPath = string.Format("/{0}", oldFeedName);
-
-            var oldApplicationExists = websiteManager.ApplicationExists(nuFridgeWebsiteName, oldAppPath);
-            if (!oldApplicationExists)
-            {
-                throw new Exception("Could not find a feed to update at: " + oldAppPath);
-            }
+            return shouldExistAsApplication ? applicationExists : !applicationExists;
         }
+
 
         public static bool CreateFeed(string feedName, out string message)
         {
-            var websiteManager = new WebsiteManager();
+            //Check the feed name provided is valid
+            if (!IsFeedNameValid(feedName, out message)) return false;
 
-            try
+            //Get the feed website name
+            string feedWebsiteName;
+            if (!GetFeedWebsiteName(ref message, out feedWebsiteName))
+                return false;
+
+            //Get port number and directory path for the feed website
+            var nuFridgePortNumber = GetFeedWebsitePortNumber();
+            var nuFridgeFeedDirectory = ConfigurationManager.AppSettings["IIS.FeedWebsite.RootDirectory"];
+
+            //Create the managers which interact with IIS
+            var feedWebsiteManager = new WebsiteManager(feedWebsiteName);
+            var feedApplicationManager = new ApplicationManager(feedWebsiteManager);
+
+            //Check the feed website has been created before we try to add to it
+            if (!DoesFeedWebsiteExist(ref message, feedWebsiteManager))
+                return false;
+
+
+            //Check website exists, get or create the feed website
+            WebsiteInfo website;
+            bool exists = feedWebsiteManager.WebsiteExists();
+            if (!exists)
             {
-                if (!IsFeedNameValid(feedName, out message)) return false;
-
-                var nuFridgeWebsiteName = ConfigurationManager.AppSettings["IIS.FeedWebsite.Name"];
-                var nuFridgePort = ConfigurationManager.AppSettings["IIS.FeedWebsite.PortNumber"];
-                var nuFridgeFeedDirectory = ConfigurationManager.AppSettings["IIS.FeedWebsite.RootDirectory"];
-
-                int nuFridgePortNumber;
-                if (!int.TryParse(nuFridgePort, out nuFridgePortNumber))
-                {
-                    nuFridgePortNumber = WebsiteManager.DefaultWebsitePortNumber;
-                }
-
-                WebsiteInfo website;
-                bool exists = websiteManager.WebsiteExists(nuFridgeWebsiteName);
-                if (!exists)
-                {
-                    var websiteInfo = new CreateWebsiteArgs(nuFridgeWebsiteName, nuFridgeFeedDirectory)
-                        {
-                            HostName = "*",
-                            PortNumber = nuFridgePortNumber
-                        };
-                    website = websiteManager.CreateWebsite(websiteInfo);
-                }
-                else
-                {
-                    website = websiteManager.GetWebsite(nuFridgeWebsiteName);
-                }
-
-                var appPath = string.Format("/{0}", feedName);
-
-                var applicationExists = websiteManager.ApplicationExists(nuFridgeWebsiteName, appPath);
-                if (applicationExists)
-                {
-                    throw new Exception("Feed already exists at: " + appPath);
-                }
-
-                var binding = website.Bindings.FirstOrDefault();
-                if (binding == null)
-                {
-                    throw new Exception("No IIS bindings found for " + nuFridgeWebsiteName);
-                }
-
-                var feedRootFolder = GetRootFeedFolder(website);
-                var feedDirectory = Path.Combine(feedRootFolder, feedName);
-
-                if (Directory.Exists(feedDirectory))
-                {
-                    throw new Exception("A directory already exists for the " + feedName + " feed.");
-                }
-
-                var identityName = WindowsIdentity.GetCurrent().Name;
-
-                var hasWriteAccess = DirectoryHelper.HasWriteAccess(feedRootFolder, identityName);
-                if (!hasWriteAccess)
-                {
-                    throw new SecurityException(string.Format("The '{0}' user does not have write access to the '{1}' directory.", identityName, feedRootFolder));
-                }
-
-                CreateFilesInFeed(feedDirectory);
-
-                websiteManager.CreateApplication(nuFridgeWebsiteName, appPath, feedDirectory);
-
-                message = "Successfully created a feed called " + feedName;
-
-                return true;
-
+                var websiteInfo = new CreateWebsiteArgs(nuFridgeFeedDirectory)
+                    {
+                        HostName = "*",
+                        PortNumber = nuFridgePortNumber
+                    };
+                website = feedWebsiteManager.CreateWebsite(websiteInfo);
             }
-            catch (Exception e)
+            else
             {
-                message = e.Message + Environment.NewLine + (e.StackTrace ?? "");
+                website = feedWebsiteManager.GetWebsite();
+            }
+
+            //Get the IIS application path and check the feed doesn't already exist in IIS
+            string appPath;
+            bool result = GetApplicationPathForFeed(feedApplicationManager, feedName, false, out appPath);
+            if (!result)
+            {
+                message = "An existing application was already found at " + appPath;
                 return false;
             }
+
+            var feedRootFolder = website.Applications[0].VirtualDirectories[0].PhysicalPath;
+            var feedDirectory = Path.Combine(feedRootFolder, feedName);
+
+            if (Directory.Exists(feedDirectory))
+            {
+                throw new Exception("A directory already exists for the " + feedName + " feed.");
+            }
+
+            var identityName = WindowsIdentity.GetCurrent().Name;
+
+            //Check the user has write permission to the feed folder
+            var hasWriteAccess = DirectoryHelper.HasWriteAccess(feedRootFolder, identityName);
+            if (!hasWriteAccess)
+            {
+                throw new SecurityException(
+                    string.Format("The '{0}' user does not have write access to the '{1}' directory.", identityName,
+                                  feedRootFolder));
+            }
+
+            //Create the NuGet feed
+            CreateFilesInFeed(feedDirectory);
+
+            //Create the application in IIS
+            feedApplicationManager.CreateApplication(appPath, feedDirectory);
+
+            message = "Successfully created a feed called " + feedName;
+
+            return true;
         }
 
-        private static string GetRootFeedFolder(WebsiteInfo website)
+        private static int GetFeedWebsitePortNumber()
         {
-            return website.Applications[0].VirtualDirectories[0].PhysicalPath;
+            var nuFridgePort = ConfigurationManager.AppSettings["IIS.FeedWebsite.PortNumber"];
 
-            //var feedRootFolder = ConfigurationManager.AppSettings["NuFridge.Feeds.Folder"];
-            //if (!Path.IsPathRooted(feedRootFolder))
-            //{
-            //    feedRootFolder = Path.Combine(website.Applications[0].VirtualDirectories[0].PhysicalPath, feedRootFolder);
-            //}
-            //return feedRootFolder;
+            int nuFridgePortNumber;
+            if (!int.TryParse(nuFridgePort, out nuFridgePortNumber))
+            {
+                nuFridgePortNumber = WebsiteManager.DefaultWebsitePortNumber;
+            }
+            return nuFridgePortNumber;
         }
+
+   
 
         private static bool IsFeedNameValid(string feedName, out string message)
         {
@@ -257,8 +290,10 @@ namespace NuFridge.Common.Manager
             var stream = new MemoryStream(resource);
             var archive = new ZipArchive(stream);
 
+            //For each file in the zip archive
             foreach (var entry in archive.Entries)
             {
+                //Get the parent folder and check it exists
                 var directoryPath = Path.Combine(feedDirectory, Path.GetDirectoryName(entry.FullName));
 
                 if (!Directory.Exists(directoryPath))
@@ -266,8 +301,10 @@ namespace NuFridge.Common.Manager
                     Directory.CreateDirectory(directoryPath);
                 }
 
+                //Construct the file path including the directory to store the feed in
                 var fileName = Path.Combine(directoryPath, entry.Name);
 
+                //Open the zip archive entry stream and copy it to the file output stream
                 using (var entryStream = entry.Open())
                 {
                     using (var outputStream = File.Create(fileName))
@@ -281,36 +318,37 @@ namespace NuFridge.Common.Manager
 
         public static bool DeleteFeed(string feedName, out string message)
         {
+            //Check the feed name provided is valid
             if (!IsFeedNameValid(feedName, out message)) return false;
 
-            var websiteManager = new WebsiteManager();
+            //Get the feed website name
+            string feedWebsiteName;
+            if (!GetFeedWebsiteName(ref message, out feedWebsiteName))
+                return false;
 
-            var nuFridgeWebsiteName = ConfigurationManager.AppSettings["IIS.FeedWebsite.Name"];
+            var feedWebsiteManager = new WebsiteManager(feedWebsiteName);
+            var feedApplicationManager = new ApplicationManager(feedWebsiteManager);
 
-            bool exists = websiteManager.WebsiteExists(nuFridgeWebsiteName);
+            bool exists = feedWebsiteManager.WebsiteExists();
             if (!exists)
             {
-                message = "Could not find a feed website in IIS called '" + nuFridgeWebsiteName + "'";
+                message = "Could not find a feed website in IIS called '" + feedWebsiteName + "'";
                 return false;
             }
 
-            var website = websiteManager.GetWebsite(nuFridgeWebsiteName);
-            var appPath = string.Format("/{0}", feedName);
+            var website = feedWebsiteManager.GetWebsite();
 
-            var applicationExists = websiteManager.ApplicationExists(nuFridgeWebsiteName, appPath);
-            if (!applicationExists)
+            string appPath;
+            var result = GetApplicationPathForFeed(feedApplicationManager, feedName, true, out appPath);
+            if (!result)
             {
-                message = "No IIS application found for " + feedName;
+                message = "No IIS application could be found at " + appPath;
                 return false;
             }
 
-            var application = website.Applications.FirstOrDefault(app => app.Path == appPath);
-            if (application == null)
-            {
-                message = "No IIS application found for " + feedName;
-                return false;
-            }
+            var application = feedApplicationManager.GetApplication(appPath);
 
+            //Check to see if we can find the feed website folder
             var feedDirectory = application.VirtualDirectories[0].PhysicalPath;
             if (!Directory.Exists(feedDirectory))
             {
@@ -320,19 +358,23 @@ namespace NuFridge.Common.Manager
 
             var identityName = WindowsIdentity.GetCurrent().Name;
 
+            //Check we have permission to delete from the feed directory
             var hasDeleteAccess = DirectoryHelper.HasDeleteRights(feedDirectory, identityName);
             if (!hasDeleteAccess)
             {
                 throw new SecurityException(string.Format("The '{0}' user does not have delete rights for the '{1}' directory.", identityName, feedDirectory));
             }
 
-            websiteManager.DeleteApplication(website.Name, appPath);
+            //Delete the application from IIS
+            feedApplicationManager.DeleteApplication(appPath);
 
+            //Delete the retention policy if one is set up
             RetentionPolicyManager.DeleteRetentionPolicy(feedName);
 
             //Delete files with checks on whether files are locked & with retries
             FileHelper.DeleteFilesInFolder(feedDirectory);
 
+            //Delete the feed directory
             Directory.Delete(feedDirectory, true);
 
             message = "Successfully removed the feed and deleted all packages for " + feedName;

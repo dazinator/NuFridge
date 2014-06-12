@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using NuFridge.DataAccess.Model;
 using NuFridge.DataAccess.Repositories;
-using NuFridge.Website.MVC.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

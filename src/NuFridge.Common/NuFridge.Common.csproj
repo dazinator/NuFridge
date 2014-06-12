@@ -114,12 +114,13 @@
     <Compile Include="IIS\CreateWebsiteArgs.cs" />
     <Compile Include="Managers\FeedManager.cs" />
     <Compile Include="IIS\HttpProtocol.cs" />
+    <Compile Include="Managers\IIS\ApplicationManager.cs" />
+    <Compile Include="Managers\IIS\WebsiteManager.cs" />
     <Compile Include="Managers\InviteManager.cs" />
     <None Include="Managers\AccountManager.cs" />
     <Compile Include="Managers\ScheduleManager.cs" />
     <Compile Include="IIS\VirtualDirectoryInfo.cs" />
     <Compile Include="IIS\WebsiteInfo.cs" />
-    <Compile Include="Managers\WebsiteManager.cs" />
     <Compile Include="Helpers\DirectoryHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Managers\RetentionPolicyManager.cs" />
