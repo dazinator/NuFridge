@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.Web.Administration;
+using NuFridge.Common.IIS;
 
 namespace NuFridge.Common.Manager
 {
@@ -97,6 +98,33 @@ namespace NuFridge.Common.Manager
 
         }
 
+        public ApplicationInfo GetApplication(string websiteName, string appPath)
+        {
+            using (var manager = new ServerManager())
+            {
+                var website = manager.Sites.FirstOrDefault(w => w.Name == websiteName);
+                if (website == null)
+                {
+                    throw new InvalidOperationException("A website with the name: " + websiteName + " doesn't exist.");
+                }
+
+                var application = website.Applications.FirstOrDefault(app => app.Path == appPath);
+                if (application == null)
+                {
+                    throw new InvalidOperationException("An application with the path: " + appPath + " doesn't exist.");
+                }
+
+               var appInfo = new ApplicationInfo {Path = appPath};
+                foreach (var v in application.VirtualDirectories)
+               {
+                   var vinfo = new VirtualDirectoryInfo {Path = v.Path, PhysicalPath = v.PhysicalPath};
+                   appInfo.VirtualDirectories.Add(vinfo);
+               }
+
+                return appInfo;
+            }
+        }
+
         public void DeleteApplication(string websiteName, string appPath)
         {
             using (var manager = new ServerManager())
@@ -130,6 +158,33 @@ namespace NuFridge.Common.Manager
                 website.Applications.Add(path, physicalPath);
                 //   website.Applications.Add("/Feeds/" + feedName, feedDirectory);
                 manager.CommitChanges();
+            }
+        }
+
+        public void UpdateApplication(string websiteName, ApplicationInfo appInfo)
+        {
+            using (var manager = new ServerManager())
+            {
+                var website = manager.Sites.FirstOrDefault(w => w.Name == websiteName);
+                if (website == null)
+                {
+                    throw new InvalidOperationException("A website with the name: " + websiteName + " doesn't exist.");
+                }
+
+                var application = website.Applications.FirstOrDefault(app => app.Path == appInfo.PreviousPath);
+                if (application == null)
+                {
+                    throw new InvalidOperationException("An application with the path: " + appInfo.PreviousPath +
+                                                        " doesn't exist.");
+                }
+
+                application.Path = appInfo.Path;
+        
+                application.VirtualDirectories[0].PhysicalPath = appInfo.VirtualDirectories[0].PhysicalPath;
+                manager.CommitChanges();
+
+                //Set the previous path back to null
+                appInfo.PreviousPath = null;
             }
         }
     }
