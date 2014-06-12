@@ -183,6 +183,21 @@ namespace NuFridge.Common.Manager
             var nuFridgePortNumber = GetFeedWebsitePortNumber();
             var nuFridgeFeedDirectory = ConfigurationManager.AppSettings["IIS.FeedWebsite.RootDirectory"];
 
+            if (!Directory.Exists(nuFridgeFeedDirectory))
+            {
+                try
+                {
+                    Directory.CreateDirectory(nuFridgeFeedDirectory);
+                }
+                catch (Exception e)
+                {
+                    message = "Unable to create feed website directory: " + nuFridgeFeedDirectory + " - " +
+                              e.Message;
+                    return false;
+                }
+
+            }
+
             //Create the managers which interact with IIS
             var feedWebsiteManager = new WebsiteManager(feedWebsiteName);
             var feedApplicationManager = new ApplicationManager(feedWebsiteManager);
@@ -226,16 +241,16 @@ namespace NuFridge.Common.Manager
                 throw new Exception("A directory already exists for the " + feedName + " feed.");
             }
 
-            var identityName = WindowsIdentity.GetCurrent().Name;
+            //var identityName = WindowsIdentity.GetCurrent().Name;
 
-            //Check the user has write permission to the feed folder
-            var hasWriteAccess = DirectoryHelper.HasWriteAccess(feedRootFolder, identityName);
-            if (!hasWriteAccess)
-            {
-                throw new SecurityException(
-                    string.Format("The '{0}' user does not have write access to the '{1}' directory.", identityName,
-                                  feedRootFolder));
-            }
+            ////Check the user has write permission to the feed folder
+            //var hasWriteAccess = DirectoryHelper.HasWriteAccess(feedRootFolder, identityName);
+            //if (!hasWriteAccess)
+            //{
+            //    throw new SecurityException(
+            //        string.Format("The '{0}' user does not have write access to the '{1}' directory.", identityName,
+            //                      feedRootFolder));
+            //}
 
             //Create the NuGet feed
             CreateFilesInFeed(feedDirectory);
@@ -298,7 +313,14 @@ namespace NuFridge.Common.Manager
 
                 if (!Directory.Exists(directoryPath))
                 {
-                    Directory.CreateDirectory(directoryPath);
+                    try
+                    {
+                        Directory.CreateDirectory(directoryPath);
+                    }
+                    catch (Exception e)
+                    {
+                        throw;
+                    }
                 }
 
                 //Construct the file path including the directory to store the feed in
