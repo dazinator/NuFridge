@@ -58,7 +58,7 @@ namespace NuFridge.Common.Manager
             ScheduleManager.Schedule<ImportPackagesJob>(job, runOnceImmediatelyTrigger);
         }
 
-       
+
 
         public static bool CreateFeed(string feedName, out string message)
         {
@@ -76,6 +76,22 @@ namespace NuFridge.Common.Manager
                 if (!int.TryParse(nuFridgePort, out nuFridgePortNumber))
                 {
                     nuFridgePortNumber = WebsiteManager.DefaultWebsitePortNumber;
+                }
+
+
+                if (!Directory.Exists(nuFridgeFeedDirectory))
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(nuFridgeFeedDirectory);
+                    }
+                    catch (Exception e)
+                    {
+                        message = "Unable to create feed website directory: " + nuFridgeFeedDirectory + " - " +
+                                  e.Message;
+                        return false;
+                    }
+
                 }
 
                 WebsiteInfo website;
@@ -116,13 +132,13 @@ namespace NuFridge.Common.Manager
                     throw new Exception("A directory already exists for the " + feedName + " feed.");
                 }
 
-                var identityName = WindowsIdentity.GetCurrent().Name;
+                //var identityName = WindowsIdentity.GetCurrent().Name;
 
-                var hasWriteAccess = DirectoryHelper.HasWriteAccess(feedRootFolder, identityName);
-                if (!hasWriteAccess)
-                {
-                    throw new SecurityException(string.Format("The '{0}' user does not have write access to the '{1}' directory.", identityName, feedRootFolder));
-                }
+                //var hasWriteAccess = DirectoryHelper.HasWriteAccess(feedRootFolder, identityName);
+                //if (!hasWriteAccess)
+                //{
+                //    throw new SecurityException(string.Format("The '{0}' user does not have write access to the '{1}' directory.", identityName, feedRootFolder));
+                //}
 
                 CreateFilesInFeed(feedDirectory);
 
@@ -186,7 +202,15 @@ namespace NuFridge.Common.Manager
 
                 if (!Directory.Exists(directoryPath))
                 {
-                    Directory.CreateDirectory(directoryPath);
+                    try
+                    {
+                        Directory.CreateDirectory(directoryPath);
+                    }
+                    catch (Exception e)
+                    {
+                        throw;
+                    }
+
                 }
 
                 var fileName = Path.Combine(directoryPath, entry.Name);
@@ -200,7 +224,6 @@ namespace NuFridge.Common.Manager
                 }
             }
         }
-
 
         public static bool DeleteFeed(string feedName, out string message)
         {
