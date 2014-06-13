@@ -202,10 +202,6 @@ namespace NuFridge.Common.Manager
             var feedWebsiteManager = new WebsiteManager(feedWebsiteName);
             var feedApplicationManager = new ApplicationManager(feedWebsiteManager);
 
-            //Check the feed website has been created before we try to add to it
-            if (!DoesFeedWebsiteExist(ref message, feedWebsiteManager))
-                return false;
-
 
             //Check website exists, get or create the feed website
             WebsiteInfo website;
@@ -240,17 +236,6 @@ namespace NuFridge.Common.Manager
             {
                 throw new Exception("A directory already exists for the " + feedName + " feed.");
             }
-
-            //var identityName = WindowsIdentity.GetCurrent().Name;
-
-            ////Check the user has write permission to the feed folder
-            //var hasWriteAccess = DirectoryHelper.HasWriteAccess(feedRootFolder, identityName);
-            //if (!hasWriteAccess)
-            //{
-            //    throw new SecurityException(
-            //        string.Format("The '{0}' user does not have write access to the '{1}' directory.", identityName,
-            //                      feedRootFolder));
-            //}
 
             //Create the NuGet feed
             CreateFilesInFeed(feedDirectory);
