@@ -48,7 +48,7 @@
             self.IsLoadingFeeds(false);
             self.LoadError(false);
             ko.mapping.fromJS(data, ctor.mapping, self.Feeds);
-        }).fail(function () {
+        }).fail(function (response) {
             self.IsLoadingFeeds(false);
             self.LoadError(true);
         });

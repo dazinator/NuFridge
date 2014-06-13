@@ -12,5 +12,6 @@ namespace NuFridge.DataAccess.Model
         public string Name { get; set; }
 
         public string PublishPackagesUrl { get; set; }
+        public string APIKey { get; set; }
     }
 }

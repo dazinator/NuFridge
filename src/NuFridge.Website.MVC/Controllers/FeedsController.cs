@@ -77,6 +77,10 @@ namespace NuFridge.Website.MVC.Controllers
                     throw new HttpResponseException(HttpStatusCode.InternalServerError);
                 }
             }
+            else
+            {
+                _repository.Update(newFeed);
+            }
         }
 
         [System.Web.Mvc.HttpDelete]

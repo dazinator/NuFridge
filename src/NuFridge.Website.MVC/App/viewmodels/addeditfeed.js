@@ -4,6 +4,7 @@
         this.Feed = {};
         this.Feed.Name = ko.observable();
         this.Feed.Id = ko.observable();
+        this.Feed.APIKey = ko.observable();
         this.ShowDeleteButton = ko.observable(true);
     };
 
@@ -21,9 +22,11 @@
             $.ajax({
                 url: "/api/feeds/GetFeed/" + match[1],
                 cache: false
-            }).then(function(item) {
+            }).then(function (item) {
+                //TODO remove with ko mapping
                 self.Feed.Name(item.Name);
                 self.Feed.Id(item.Id);
+                self.Feed.APIKey(item.APIKey);
             }).fail(function () {
                 self.ShowDeleteButton(false);
                 alert("An error occurred loading the feed.");
