@@ -4,6 +4,7 @@ using NuFridge.DataAccess.Entity;
 
 namespace NuFridge.DataAccess.Model
 {
+    //When adding new properties please remember to add them to the javascript view model so values are not lost on database updates
     public class Feed : IEntityBase
     {
         [BsonId]

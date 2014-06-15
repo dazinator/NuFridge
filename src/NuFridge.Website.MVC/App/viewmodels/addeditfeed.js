@@ -1,19 +1,23 @@
-﻿define(['plugins/router', 'durandal/app', 'viewmodels/shell', 'plugins/dialog'], function (router, app, shell, dialog) {
+﻿define(['plugins/router', 'durandal/app', 'viewmodels/shell', 'plugins/dialog', 'viewmodels/databinding/feed'], function (router, app, shell, dialog, feed) {
 
     var ctor = function () {
         var self = this;
 
-        this.Feed = {};
-        this.Feed.Name = ko.observable("").extend({ trackChange: true });
-        this.Feed.Id = ko.observable();
-        this.Feed.APIKey = ko.observable("").extend({ trackChange: true });
+        this.Feed = ko.observable(new FeedObject());
+
         this.ShowDeleteButton = ko.observable(true);
         this.EditFeedTitle = ko.observable();
         this.IsEditMode = ko.observable(false);
 
         this.IsFormDirty = ko.computed(function () {
-            return (self.Feed.Name() != null && self.Feed.Name.isDirty() == true) || (self.Feed.APIKey() != null && self.Feed.APIKey.isDirty() == true);
+            return self.Feed() != null && ((self.Feed().Name() != null && self.Feed().Name.isDirty() == true) || (self.Feed().APIKey() != null && self.Feed().APIKey.isDirty() == true));
         });
+    };
+
+    var mapping = {
+        create: function (options) {
+            return new FeedObject(options.data);
+        }
     };
 
     ctor.prototype.activate = function() {
@@ -33,21 +37,16 @@
             $.ajax({
                 url: "/api/feeds/GetFeed/" + match[1],
                 cache: false
-            }).then(function (item) {
-                //TODO remove with ko mapping
-                self.Feed.Name(item.Name);
-                self.EditFeedTitle(self.Feed.Name());
-                self.Feed.Id(item.Id);
-                self.Feed.APIKey(item.APIKey);
-
-                self.Feed.Name.isDirty(false);
-                self.Feed.APIKey.isDirty(false);
+            }).then(function (data) {
+                ko.mapping.fromJS(data, mapping, self.Feed);
+                self.EditFeedTitle(self.Feed().Name());
                 self.IsEditMode(true);
             }).fail(function () {
                 self.ShowDeleteButton(false);
                 alert("An error occurred loading the feed.");
             });
         } else {
+
             self.ShowDeleteButton(false);
             self.EditFeedTitle = "Create Feed";
             self.IsEditMode(false);
@@ -61,7 +60,7 @@
             if (data == "Yes") {
                 $.ajax({
                     type: 'DELETE',
-                    url: "/api/feeds/DeleteFeed/" + self.Feed.Id(),
+                    url: "/api/feeds/DeleteFeed/" + self.Feed().Id(),
                     cache: false
                 }).then(function (item) {
                     router.navigate('#feeds');
@@ -81,11 +80,11 @@
     ctor.prototype.SaveChanges = function () {
         var self = this;
 
-        if (this.Feed.Id() != null) {
+        if (this.Feed().Id() != null) {
             $.ajax({
-                url: "/api/feeds/PutFeed/" + self.Feed.Id(),
+                url: "/api/feeds/PutFeed/" + self.Feed().Id(),
                 type: 'PUT',
-                data: self.Feed,
+                data: self.Feed(),
                 dataType: 'json',
                 cache: false,
                 success: function (result) {
@@ -96,14 +95,12 @@
                 }
             });
         } else {
-            var json = JSON.stringify(ko.mapping.toJS(self.Feed));
-
             $.ajax({
                 url: "/api/feeds/PostFeed",
                 type: 'POST',
                 cache: false,
                 dataType: 'json',
-                data: self.Feed,
+                data: self.Feed(),
                 success: function (result) {
                     router.navigate('#feeds');
                 },

@@ -225,6 +225,7 @@
   <ItemGroup>
     <Content Include="App\main.js" />
     <Content Include="App\viewmodels\addeditfeed.js" />
+    <Content Include="App\viewmodels\databinding\feed.js" />
     <Content Include="App\viewmodels\home.js" />
     <Content Include="App\viewmodels\viewretentionpolicies.js" />
     <Content Include="App\viewmodels\shell.js" />

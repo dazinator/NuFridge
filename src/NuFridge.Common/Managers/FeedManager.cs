@@ -44,12 +44,28 @@ namespace NuFridge.Common.Manager
 
         public IEnumerable<Feed> GetAll()
         {
-            return Repository.GetAll();
+            var feeds = Repository.GetAll();
+
+            var website = WebsiteManager.GetWebsite();
+
+            foreach (var feed in feeds)
+            {
+                feed.FeedURL = string.Format("{0}/{1}", website.Bindings[0].Url, feed.Name);
+            }
+
+            return feeds;
         }
 
         public Feed GetById(Guid id)
         {
-            return Repository.GetById(id);
+            var feed = Repository.GetById(id);
+
+            var website = WebsiteManager.GetWebsite();
+
+
+            feed.FeedURL = string.Format("{0}/{1}", website.Bindings[0].Url, feed.Name);
+
+            return feed;
         }
 
 
