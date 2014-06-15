@@ -4,9 +4,9 @@
         var self = this;
 
         this.Feed = {};
-        this.Feed.Name = ko.observable().extend({ trackChange: true });
+        this.Feed.Name = ko.observable("").extend({ trackChange: true });
         this.Feed.Id = ko.observable();
-        this.Feed.APIKey = ko.observable().extend({ trackChange: true });
+        this.Feed.APIKey = ko.observable("").extend({ trackChange: true });
         this.ShowDeleteButton = ko.observable(true);
         this.EditFeedTitle = ko.observable();
         this.IsEditMode = ko.observable(false);
