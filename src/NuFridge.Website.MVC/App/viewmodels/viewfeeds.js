@@ -1,4 +1,4 @@
-﻿define(['plugins/router', 'durandal/app', 'viewmodels/shell', 'introjs'], function (router, app, shell, introjs) {
+﻿define(['plugins/router', 'durandal/app', 'viewmodels/shell', 'introjs', 'plugins/cssLoader'], function (router, app, shell, introjs, cssLoader) {
     
     var ctor = function () {
         var self = this;
@@ -31,8 +31,23 @@
         }
     };
 
+    ctor.prototype.compositionComplete = function () {
+        if (this.ShowNoFeedsFound() == true) {
+            cssLoader.loadCss("../../Content/introjs.css");
+            introjs().start();
+        }
+    };
+
     ctor.prototype.AddFeed = function() {
         router.navigate('#feeds/create');
+    };
+
+    ctor.prototype.deactivate = function () {
+        if (this.ShowNoFeedsFound() == true) {
+            introjs().exit();
+        }
+
+        cssLoader.removeModuleCss();
     };
 
     ctor.prototype.activate = function() {

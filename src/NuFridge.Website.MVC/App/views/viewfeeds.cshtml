@@ -1,12 +1,9 @@
 ﻿<section class="viewFeedsSection">
     <div class="row">
         <p>This page allows you to manage the feeds available on NuFridge.</p>
-        <div data-bind="visible: ShowNoFeedsFound">
-            <p>No feeds were found, click the 'Add Feed' button to get started.</p>
-        </div>
-        <button type="submit" class="btn btn-info addFeedButton" data-bind="click: AddFeed, visible: !ShowError() && !IsLoadingFeeds()">Add Feed</button>
+        <button data-step="1" data-intro="No feeds were found, click the 'Add Feed' button to get started." type="submit" class="btn btn-info addFeedButton" data-bind="click: AddFeed, visible: !ShowError() && !IsLoadingFeeds()">Add Feed</button>
     </div>
-    <div class="row">
+    <div class="row" data-step="2" data-intro="Ok, wasn't that fun?">
         <div data-bind="visible: Feeds() != null && Feeds().length > 0">
             <ul class="ds-btn" data-bind="foreach: Feeds()">
                 <li>

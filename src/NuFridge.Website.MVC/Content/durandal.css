@@ -200,3 +200,10 @@ vertical-align:bottom;
         background-color: rgba(255,255,255, .23);
         border-bottom-color: transparent;
     }
+
+.introjs-tooltiptext, .introjs-showElement  {
+color:black;
+}
+.introjs-bullets, .introjs-tooltipbuttons {
+display:none;
+}
