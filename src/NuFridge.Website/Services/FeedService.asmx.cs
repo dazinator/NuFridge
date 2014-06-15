@@ -115,9 +115,9 @@ namespace NuFridge.Website.Services
         public CreateFeedResponse CreateFeed(CreateFeedRequest request)
         {
 
-            string message;
-            var success = FeedManager.CreateFeed(request.FeedName, out message);
-            return new CreateFeedResponse(success, message);
+            string message = string.Empty;
+          //  var success = FeedManager.CreateFeed(request.FeedName, out message);
+            return new CreateFeedResponse(false, message);
         }
 
         [WebMethod(MessageName = "GetRetentionPolicyHistoryList")]
@@ -140,8 +140,8 @@ namespace NuFridge.Website.Services
         public DeleteFeedResponse DeleteFeed(DeleteFeedRequest request)
         {
             string message;
-            var success = FeedManager.DeleteFeed(request.FeedName, out message);
-            return new DeleteFeedResponse(success, message);
+           // var success = FeedManager.DeleteFeed(request.FeedName, out message);
+            return new DeleteFeedResponse(true, "");
         }
 
         [WebMethod]

@@ -4,7 +4,7 @@
         <div data-bind="visible: ShowNoFeedsFound">
             <p>No feeds were found, click the 'Add Feed' button to get started.</p>
         </div>
-        <button type="submit" class="btn btn-info addFeedButton" data-bind="click: AddFeed, visible: !ShowError()">Add Feed</button>
+        <button type="submit" class="btn btn-info addFeedButton" data-bind="click: AddFeed, visible: !ShowError() && !IsLoadingFeeds()">Add Feed</button>
     </div>
     <div class="row">
         <div data-bind="visible: Feeds() != null && Feeds().length > 0">
@@ -16,8 +16,7 @@
             </ul>
         </div>
         <div data-bind="visible: ShowError">
-            <br />
-            <p class="bg-danger">There was an error loading the feeds.</p>
+            <p class="bg-danger" data-bind="text: ErrorMessage"></p>
         </div>
     </div>
 </section>

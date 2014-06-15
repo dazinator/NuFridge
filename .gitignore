@@ -173,3 +173,8 @@ UpgradeLog*.htm
 # Microsoft Fakes
 FakesAssemblies/
 
+/src/NuFridge.Website.MVC/Scripts/knockout-3.1.0.js
+/src/NuFridge.Website.MVC/Content/themes/Thumbs.db
+/src/NuFridge.Website.MVC/Content/images/Thumbs.db
+/src/NuFridge.Website.MVC/Content/images/ios-startup-image-portrait.png
+/src/NuFridge.Website.MVC/Content/images/ios-startup-image-landscape.png

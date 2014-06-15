@@ -43,6 +43,9 @@
     <Reference Include="Common.Logging.Core">
       <HintPath>..\packages\Common.Logging.Core.2.2.0\lib\net40\Common.Logging.Core.dll</HintPath>
     </Reference>
+    <Reference Include="FluentValidation">
+      <HintPath>..\packages\FluentValidation.5.3.0.0\lib\Net40\FluentValidation.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
@@ -84,12 +87,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="ThoughtWorks.CruiseControl.CCTrayLib">
-      <HintPath>..\..\lib\ThoughtWorks.CruiseControl.CCTrayLib.dll</HintPath>
-    </Reference>
-    <Reference Include="ThoughtWorks.CruiseControl.Remote">
-      <HintPath>..\..\lib\ThoughtWorks.CruiseControl.Remote.dll</HintPath>
-    </Reference>
     <Reference Include="WebMatrix.Data, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.Data.3.1.2\lib\net45\WebMatrix.Data.dll</HintPath>
@@ -101,12 +98,16 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Feeds\Configuration\IFeedConfig.cs" />
+    <Compile Include="Feeds\Configuration\KlondikeFeedConfig.cs" />
     <Compile Include="FileResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>FileResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\ConfigHelper.cs" />
     <Compile Include="Helpers\FileHelper.cs" />
+    <Compile Include="Validators\ValidatorBuilder.cs" />
     <Compile Include="Jobs\ApplyRetentionPoliciesJob.cs" />
     <Compile Include="Jobs\ImportPackagesJob.cs" />
     <Compile Include="IIS\ApplicationInfo.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="Managers\IIS\ApplicationManager.cs" />
     <Compile Include="Managers\IIS\WebsiteManager.cs" />
     <Compile Include="Managers\InviteManager.cs" />
+    <Compile Include="Validators\FeedValidator.cs" />
     <None Include="Managers\AccountManager.cs" />
     <Compile Include="Managers\ScheduleManager.cs" />
     <Compile Include="IIS\VirtualDirectoryInfo.cs" />

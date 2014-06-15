@@ -8,6 +8,7 @@
         
         this.IsLoadingFeeds = ko.observable(false);
         this.LoadError = ko.observable(false);
+        this.ErrorMessage = ko.observable();
 
         this.ShowNoFeedsFound = ko.computed(function() {
             return self.IsLoadingFeeds() == false && self.LoadError() == false && (self.Feeds() == null || self.Feeds().length <= 0);
@@ -49,6 +50,7 @@
             self.LoadError(false);
             ko.mapping.fromJS(data, ctor.mapping, self.Feeds);
         }).fail(function (response) {
+            self.ErrorMessage(JSON.parse(response.responseText).Message);
             self.IsLoadingFeeds(false);
             self.LoadError(true);
         });
