@@ -3,9 +3,9 @@
 
     // your default structure goes here
     data = $.extend({
-        Name: ko.observable().extend({ trackChange: true }),
-        APIKey: ko.observable().extend({ trackChange: true }),
-        FeedURL: ko.observable(),
+        Name: ko.observable("").extend({ trackChange: true }),
+        APIKey: ko.observable("").extend({ trackChange: true }),
+        FeedURL: ko.observable(""),
         Id: ko.observable()
     }, config);
 
