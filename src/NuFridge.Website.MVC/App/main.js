@@ -4,9 +4,10 @@
         'durandal': '../Scripts/durandal',
         'plugins': '../Scripts/durandal/plugins',
         'transitions': '../Scripts/durandal/transitions',
-        'knockout': '../Scripts/knockout-2.3.0',
+        'knockout': '../Scripts/knockout-3.1.0',
         'knockoutmapping': '../Scripts/knockout.mapping',
-        'jQuery': '../Scripts/jquery-1.9.1'
+        'jQuery': '../Scripts/jquery-1.9.1',
+        'introjs': '../Scripts/intro'
     }
 });
 

@@ -1,4 +1,4 @@
-﻿define(['plugins/router', 'durandal/app', 'viewmodels/shell'], function (router, app, shell) {
+﻿define(['plugins/router', 'durandal/app', 'viewmodels/shell', 'introjs'], function (router, app, shell, introjs) {
     
     var ctor = function () {
         var self = this;
