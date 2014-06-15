@@ -7,6 +7,7 @@
         this.Feed.APIKey = ko.observable();
         this.ShowDeleteButton = ko.observable(true);
         this.EditFeedTitle = ko.observable();
+        this.IsEditMode = ko.observable(false);
     };
 
     ctor.prototype.activate = function() {
@@ -32,6 +33,7 @@
                 self.EditFeedTitle(self.Feed.Name());
                 self.Feed.Id(item.Id);
                 self.Feed.APIKey(item.APIKey);
+                self.IsEditMode(true);
             }).fail(function () {
                 self.ShowDeleteButton(false);
                 alert("An error occurred loading the feed.");
@@ -39,6 +41,7 @@
         } else {
             self.ShowDeleteButton(false);
             self.EditFeedTitle = "Create Feed";
+            self.IsEditMode(false);
         }
     };
 

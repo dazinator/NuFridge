@@ -23,10 +23,10 @@ namespace NuFridge.Website.Services
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public GetFeedResponse GetFeed(GetFeedRequest request)
         {
-            FeedEntity feed;
+            FeedEntity feed = null;
             try
             {
-                feed = FeedManager.FindFeed(request.FeedName);
+                //feed = FeedManager.FindFeed(request.FeedName);
             }
             catch (Exception)
             {

@@ -97,7 +97,7 @@ namespace NuFridge.Common.Manager
             }
 
             string feedWebsiteName;
-            if (!GetFeedWebsiteName(out message, out feedWebsiteName)) 
+            if (!ConfigHelper.GetFeedWebsiteName(out message, out feedWebsiteName)) 
                 return false;
 
             //Create the website and application managers which interact with IIS
@@ -175,19 +175,7 @@ namespace NuFridge.Common.Manager
             return true;
         }
 
-        private static bool GetFeedWebsiteName(out string message, out string nuFridgeWebsiteName)
-        {
-            message = null;
-            nuFridgeWebsiteName = ConfigurationManager.AppSettings["IIS.FeedWebsite.Name"];
 
-
-            if (string.IsNullOrWhiteSpace(nuFridgeWebsiteName))
-            {
-                message = "The IIS.FeedWebsite.Name app setting has not been configured.";
-                return false;
-            }
-            return true;
-        }
 
         private static void GetApplicationDirectoryPathsForRename(string newFeedName, ApplicationInfo app, out string oldPath,
                                                                   out string newPath)
@@ -234,15 +222,13 @@ namespace NuFridge.Common.Manager
                 }
             }
 
-            
-
             //Get the feed website name
             string feedWebsiteName;
-            if (!GetFeedWebsiteName(out message, out feedWebsiteName))
+            if (!ConfigHelper.GetFeedWebsiteName(out message, out feedWebsiteName))
                 return false;
 
             //Get port number and directory path for the feed website
-            var nuFridgePortNumber = GetFeedWebsitePortNumber();
+            var nuFridgePortNumber = ConfigHelper.GetFeedWebsitePortNumber();
             var nuFridgeFeedDirectory = ConfigurationManager.AppSettings["IIS.FeedWebsite.RootDirectory"];
 
             if (!Directory.Exists(nuFridgeFeedDirectory))
@@ -298,76 +284,31 @@ namespace NuFridge.Common.Manager
                 throw new Exception("A directory already exists for the " + feed.Name + " feed.");
             }
 
-
-
             //Create the NuGet feed
-            CreateFilesInFeed(feedDirectory, feed.APIKey);
+            CreateFilesInFeed(feedDirectory);
+
+            //Update the feed config
+            IFeedConfig feedConfig = new KlondikeFeedConfig(Path.Combine(feedDirectory, @"Web.config"));
+            feedConfig.UpdateAPIKey(feed.APIKey);
 
             //Create the application in IIS
             feedApplicationManager.CreateApplication(appPath, feedDirectory);
 
             message = "Successfully created a feed called " + feed.Name;
 
-
-
             return true;
         }
 
-        private static int GetFeedWebsitePortNumber()
-        {
-            var nuFridgePort = ConfigurationManager.AppSettings["IIS.FeedWebsite.PortNumber"];
 
-            int nuFridgePortNumber;
-            if (!int.TryParse(nuFridgePort, out nuFridgePortNumber))
-            {
-                nuFridgePortNumber = WebsiteManager.DefaultWebsitePortNumber;
-            }
-            return nuFridgePortNumber;
-        }
 
-        private static void CreateFilesInFeed(string feedDirectory, string APIKey)
+        private static void CreateFilesInFeed(string feedDirectory)
         {
             Directory.CreateDirectory(feedDirectory);
 
             var resource = FileResources.Klondike;
+            var archive = new ZipArchive(new MemoryStream(resource));
 
-            var stream = new MemoryStream(resource);
-            var archive = new ZipArchive(stream);
-
-            //For each file in the zip archive
-            foreach (var entry in archive.Entries)
-            {
-                //Get the parent folder and check it exists
-                var directoryPath = Path.Combine(feedDirectory, Path.GetDirectoryName(entry.FullName));
-
-                if (!Directory.Exists(directoryPath))
-                {
-                    try
-                    {
-                        Directory.CreateDirectory(directoryPath);
-                    }
-                    catch (Exception e)
-                    {
-                        throw;
-                    }
-                }
-
-                //Construct the file path including the directory to store the feed in
-                var fileName = Path.Combine(directoryPath, entry.Name);
-
-                //Open the zip archive entry stream and copy it to the file output stream
-                using (var entryStream = entry.Open())
-                {
-                    using (var outputStream = File.Create(fileName))
-                    {
-                        entryStream.CopyTo(outputStream);
-                    }
-                }
-            }
-
-            IFeedConfig feedConfig = new KlondikeFeedConfig(Path.Combine(feedDirectory, @"Web.config"));
-            feedConfig.UpdateAPIKey(APIKey);
-
+            FileHelper.ExtractZipToFolder(feedDirectory, archive);
         }
 
 
@@ -388,7 +329,7 @@ namespace NuFridge.Common.Manager
 
             //Get the feed website name
             string feedWebsiteName;
-            if (!GetFeedWebsiteName(out message, out feedWebsiteName))
+            if (!ConfigHelper.GetFeedWebsiteName(out message, out feedWebsiteName))
                 return false;
 
             var feedWebsiteManager = new WebsiteManager(feedWebsiteName);
@@ -437,18 +378,6 @@ namespace NuFridge.Common.Manager
 
             message = "Successfully removed the feed and deleted all packages for " + feed.Name;
             return true;
-        }
-
-        public static FeedEntity FindFeed(string feedName)
-        {
-            MongoDbRepository<FeedEntity> repository = new MongoDbRepository<FeedEntity>();
-            return repository.Get(fd => fd.Name == feedName).FirstOrDefault();
-        }
-
-        public static FeedEntity FindFeed(Guid id)
-        {
-            MongoDbRepository<FeedEntity> repository = new MongoDbRepository<FeedEntity>();
-            return repository.Get(fd => fd.Id == id).FirstOrDefault();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NuFridge.Common.Managers.IIS;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -18,6 +19,32 @@ namespace NuFridge.Common.Helpers
             var wcfm = new WebConfigurationFileMap();
             wcfm.VirtualDirectories.Add("/", vdm);
             return WebConfigurationManager.OpenMappedWebConfiguration(wcfm, "/");
+        }
+
+        internal static int GetFeedWebsitePortNumber()
+        {
+            var nuFridgePort = ConfigurationManager.AppSettings["IIS.FeedWebsite.PortNumber"];
+
+            int nuFridgePortNumber;
+            if (!int.TryParse(nuFridgePort, out nuFridgePortNumber))
+            {
+                nuFridgePortNumber = WebsiteManager.DefaultWebsitePortNumber;
+            }
+            return nuFridgePortNumber;
+        }
+
+        internal static bool GetFeedWebsiteName(out string message, out string nuFridgeWebsiteName)
+        {
+            message = null;
+            nuFridgeWebsiteName = ConfigurationManager.AppSettings["IIS.FeedWebsite.Name"];
+
+
+            if (string.IsNullOrWhiteSpace(nuFridgeWebsiteName))
+            {
+                message = "The IIS.FeedWebsite.Name app setting has not been configured.";
+                return false;
+            }
+            return true;
         }
     }
 }

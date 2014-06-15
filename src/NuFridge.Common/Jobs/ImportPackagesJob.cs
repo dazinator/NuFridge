@@ -59,7 +59,7 @@ namespace NuFridge.Common.Jobs
                 {
 
                     var sourceRepos = new DataServicePackageRepository(sourceFeedUri);
-                    var targetFeedUri = new Uri(targetFeed.PublishPackagesUrl);
+                    var targetFeedUri = new Uri(targetFeed.FeedURL);
                     var targetRepos = new DataServicePackageRepository(targetFeedUri);
 
                     var packagesInfo = sourceRepos.GetPackages().OrderBy(a => a.Id).ThenBy(a => a.Version).ToList();
@@ -67,7 +67,7 @@ namespace NuFridge.Common.Jobs
                     //    Select(p => new { p.Id, p.Title, p.Version }).ToList();
                     //packagesInfo = packagesInfo.OrderBy(a => a.Id).ThenBy(a => a.Version).
 
-                    var packageServer = new PackageServer(targetFeed.PublishPackagesUrl, UserAgent);
+                    var packageServer = new PackageServer(targetFeed.FeedURL, UserAgent);
 
                     foreach (var packageInfo in packagesInfo)
                     {
