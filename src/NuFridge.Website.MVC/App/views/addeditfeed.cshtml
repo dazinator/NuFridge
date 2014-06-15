@@ -27,7 +27,7 @@
                         <input type="text" class="form-control" id="feedAPIKeyInput" data-bind="value: Feed.APIKey">
                     </div>
                     <button type="submit" class="btn btn-danger" data-bind="click: Cancel">Cancel</button>
-                    <button type="submit" class="btn btn-primary" data-bind="click: SaveChanges">Save</button>
+                    <button type="submit" class="btn btn-primary" data-bind="click: SaveChanges, enable: Feed.Name() != null && Feed.Name().length > 0">Save</button>
                     <button type="submit" class="btn btn-danger float-right" data-bind="click: Delete, visible: ShowDeleteButton">Delete</button>
                 </form>
             </div>
