@@ -11,11 +11,11 @@ namespace NuFridge.Website.MVC.Controllers
 {
     public class FeedsController : ApiController
     {
-        private readonly IRepository<Feed> _repository;
+        private FeedManager _feedManager;
 
-        public FeedsController(IRepository<Feed> repository)
+        public FeedsController(FeedManager feedManager)
         {
-            _repository = repository;
+            _feedManager = feedManager;
         }
 
         [System.Web.Mvc.HttpGet]
@@ -23,7 +23,7 @@ namespace NuFridge.Website.MVC.Controllers
         {
             try
             {
-                return Request.CreateResponse(HttpStatusCode.OK, _repository.GetAll());
+                return Request.CreateResponse(HttpStatusCode.OK, _feedManager.GetAll());
             }
             catch (MongoDB.Driver.MongoConnectionException ex)
             {
@@ -35,7 +35,7 @@ namespace NuFridge.Website.MVC.Controllers
         [System.Web.Mvc.HttpGet]
         public Feed GetFeed(Guid id)
         {
-            Feed item = _repository.GetById(id);
+            Feed item = _feedManager.GetById(id);
             if (item == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -47,12 +47,10 @@ namespace NuFridge.Website.MVC.Controllers
         public HttpResponseMessage PostFeed(Feed item)
         {
             string message;
-            var result = FeedManager.CreateFeed(item, out message);
+            var result = _feedManager.CreateFeed(item, out message);
 
             if (result)
             {
-                _repository.Insert(item);
-
                 return Request.CreateResponse<Feed>(HttpStatusCode.Created, item);
             }
             else
@@ -67,12 +65,8 @@ namespace NuFridge.Website.MVC.Controllers
             newFeed.Id = id;
 
             string message;
-            var result = FeedManager.UpdateFeed(newFeed, out message);
-            if (result)
-            {
-                _repository.Update(newFeed);
-            }
-            else
+            var result = _feedManager.UpdateFeed(newFeed, out message);
+            if (!result)
             {
                 throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
@@ -81,20 +75,16 @@ namespace NuFridge.Website.MVC.Controllers
         [System.Web.Mvc.HttpDelete]
         public void DeleteFeed(Guid id)
         {
-            Feed item = _repository.GetById(id);
+            Feed item = _feedManager.GetById(id);
             if (item == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
             string message;
-            var result = FeedManager.DeleteFeed(item, out message);
+            var result = _feedManager.DeleteFeed(item, out message);
 
-            if (result)
-            {
-                _repository.Delete(item);
-            }
-            else
+            if (!result)
             {
                 throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }

@@ -148,8 +148,8 @@ namespace NuFridge.Website.Services
         [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
         public ImportFeedResponse ImportFeed(ImportFeedRequest request)
         {
-            string jobName;
-            FeedManager.ScheduleImportPackagesJob(request.SourceFeedUrl, request.FeedName, request.ApiKey, out jobName);
+            string jobName = "";
+           // FeedManager.ScheduleImportPackagesJob(request.SourceFeedUrl, request.FeedName, request.ApiKey, out jobName);
             return new ImportFeedResponse() { Success = true, JobName = jobName };
         }
     }

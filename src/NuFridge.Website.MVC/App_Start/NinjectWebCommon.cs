@@ -3,6 +3,7 @@
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using Ninject;
 using Ninject.Web.Common;
+using NuFridge.Common.Manager;
 using NuFridge.DataAccess.Model;
 using NuFridge.DataAccess.Repositories;
 using System;
@@ -62,6 +63,7 @@ namespace NuFridge.Website.MVC.App_Start
         private static void RegisterServices(IKernel kernel)
         {
             kernel.Bind<IRepository<Feed>>().To<MongoDbRepository<Feed>>();
+            kernel.Bind<FeedManager>().ToSelf();
         }
     }
 }
