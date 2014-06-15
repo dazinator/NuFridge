@@ -1,20 +1,37 @@
 ﻿<section>
     <div class="modal-content">
         <div class="modal-header">
-            <h3 data-bind="text: 'Please enter a feed name'"></h3>
+            <h3 data-bind="text: EditFeedTitle"></h3>
+            <span class="pull-right">
+                <!-- Tabs -->
+                <ul id="viewFeedTabs" class="nav nav-tabs panel-tabs" data-tabs="tabs">
+                    <li class="active"><a href="#tabOverview" data-toggle="tab">Overview</a></li>
+                    <li><a href="#tabPackages" data-toggle="tab">Packages</a></li>
+                    <li><a href="#tabSettings" data-toggle="tab">Settings</a></li>
+                </ul>
+            </span>
         </div>
-        <div class="modal-body">
-            <form role="form">
-                <div class="form-group">
-                    <p>Name:</p>
-                    <input type="text" class="form-control" id="feedNameInput" data-bind="value: Feed.Name">
-                    <p>API Key:</p>
-                    <input type="text" class="form-control" id="feedAPIKeyInput" data-bind="value: Feed.APIKey">
-                </div>
-                <button type="submit" class="btn btn-danger" data-bind="click: Cancel">Cancel</button>
-                <button type="submit" class="btn btn-primary" data-bind="click: SaveChanges">Save</button>
-                <button type="submit" class="btn btn-danger float-right" data-bind="click: Delete, visible: ShowDeleteButton">Delete</button>
-            </form>
+        <div class="tab-content">
+            <div id="tabOverview" class="modal-body tab-pane active">
+                Overview
+            </div>
+            <div id="tabPackages" class="modal-body tab-pane">
+                Packages
+            </div>
+            <div id="tabSettings" class="modal-body tab-pane">
+                <form role="form">
+                    <div class="form-group">
+                        <p>Name:</p>
+                        <input type="text" class="form-control" id="feedNameInput" data-bind="value: Feed.Name">
+                        <p>API Key:</p>
+                        <input type="text" class="form-control" id="feedAPIKeyInput" data-bind="value: Feed.APIKey">
+                    </div>
+                    <button type="submit" class="btn btn-danger" data-bind="click: Cancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary" data-bind="click: SaveChanges">Save</button>
+                    <button type="submit" class="btn btn-danger float-right" data-bind="click: Delete, visible: ShowDeleteButton">Delete</button>
+                </form>
+
+            </div>
         </div>
     </div>
 </section>

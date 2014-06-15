@@ -6,14 +6,18 @@
         this.Feed.Id = ko.observable();
         this.Feed.APIKey = ko.observable();
         this.ShowDeleteButton = ko.observable(true);
+        this.EditFeedTitle = ko.observable();
     };
 
     ctor.prototype.activate = function() {
 
         shell.ShowNavigation(true);
+        shell.ShowPageTitle(false);
+
+        $('#viewFeedTabs').tab();
 
         var self = this;
-       
+
         var re = new RegExp("([a-z0-9]{8}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{12})");
 
         var match = re.exec(document.location.href);
@@ -25,6 +29,7 @@
             }).then(function (item) {
                 //TODO remove with ko mapping
                 self.Feed.Name(item.Name);
+                self.EditFeedTitle(self.Feed.Name());
                 self.Feed.Id(item.Id);
                 self.Feed.APIKey(item.APIKey);
             }).fail(function () {
@@ -33,6 +38,7 @@
             });
         } else {
             self.ShowDeleteButton(false);
+            self.EditFeedTitle = "Create Feed";
         }
     };
 

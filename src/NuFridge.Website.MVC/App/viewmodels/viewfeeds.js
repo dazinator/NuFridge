@@ -24,7 +24,7 @@
             var vm = ko.mapping.fromJS(options.data);
 
             vm.EditUrl = ko.computed(function () {
-                return '#feeds/edit/' + vm.Id();
+                return '#feeds/view/' + vm.Id();
             });
 
             return vm;
