@@ -1,13 +1,19 @@
 ﻿define(['plugins/router', 'durandal/app', 'viewmodels/shell', 'plugins/dialog'], function (router, app, shell, dialog) {
 
     var ctor = function () {
+        var self = this;
+
         this.Feed = {};
-        this.Feed.Name = ko.observable();
+        this.Feed.Name = ko.observable().extend({ trackChange: true });
         this.Feed.Id = ko.observable();
-        this.Feed.APIKey = ko.observable();
+        this.Feed.APIKey = ko.observable().extend({ trackChange: true });
         this.ShowDeleteButton = ko.observable(true);
         this.EditFeedTitle = ko.observable();
         this.IsEditMode = ko.observable(false);
+
+        this.IsFormDirty = ko.computed(function () {
+            return (self.Feed.Name() != null && self.Feed.Name.isDirty() == true) || (self.Feed.APIKey() != null && self.Feed.APIKey.isDirty() == true);
+        });
     };
 
     ctor.prototype.activate = function() {
@@ -33,6 +39,9 @@
                 self.EditFeedTitle(self.Feed.Name());
                 self.Feed.Id(item.Id);
                 self.Feed.APIKey(item.APIKey);
+
+                self.Feed.Name.isDirty(false);
+                self.Feed.APIKey.isDirty(false);
                 self.IsEditMode(true);
             }).fail(function () {
                 self.ShowDeleteButton(false);
