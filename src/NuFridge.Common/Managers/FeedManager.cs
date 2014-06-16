@@ -59,12 +59,13 @@ namespace NuFridge.Common.Manager
         public Feed GetById(Guid id)
         {
             var feed = Repository.GetById(id);
+            if (feed != null)
+            {
+                var website = WebsiteManager.GetWebsite();
 
-            var website = WebsiteManager.GetWebsite();
 
-
-            feed.FeedURL = string.Format("{0}/{1}", website.Bindings[0].Url, feed.Name);
-
+                feed.FeedURL = string.Format("{0}/{1}", website.Bindings[0].Url, feed.Name);
+            }
             return feed;
         }
 

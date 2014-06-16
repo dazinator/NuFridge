@@ -32,20 +32,30 @@ namespace NuFridge.Website.MVC.Controllers
             }
             catch (Exception ex)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, new HttpError(ex.Message));
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new HttpError(ex, true));
             }
         }
 
 
         [System.Web.Mvc.HttpGet]
-        public Feed GetFeed(Guid id)
+        public HttpResponseMessage GetFeed(Guid id)
         {
-            Feed item = _feedManager.GetById(id);
-            if (item == null)
+            Feed feed;
+            try
+            {
+                feed = _feedManager.GetById(id);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new HttpError(ex, true));
+            }
+
+            if (feed == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-            return item;
+
+            return Request.CreateResponse(HttpStatusCode.OK, feed);
         }
 
         [System.Web.Mvc.HttpPost]
