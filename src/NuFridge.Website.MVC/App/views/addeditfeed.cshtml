@@ -25,12 +25,17 @@
                                 </figure>
                             </div>
                             <div class="col-md-8">
-                                <h4 class="list-group-item-heading"><a href="#" data-bind="text: title"></a></h4>
+                                <h4 class="list-group-item-heading">
+                                    <a href="#" data-bind="text: title" />
+                                    <span>by<span data-bind=" foreach: authors">
+                                        <span data-bind="text: $data"></span></span>
+                                    </span>
+                                </h4>
                                 <p class="list-group-item-text" data-bind="text: description">
                                 </p>
                             </div>
                             <div class="col-md-3 text-center">
-                                <h2><span data-bind="text: downloadCount"></span> <small>downloads </small></h2>
+                                <h2><span data-bind="text: downloadCount"></span><small> downloads</small></h2>
                                 <button type="button" class="btn btn-primary btn-sm btn-block">View </button>
                             </div>
                         </div>
