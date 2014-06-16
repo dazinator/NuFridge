@@ -3,7 +3,7 @@
         <p>This page allows you to manage the feeds available on NuFridge.</p>
         <button data-step="1" data-intro="No feeds were found, click the 'Add Feed' button to get started." type="submit" class="btn btn-info addFeedButton" data-bind="click: AddFeed, visible: !ShowError() && !IsLoadingFeeds()">Add Feed</button>
     </div>
-    <div class="row" data-step="2" data-intro="Ok, wasn't that fun?">
+    <div class="row">
         <div data-bind="visible: Feeds() != null && Feeds().length > 0">
             <ul class="ds-btn" data-bind="foreach: Feeds()">
                 <li>
@@ -12,8 +12,9 @@
                 </li>
             </ul>
         </div>
-        <div data-bind="visible: ShowError">
-            <p class="bg-danger" data-bind="text: ErrorMessage"></p>
+        <div class="bg-danger" data-bind="visible: ShowError">
+            <h3 data-bind="text: ErrorMessage"></h3>
+            <p class="bg-danger" data-bind="text: ExceptionMessage, visible: ExceptionMessage != null"></p>
         </div>
     </div>
 </section>

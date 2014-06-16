@@ -9,6 +9,7 @@
         this.IsLoadingFeeds = ko.observable(false);
         this.LoadError = ko.observable(false);
         this.ErrorMessage = ko.observable();
+        this.ExceptionMessage = ko.observable();
 
         this.ShowNoFeedsFound = ko.computed(function() {
             return self.IsLoadingFeeds() == false && self.LoadError() == false && (self.Feeds() == null || self.Feeds().length <= 0);
@@ -65,7 +66,16 @@
             self.LoadError(false);
             ko.mapping.fromJS(data, ctor.mapping, self.Feeds);
         }).fail(function (response) {
-            self.ErrorMessage(JSON.parse(response.responseText).Message);
+            var responseText = JSON.parse(response.responseText);
+
+            if (responseText.ExceptionMessage != null) {
+                self.ErrorMessage(responseText.Message);
+                self.ExceptionMessage(responseText.ExceptionMessage);
+            } else {
+                self.ErrorMessage("There was a problem loading the feeds.");
+                self.ExceptionMessage(responseText.Message);
+            }
+            
             self.IsLoadingFeeds(false);
             self.LoadError(true);
         });

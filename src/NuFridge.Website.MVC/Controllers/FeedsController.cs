@@ -27,7 +27,12 @@ namespace NuFridge.Website.MVC.Controllers
             }
             catch (MongoDB.Driver.MongoConnectionException ex)
             {
-               return Request.CreateResponse(HttpStatusCode.InternalServerError, new HttpError("There was an error connecting to MongoDB. " + ex.Message));
+                return Request.CreateResponse(HttpStatusCode.InternalServerError,
+                                              new HttpError("There was an error connecting to MongoDB. " + ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new HttpError(ex.Message));
             }
         }
 
