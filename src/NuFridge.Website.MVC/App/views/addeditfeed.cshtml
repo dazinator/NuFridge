@@ -12,21 +12,21 @@
             </span>
         </div>
         <div class="tab-content">
-            <div id="tabOverview" class="modal-body tab-pane fade" data-bind="css: IsEditMode() ? 'active in' : ''">
+            <div id="tabOverview" class="modal-body tab-pane" data-bind="css: IsEditMode() ? 'active in' : ''">
                 <p>Feed URL: <a data-bind="text: Feed().FeedURL, href: Feed().FeedURL" target="_blank"></a></p>
             </div>
-            <div id="tabPackages" class="modal-body tab-pane fade">
+            <div id="tabPackages" class="modal-body tab-pane">
                 <div class="well">
                     <div class="list-group" data-bind="foreach: Feed().Packages ">
                         <div class="clearfix list-group-item package-grid-item">
                             <div class="media col-md-1">
                                 <figure class="pull-left">
-                                    <img class="media-object img-rounded img-responsive" src="http://placehold.it/48x48">
+                                    <img class="media-object img-rounded img-responsive" data-bind="src: iconUrl">
                                 </figure>
                             </div>
                             <div class="col-md-8">
                                 <h4 class="list-group-item-heading">
-                                    <a href="#" data-bind="text: title" />
+                                    <a data-bind="text: title, href: ViewUrl" />
                                     <span>by<span data-bind=" foreach: authors">
                                         <span data-bind="text: $data"></span></span>
                                     </span>
@@ -36,13 +36,13 @@
                             </div>
                             <div class="col-md-3 text-center">
                                 <h2><span data-bind="text: downloadCount"></span><small> downloads</small></h2>
-                                <button type="button" class="btn btn-primary btn-sm btn-block">View </button>
+                                <a class="btn btn-primary btn-sm btn-block" data-bind="href: ViewUrl">View </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div id="tabSettings" class="modal-body tab-pane fade" data-bind="css: IsEditMode() ? '' : 'active in'">
+            <div id="tabSettings" class="modal-body tab-pane" data-bind="css: IsEditMode() ? '' : 'active in'">
                 <form role="form">
                     <div class="form-group">
                         <p>Name:</p>

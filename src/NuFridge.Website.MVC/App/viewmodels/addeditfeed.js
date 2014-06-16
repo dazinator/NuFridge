@@ -1,4 +1,4 @@
-﻿define(['plugins/router', 'durandal/app', 'viewmodels/shell', 'plugins/dialog', 'viewmodels/databinding/feed'], function (router, app, shell, dialog, feed) {
+﻿define(['plugins/router', 'durandal/app', 'viewmodels/shell', 'plugins/dialog', 'viewmodels/databinding/feed', 'viewmodels/databinding/package'], function (router, app, shell, dialog, feed, feedPackage) {
 
     var ctor = function () {
         var self = this;
@@ -12,6 +12,8 @@
         this.IsFormDirty = ko.computed(function () {
             return self.Feed() != null && ((self.Feed().Name() != null && self.Feed().Name.isDirty() == true) || (self.Feed().APIKey() != null && self.Feed().APIKey.isDirty() == true));
         });
+
+        this.activeTab = ko.observable();
     };
 
     var mapping = {
@@ -20,22 +22,31 @@
         }
     };
 
+
     ctor.prototype.compositionComplete = function ()
     {
         var self = this;
+
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-            if (e.target.hash == "#tabPackages") {
+            self.activeTab(e.target.hash);
+
+            if (self.activeTab() == "#tabPackages") {
                 self.LoadPackagesFromFeed();
             }
-        })
+        });
     };
+
 
     ctor.packageMapping = {
         create: function (options) {
-            var vm = ko.mapping.fromJS(options.data);
-            return vm;
+            var po = new PackageObject(options.data);
+            po.ViewUrl = ko.computed(function () {
+                   return '#feeds/view/' + router.activeInstruction().params[0] + "/package/" + po.id();
+            });
+            return po;
         }
     };
+
 
     ctor.prototype.LoadPackagesFromFeed = function () {
         var self = this;
@@ -44,7 +55,7 @@
         if (self.Feed().Packages().length <= 0) {
             $.ajax({
                 url: feedURL + "/api/packages",
-                data: { query: '', offset: 0, count: 10, originFilter: 'Any', sort: 'Score', order: 'Ascending', includePrerelease: false },
+                data: { query: '', offset: 0, count: 5, originFilter: 'Any', sort: 'Score', order: 'Ascending', includePrerelease: true },
                 cache: false,
                 dataType: 'json'
             }).then(function (data) {
@@ -61,17 +72,19 @@
 
         $('#viewFeedTabs').tab();
 
-     
 
         var self = this;
 
         var re = new RegExp("([a-z0-9]{8}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{12})");
 
-        var match = re.exec(document.location.href);
+        var createNew = false;
 
-        if (match) {
+        if (router.activeInstruction().params.length == 1)
+            createNew = true;
+
+        if (createNew) {
             $.ajax({
-                url: "/api/feeds/GetFeed/" + match[1],
+                url: "/api/feeds/GetFeed/" + router.activeInstruction().params[0],
                 cache: false
             }).then(function (data) {
                 ko.mapping.fromJS(data, mapping, self.Feed);
