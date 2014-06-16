@@ -20,12 +20,48 @@
         }
     };
 
+    ctor.prototype.compositionComplete = function ()
+    {
+        var self = this;
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            if (e.target.hash == "#tabPackages") {
+                self.LoadPackagesFromFeed();
+            }
+        })
+    };
+
+    ctor.packageMapping = {
+        create: function (options) {
+            var vm = ko.mapping.fromJS(options.data);
+            return vm;
+        }
+    };
+
+    ctor.prototype.LoadPackagesFromFeed = function () {
+        var self = this;
+        var feedURL = this.Feed().FeedURL();
+
+        if (self.Feed().Packages().length <= 0) {
+            $.ajax({
+                url: feedURL + "/api/packages",
+                data: { query: '', offset: 0, count: 10, originFilter: 'Any', sort: 'Score', order: 'Ascending', includePrerelease: false },
+                cache: false,
+                dataType: 'json'
+            }).then(function (data) {
+                ko.mapping.fromJS(data.hits, ctor.packageMapping, self.Feed().Packages);
+            }).fail(function (response) {
+            });
+        }
+    };
+
     ctor.prototype.activate = function() {
 
         shell.ShowNavigation(true);
         shell.ShowPageTitle(false);
 
         $('#viewFeedTabs').tab();
+
+     
 
         var self = this;
 

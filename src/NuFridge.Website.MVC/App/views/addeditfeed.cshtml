@@ -12,13 +12,32 @@
             </span>
         </div>
         <div class="tab-content">
-            <div id="tabOverview" class="modal-body tab-pane" data-bind="css: IsEditMode() ? 'active' : ''">
-             <p>Feed URL: <a data-bind="text: Feed().FeedURL, href: Feed().FeedURL" target="_blank"></a></p>
+            <div id="tabOverview" class="modal-body tab-pane fade" data-bind="css: IsEditMode() ? 'active in' : ''">
+                <p>Feed URL: <a data-bind="text: Feed().FeedURL, href: Feed().FeedURL" target="_blank"></a></p>
             </div>
-            <div id="tabPackages" class="modal-body tab-pane">
-                Packages
+            <div id="tabPackages" class="modal-body tab-pane fade">
+                <div class="well">
+                    <div class="list-group" data-bind="foreach: Feed().Packages ">
+                        <div class="clearfix list-group-item package-grid-item">
+                            <div class="media col-md-1">
+                                <figure class="pull-left">
+                                    <img class="media-object img-rounded img-responsive" src="http://placehold.it/48x48">
+                                </figure>
+                            </div>
+                            <div class="col-md-8">
+                                <h4 class="list-group-item-heading"><a href="#" data-bind="text: title"></a></h4>
+                                <p class="list-group-item-text" data-bind="text: description">
+                                </p>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <h2><span data-bind="text: downloadCount"></span> <small>downloads </small></h2>
+                                <button type="button" class="btn btn-primary btn-sm btn-block">View </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div id="tabSettings" class="modal-body tab-pane" data-bind="css: IsEditMode() ? '' : 'active'">
+            <div id="tabSettings" class="modal-body tab-pane fade" data-bind="css: IsEditMode() ? '' : 'active in'">
                 <form role="form">
                     <div class="form-group">
                         <p>Name:</p>
@@ -27,8 +46,8 @@
                         <input type="text" class="form-control" id="feedAPIKeyInput" data-bind="value: Feed().APIKey, valueUpdate: 'afterkeydown'">
                     </div>
                     <button type="submit" class="btn btn-danger" data-bind="click: Cancel">Cancel</button>
-                          
-                <button type="submit" class="btn btn-primary" data-bind="click: SaveChanges, enable: Feed().Name() != null && Feed().Name().length > 0 && IsFormDirty()">Save</button>
+
+                    <button type="submit" class="btn btn-primary" data-bind="click: SaveChanges, enable: Feed().Name() != null && Feed().Name().length > 0 && IsFormDirty()">Save</button>
                     <button type="submit" class="btn btn-danger float-right" data-bind="click: Delete, visible: ShowDeleteButton">Delete</button>
                 </form>
             </div>

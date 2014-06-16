@@ -227,11 +227,13 @@
     <Content Include="App\viewmodels\addeditfeed.js" />
     <Content Include="App\viewmodels\databinding\feed.js" />
     <Content Include="App\viewmodels\home.js" />
+    <Content Include="App\viewmodels\install.js" />
     <Content Include="App\viewmodels\viewretentionpolicies.js" />
     <Content Include="App\viewmodels\shell.js" />
     <Content Include="App\viewmodels\signin.js" />
     <Content Include="App\viewmodels\viewfeeds.js" />
     <Content Include="App\views\addeditfeed.cshtml" />
+    <Content Include="App\views\install.cshtml" />
     <None Include="App\views\shell.cshtml" />
     <None Include="App\views\home.cshtml" />
     <None Include="App\views\viewretentionpolicies.cshtml" />

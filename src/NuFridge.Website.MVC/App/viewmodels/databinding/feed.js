@@ -6,7 +6,8 @@
         Name: ko.observable("").extend({ trackChange: true }),
         APIKey: ko.observable("").extend({ trackChange: true }),
         FeedURL: ko.observable(""),
-        Id: ko.observable()
+        Id: ko.observable(),
+        Packages: ko.observableArray()
     }, config);
 
     ko.mapping.fromJS(data, {}, self);
