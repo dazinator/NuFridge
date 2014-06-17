@@ -8,6 +8,11 @@
         this.ShowDeleteButton = ko.observable(true);
         this.EditFeedTitle = ko.observable();
         this.IsEditMode = ko.observable(false);
+        this.PackagesLoading = ko.observable(true);
+        this.ErrorLoadingPackages = ko.observable(false);
+        this.NoPackagesFound = ko.computed(function () {
+            return self.PackagesLoading() == false && self.ErrorLoadingPackages() == false && self.Feed().Packages().length <= 0;
+        });
 
         this.IsFormDirty = ko.computed(function () {
             return self.Feed() != null && ((self.Feed().Name() != null && self.Feed().Name.isDirty() == true) || (self.Feed().APIKey() != null && self.Feed().APIKey.isDirty() == true));
@@ -60,7 +65,11 @@
                 dataType: 'json'
             }).then(function (data) {
                 ko.mapping.fromJS(data.hits, ctor.packageMapping, self.Feed().Packages);
+                self.PackagesLoading(false);
+                self.ErrorLoadingPackages(false);
             }).fail(function (response) {
+                self.PackagesLoading(false);
+                self.ErrorLoadingPackages(true);
             });
         }
     };
