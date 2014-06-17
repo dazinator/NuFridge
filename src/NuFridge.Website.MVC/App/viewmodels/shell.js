@@ -23,6 +23,7 @@
             ]).buildNavigationModel();
 
             return router.activate('viewmodels/signin', 'entrance');
-        }
+        }, 
+
     };
 });

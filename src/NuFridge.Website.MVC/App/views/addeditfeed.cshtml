@@ -1,9 +1,9 @@
 ﻿<section>
     <div class="modal-content">
-                <i title="Connecting..." data-bind="visible: LoadingData" class="pull-right icon-spinner icon-2x icon-spin"></i>
+        <i title="Connecting..." data-bind="visible: LoadingData" class="pull-right icon-spinner icon-2x icon-spin"></i>
         <div class="modal-header feed-heading">
-    
-            <h3 class="feed-heading-title"><span data-bind="text: EditFeedTitle"></span> </h3>
+
+            <h3 class="feed-heading-title"><span data-bind="text: EditFeedTitle"></span></h3>
             <span class="pull-right">
                 <ul id="viewFeedTabs" class="nav nav-tabs panel-tabs" data-tabs="tabs">
                     <li data-bind="visible: IsEditMode(), css: IsEditMode() ? 'active' : ''"><a href="#tabOverview" data-toggle="tab">Overview</a></li>
@@ -15,7 +15,6 @@
         <div class="tab-content">
             <div id="tabOverview" class="modal-body tab-pane" data-bind="css: IsEditMode() ? 'active in' : ''">
                 <h4><a data-bind="text: Feed().FeedURL, href: Feed().FeedURL" target="_blank"></a></h4>
-                <p>Packages: <span data-bind="text: PackageCount"></span></p>
             </div>
             <div id="tabPackages" class="modal-body tab-pane">
                 <h4 data-bind="visible: PackagesLoading">Loading packages...</h4>
@@ -44,6 +43,15 @@
                                 <a class="btn btn-primary btn-sm btn-block" data-bind="href: ViewUrl">View </a>
                             </div>
                         </div>
+                    </div>
+                    <div class="text-center" data-bind="visible: !NoPackagesFound() && !PackagesLoading()">
+                        <ul class="pagination">
+                            <li data-bind="css: PackageActivePageIndex() - 1 > 0 ? 'enabled' : 'disabled'"><a data-bind="    click: $root.PackagePageChanged.bind($root, PackageActivePageIndex() - 1)">« Previous</a></li>
+                             <!-- ko foreach: new Array(PackagePageCount()) -->
+                            <li data-bind="css: ($index() + 1) == $root.PackageActivePageIndex() ? 'active enabled' : 'enabled'"><a data-bind="click: $root.PackagePageChanged.bind($root, $index() + 1), text: $index() + 1"></a></li>
+                            <!-- /ko -->
+                            <li data-bind="css: PackageActivePageIndex() + 1 <= PackagePageCount() ? 'enabled' : 'disabled'"><a data-bind="    click: $root.PackagePageChanged.bind($root, PackageActivePageIndex() + 1)">Next »</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>

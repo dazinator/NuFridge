@@ -230,3 +230,7 @@ a.list-group-item.active small {
 .modal-content .icon-spinner {
     margin: 10px;
 }
+
+.pagination .enabled {
+cursor:pointer;
+}
