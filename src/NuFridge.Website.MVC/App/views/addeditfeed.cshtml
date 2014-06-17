@@ -19,7 +19,7 @@
                 <h4 data-bind="visible: PackagesLoading">Loading packages...</h4>
                 <h4 data-bind="visible: ErrorLoadingPackages">An error occurred loading the packages in the feed.</h4>
                 <h4 data-bind="visible: NoPackagesFound">No packages were found in the feed.</h4>
-                <div class="well" data-bind="visible: !NoPackagesFound">
+                <div class="well" data-bind="visible: Feed().Packages().length > 0">
                     <div class="list-group" data-bind="foreach: Feed().Packages ">
                         <div class="clearfix list-group-item package-grid-item">
                             <div class="media col-md-1">
