@@ -15,6 +15,11 @@
         <div class="tab-content">
             <div id="tabOverview" class="modal-body tab-pane" data-bind="css: IsEditMode() ? 'active in' : ''">
                 <h4><a data-bind="text: Feed().FeedURL, href: Feed().FeedURL" target="_blank"></a></h4>
+                <p>Klondike: <span data-bind="text: FeedVersion().klondike"></span></p>
+                <p>NuGet.Lucene: <span data-bind="text: FeedVersion().nuGetLucene"></span></p>
+                <p>NuGet.Core: <span data-bind="text: FeedVersion().nuGetCore"></span></p>
+                <p>Lucene.Net.Linq: <span data-bind="text: FeedVersion().luceneNetLinq"></span></p>
+                <p>Lucene.Net: <span data-bind="text: FeedVersion().luceneNet"></span></p>
             </div>
             <div id="tabPackages" class="modal-body tab-pane">
                 <h4 data-bind="visible: PackagesLoading">Loading packages...</h4>
@@ -47,8 +52,8 @@
                     <div class="text-center" data-bind="visible: !NoPackagesFound() && !PackagesLoading()">
                         <ul class="pagination">
                             <li data-bind="css: PackageActivePageIndex() - 1 > 0 ? 'enabled' : 'disabled'"><a data-bind="    click: $root.PackagePageChanged.bind($root, PackageActivePageIndex() - 1)">« Previous</a></li>
-                             <!-- ko foreach: new Array(PackagePageCount()) -->
-                            <li data-bind="css: ($index() + 1) == $root.PackageActivePageIndex() ? 'active enabled' : 'enabled'"><a data-bind="click: $root.PackagePageChanged.bind($root, $index() + 1), text: $index() + 1"></a></li>
+                            <!-- ko foreach: new Array(PackagePageCount()) -->
+                            <li data-bind="css: ($index() + 1) == $root.PackageActivePageIndex() ? 'active enabled' : 'enabled'"><a data-bind="    click: $root.PackagePageChanged.bind($root, $index() + 1), text: $index() + 1"></a></li>
                             <!-- /ko -->
                             <li data-bind="css: PackageActivePageIndex() + 1 <= PackagePageCount() ? 'enabled' : 'disabled'"><a data-bind="    click: $root.PackagePageChanged.bind($root, PackageActivePageIndex() + 1)">Next »</a></li>
                         </ul>

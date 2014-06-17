@@ -1,15 +1,16 @@
-﻿define(['plugins/router', 'durandal/app', 'viewmodels/shell', 'plugins/dialog', 'viewmodels/databinding/LuceneFeed', 'viewmodels/databinding/LucenePackage'], function (router, app, shell, dialog, luceneFeed, lucenePackage) {
+﻿define(['plugins/router', 'durandal/app', 'viewmodels/shell', 'plugins/dialog', 'viewmodels/databinding/LuceneFeed', 'viewmodels/databinding/LucenePackage', 'viewmodels/databinding/LuceneFeedVersion'], function (router, app, shell, dialog, luceneFeed, lucenePackage, luceneFeedVersion) {
 
     var ctor = function () {
         var self = this;
 
         this.Feed = ko.observable(new LuceneFeed());
+        this.FeedVersion = ko.observable(new LuceneFeedVersion());
         this.ShowDeleteButton = ko.observable(true);
         this.EditFeedTitle = ko.observable();
         this.IsEditMode = ko.observable(false);
 
         this.PackagesLoading = ko.observable(true);
-       // this.StatusLoading = ko.observable(true);
+        this.VersionLoading = ko.observable(true);
         this.ErrorLoadingPackages = ko.observable(false);
 
         this.PackagePageSize = ko.observable(5);
@@ -27,7 +28,7 @@
         });
 
         this.LoadingData = ko.computed(function () {
-            return self.IsEditMode() && (self.PackagesLoading());
+            return self.IsEditMode() && (self.PackagesLoading() || self.VersionLoading());
         });
 
         //TODO replace with knockout validation library
@@ -36,19 +37,20 @@
         });
     };
 
-    //ctor.prototype.LoadFeedStatus = function () {
-    //    var self = this;
+    ctor.prototype.LoadFeedVersion = function () {
+        var self = this;
 
-    //    $.ajax({
-    //        url: this.Feed().FeedURL() + "/api/indexing/status",
-    //        dataType: 'json'
-    //    }).then(function (data) {
-    //        self.PackageCount(data.totalPackages);
-    //        self.StatusLoading(false);
-    //    }).fail(function() {
-    //        self.StatusLoading(false);
-    //    });
-    //};
+        $.ajax({
+            url: this.Feed().FeedURL() + "/api/version",
+            dataType: 'json',
+            cache: false
+        }).then(function (data) {
+            ko.mapping.fromJS(data, LuceneFeedVersion.mapping, self.FeedVersion);
+            self.VersionLoading(false);
+        }).fail(function() {
+            self.VersionLoading(false);
+        });
+    };
 
     ctor.prototype.activate = function() {
 
@@ -74,7 +76,7 @@
                 ko.mapping.fromJS(data, LuceneFeed.mapping, self.Feed);
                 self.EditFeedTitle(self.Feed().Name());
                 self.IsEditMode(true);
-               // self.LoadFeedStatus();
+                self.LoadFeedVersion();
                 self.LoadPackagesFromFeed();
             }).fail(function () {
                 self.ShowDeleteButton(false);
