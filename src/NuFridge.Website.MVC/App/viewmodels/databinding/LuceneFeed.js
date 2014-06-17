@@ -1,4 +1,5 @@
-﻿var FeedObject = function (config) {
+﻿
+var LuceneFeed = function (config) {
     var self = this, data;
 
     // your default structure goes here
@@ -12,5 +13,19 @@
 
     ko.mapping.fromJS(data, {}, self);
 
+
+};
+
+LuceneFeed.mapping = {
+    create: function (options) {
+
+        var fd = new LuceneFeed(options.data);
+
+        fd.EditUrl = ko.computed(function () {
+            return '#feeds/view/' + fd.Id();
+        });
+
+        return fd;
+    }
 
 };

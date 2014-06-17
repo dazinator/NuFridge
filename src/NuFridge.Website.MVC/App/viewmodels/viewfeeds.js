@@ -1,10 +1,10 @@
-﻿define(['plugins/router', 'durandal/app', 'viewmodels/shell', 'introjs', 'plugins/cssLoader', 'viewmodels/databinding/feed'], function (router, app, shell, introjs, cssLoader, feed) {
+﻿define(['plugins/router', 'durandal/app', 'viewmodels/shell', 'introjs', 'plugins/cssLoader', 'viewmodels/databinding/LuceneFeed'], function (router, app, shell, introjs, cssLoader, feed) {
     
     var ctor = function () {
         var self = this;
 
         this.DisplayName = ko.observable('View Feeds');
-        this.Feeds = ko.observable();
+        this.Feeds = ko.observableArray();
         
         this.IsLoadingFeeds = ko.observable(false);
         this.LoadError = ko.observable(false);
@@ -18,18 +18,6 @@
         this.ShowError = ko.computed(function () {
             return self.LoadError() == true && self.IsLoadingFeeds() == false;
         });
-    };
-
-    ctor.mapping = {
-        create: function (options) {
-            var vm = ko.mapping.fromJS(options.data);
-
-            vm.EditUrl = ko.computed(function () {
-                return '#feeds/view/' + vm.Id();
-            });
-
-            return vm;
-        }
     };
 
     ctor.prototype.compositionComplete = function () {
@@ -64,7 +52,7 @@
         }).then(function (data) {
             self.IsLoadingFeeds(false);
             self.LoadError(false);
-            ko.mapping.fromJS(data, ctor.mapping, self.Feeds);
+            ko.mapping.fromJS(data, LuceneFeed.mapping, self.Feeds);
         }).fail(function (response) {
             var responseText = JSON.parse(response.responseText);
 

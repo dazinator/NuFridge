@@ -225,8 +225,9 @@
   <ItemGroup>
     <Content Include="App\main.js" />
     <Content Include="App\viewmodels\addeditfeed.js" />
-    <Content Include="App\viewmodels\databinding\feed.js" />
-    <Content Include="App\viewmodels\databinding\package.js" />
+    <Content Include="App\viewmodels\databinding\LuceneFeed.js" />
+    <Content Include="App\viewmodels\databinding\LucenePackage.js" />
+    <Content Include="App\viewmodels\databinding\RepositoryInfo.js" />
     <Content Include="App\viewmodels\home.js" />
     <Content Include="App\viewmodels\install.js" />
     <Content Include="App\viewmodels\viewpackage.js" />

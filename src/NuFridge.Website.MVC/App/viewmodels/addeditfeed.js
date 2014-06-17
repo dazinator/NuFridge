@@ -1,9 +1,9 @@
-﻿define(['plugins/router', 'durandal/app', 'viewmodels/shell', 'plugins/dialog', 'viewmodels/databinding/feed', 'viewmodels/databinding/package'], function (router, app, shell, dialog, feed, feedPackage) {
+﻿define(['plugins/router', 'durandal/app', 'viewmodels/shell', 'plugins/dialog', 'viewmodels/databinding/LuceneFeed', 'viewmodels/databinding/LucenePackage'], function (router, app, shell, dialog, luceneFeed, lucenePackage) {
 
     var ctor = function () {
         var self = this;
 
-        this.Feed = ko.observable(new FeedObject());
+        this.Feed = ko.observable(new LuceneFeed());
         this.PackageCount = ko.observable(0);
         this.ShowDeleteButton = ko.observable(true);
         this.EditFeedTitle = ko.observable();
@@ -27,21 +27,7 @@
         });
     };
 
-    var mapping = {
-        create: function (options) {
-            return new FeedObject(options.data);
-        }
-    };
 
-    ctor.packageMapping = {
-        create: function (options) {
-            var po = new PackageObject(options.data);
-            po.ViewUrl = ko.computed(function () {
-                   return '#feeds/view/' + router.activeInstruction().params[0] + "/package/" + po.id();
-            });
-            return po;
-        }
-    };
 
 
     ctor.prototype.LoadPackagesFromFeed = function () {
@@ -52,7 +38,7 @@
                 data: { query: '', offset: 0, count: 5, originFilter: 'Any', sort: 'Score', order: 'Ascending', includePrerelease: true },
                 dataType: 'json'
             }).then(function (data) {
-                ko.mapping.fromJS(data.hits, ctor.packageMapping, self.Feed().Packages);
+                ko.mapping.fromJS(data.hits, LucenePackage.mapping, self.Feed().Packages);
                 self.PackagesLoading(false);
                 self.ErrorLoadingPackages(false);
             }).fail(function (response) {
@@ -96,7 +82,7 @@
             $.ajax({
                 url: "/api/feeds/GetFeed/" + router.activeInstruction().params[0]
             }).then(function (data) {
-                ko.mapping.fromJS(data, mapping, self.Feed);
+                ko.mapping.fromJS(data, LuceneFeed.mapping, self.Feed);
                 self.EditFeedTitle(self.Feed().Name());
                 self.IsEditMode(true);
                 self.LoadFeedStatus();

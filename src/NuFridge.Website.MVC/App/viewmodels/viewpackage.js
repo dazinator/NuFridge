@@ -1,8 +1,8 @@
-﻿define(['plugins/router', 'durandal/app', 'knockout', 'viewmodels/shell', 'viewmodels/databinding/feed', 'viewmodels/databinding/package'], function (router, app, ko, shell, feed, feedPackage) {
+﻿define(['plugins/router', 'durandal/app', 'knockout', 'viewmodels/shell', 'viewmodels/databinding/LuceneFeed', 'viewmodels/databinding/LucenePackage'], function (router, app, ko, shell, feed, feedPackage) {
 
     var ctor = function () {
-        this.Feed = ko.observable(new FeedObject());
-        this.Package = ko.observable(new PackageObject());
+        this.Feed = ko.observable(new LuceneFeed());
+        this.Package = ko.observable(new LucenePackage());
 
         this.FeedId = ko.observable();
         this.PackageId = ko.observable();
@@ -21,7 +21,7 @@
             url: "/api/feeds/GetFeed/" + self.FeedId(),
             cache: false
         }).then(function (data) {
-            ko.mapping.fromJS(data, mapping, self.Feed);
+            ko.mapping.fromJS(data, LuceneFeed.mapping, self.Feed);
 
             var feedURL = self.Feed().FeedURL();
 
@@ -30,25 +30,13 @@
                 cache: false,
                 dataType: 'json'
             }).then(function (data) {
-                ko.mapping.fromJS(data, ctor.packageMapping, self.Package);
+                ko.mapping.fromJS(data, LucenePackage.mapping, self.Package);
             }).fail(function (response) {
                 alert("An error occurred loading the package.");
             });
         }).fail(function () {
             alert("An error occurred loading the feed.");
         });
-    };
-
-    var mapping = {
-        create: function (options) {
-            return new FeedObject(options.data);
-        }
-    };
-
-    ctor.packageMapping = {
-        create: function (options) {
-            return new PackageObject(options.data);
-        }
     };
 
     return ctor;
