@@ -4,21 +4,27 @@
         var self = this;
 
         this.Feed = ko.observable(new FeedObject());
-
+        this.PackageCount = ko.observable(0);
         this.ShowDeleteButton = ko.observable(true);
         this.EditFeedTitle = ko.observable();
         this.IsEditMode = ko.observable(false);
+
         this.PackagesLoading = ko.observable(true);
+        this.StatusLoading = ko.observable(true);
         this.ErrorLoadingPackages = ko.observable(false);
+
         this.NoPackagesFound = ko.computed(function () {
             return self.PackagesLoading() == false && self.ErrorLoadingPackages() == false && self.Feed().Packages().length <= 0;
         });
 
+        this.LoadingData = ko.computed(function () {
+            return self.IsEditMode() && (self.PackagesLoading() || self.StatusLoading());
+        });
+
+        //TODO replace with knockout validation library
         this.IsFormDirty = ko.computed(function () {
             return self.Feed() != null && ((self.Feed().Name() != null && self.Feed().Name.isDirty() == true) || (self.Feed().APIKey() != null && self.Feed().APIKey.isDirty() == true));
         });
-
-        this.activeTab = ko.observable();
     };
 
     var mapping = {
@@ -26,21 +32,6 @@
             return new FeedObject(options.data);
         }
     };
-
-
-    ctor.prototype.compositionComplete = function ()
-    {
-        var self = this;
-
-        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-            self.activeTab(e.target.hash);
-
-            if (self.activeTab() == "#tabPackages") {
-                self.LoadPackagesFromFeed();
-            }
-        });
-    };
-
 
     ctor.packageMapping = {
         create: function (options) {
@@ -55,13 +46,10 @@
 
     ctor.prototype.LoadPackagesFromFeed = function () {
         var self = this;
-        var feedURL = this.Feed().FeedURL();
 
-        if (self.Feed().Packages().length <= 0) {
             $.ajax({
-                url: feedURL + "/api/packages",
+                url: this.Feed().FeedURL() + "/api/packages",
                 data: { query: '', offset: 0, count: 5, originFilter: 'Any', sort: 'Score', order: 'Ascending', includePrerelease: true },
-                cache: false,
                 dataType: 'json'
             }).then(function (data) {
                 ko.mapping.fromJS(data.hits, ctor.packageMapping, self.Feed().Packages);
@@ -71,7 +59,20 @@
                 self.PackagesLoading(false);
                 self.ErrorLoadingPackages(true);
             });
-        }
+    };
+
+    ctor.prototype.LoadFeedStatus = function () {
+        var self = this;
+
+        $.ajax({
+            url: this.Feed().FeedURL() + "/api/indexing/status",
+            dataType: 'json'
+        }).then(function (data) {
+            self.PackageCount(data.totalPackages);
+            self.StatusLoading(false);
+        }).fail(function() {
+            self.StatusLoading(false);
+        });
     };
 
     ctor.prototype.activate = function() {
@@ -93,12 +94,13 @@
 
         if (createNew) {
             $.ajax({
-                url: "/api/feeds/GetFeed/" + router.activeInstruction().params[0],
-                cache: false
+                url: "/api/feeds/GetFeed/" + router.activeInstruction().params[0]
             }).then(function (data) {
                 ko.mapping.fromJS(data, mapping, self.Feed);
                 self.EditFeedTitle(self.Feed().Name());
                 self.IsEditMode(true);
+                self.LoadFeedStatus();
+                self.LoadPackagesFromFeed();
             }).fail(function () {
                 self.ShowDeleteButton(false);
                 alert("An error occurred loading the feed.");

@@ -226,3 +226,7 @@ a.list-group-item.active small {
     padding: 0;
     display: inline;
 }
+
+.modal-content .icon-spinner {
+    margin: 10px;
+}

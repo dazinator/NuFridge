@@ -1,9 +1,10 @@
 ﻿<section>
     <div class="modal-content">
-        <div class="modal-header">
-            <h3 data-bind="text: EditFeedTitle"></h3>
+                <i title="Connecting..." data-bind="visible: LoadingData" class="pull-right icon-spinner icon-2x icon-spin"></i>
+        <div class="modal-header feed-heading">
+    
+            <h3 class="feed-heading-title"><span data-bind="text: EditFeedTitle"></span> </h3>
             <span class="pull-right">
-                <!-- Tabs -->
                 <ul id="viewFeedTabs" class="nav nav-tabs panel-tabs" data-tabs="tabs">
                     <li data-bind="visible: IsEditMode(), css: IsEditMode() ? 'active' : ''"><a href="#tabOverview" data-toggle="tab">Overview</a></li>
                     <li data-bind="visible: IsEditMode()"><a href="#tabPackages" data-toggle="tab">Packages</a></li>
@@ -13,7 +14,8 @@
         </div>
         <div class="tab-content">
             <div id="tabOverview" class="modal-body tab-pane" data-bind="css: IsEditMode() ? 'active in' : ''">
-                <p>Feed URL: <a data-bind="text: Feed().FeedURL, href: Feed().FeedURL" target="_blank"></a></p>
+                <h4><a data-bind="text: Feed().FeedURL, href: Feed().FeedURL" target="_blank"></a></h4>
+                <p>Packages: <span data-bind="text: PackageCount"></span></p>
             </div>
             <div id="tabPackages" class="modal-body tab-pane">
                 <h4 data-bind="visible: PackagesLoading">Loading packages...</h4>
@@ -38,7 +40,7 @@
                                 </p>
                             </div>
                             <div class="col-md-3 text-center">
-                                <h2><span data-bind="text: downloadCount"></span><small> downloads</small></h2>
+                                <h2><span data-bind="text: downloadCount"></span><small>downloads</small></h2>
                                 <a class="btn btn-primary btn-sm btn-block" data-bind="href: ViewUrl">View </a>
                             </div>
                         </div>
