@@ -1,4 +1,4 @@
-﻿define(['plugins/router', 'durandal/app', 'viewmodels/shell', 'plugins/dialog', 'viewmodels/databinding/LuceneFeed', 'viewmodels/databinding/LucenePackage', 'viewmodels/databinding/LuceneFeedVersion'], function (router, app, shell, dialog, luceneFeed, lucenePackage, luceneFeedVersion) {
+﻿define(['plugins/router', 'durandal/app', 'viewmodels/shell', 'plugins/dialog', 'viewmodels/databinding/LuceneFeed', 'viewmodels/databinding/LucenePackage', 'viewmodels/databinding/LuceneFeedVersion', 'knockoutvalidation'], function (router, app, shell, dialog, luceneFeed, lucenePackage, luceneFeedVersion, validation) {
 
     var ctor = function () {
         var self = this;
@@ -33,11 +33,6 @@
             return self.IsEditMode() && (self.PackagesLoading() || self.VersionLoading());
         });
 
-        //TODO replace with knockout validation library
-        this.IsFormDirty = ko.computed(function () {
-            return self.Feed() != null && ((self.Feed().Name() != null && self.Feed().Name.isDirty() == true) || (self.Feed().APIKey() != null && self.Feed().APIKey.isDirty() == true));
-        });
-
         this.PackageSearchSuggestions = ko.observableArray();
     };
 
@@ -60,6 +55,11 @@
         var self = this;
         shell.ShowNavigation(true);
         shell.ShowPageTitle(false);
+
+        ko.validation.init({
+            registerExtenders: true,
+            insertMessages: false,
+        });
 
         $('#viewFeedTabs').tab();
 

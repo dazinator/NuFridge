@@ -7,7 +7,8 @@
         'knockout': '../Scripts/knockout-3.1.0',
         'knockoutmapping': '../Scripts/knockout.mapping',
         'jQuery': '../Scripts/jquery-1.9.1',
-        'introjs': '../Scripts/intro'
+        'introjs': '../Scripts/intro',
+        'knockoutvalidation': '../Scripts/knockout.validation'
     }
 });
 
@@ -32,18 +33,6 @@ define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'knockoutmapp
                 return { src: valueAccessor() };
             });
         }
-    };
-
-    ko.extenders.trackChange = function (target, track) {
-        if (track) {
-            target.isDirty = ko.observable(false);
-            target.originalValue = target();
-            target.subscribe(function (newValue) {
-                // use != not !== so numbers will equate naturally
-                target.isDirty(newValue != target.originalValue);
-            });
-        }
-        return target;
     };
 
     ko.bindingHandlers.returnAction = {

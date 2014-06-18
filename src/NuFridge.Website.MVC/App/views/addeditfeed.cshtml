@@ -81,14 +81,15 @@
             <div id="tabSettings" class="modal-body tab-pane" data-bind="css: IsEditMode() ? '' : 'active in'">
                 <form role="form">
                     <div class="form-group">
-                        <p>Name:</p>
-                        <input type="text" class="form-control" id="feedNameInput" data-bind="value: Feed().Name, valueUpdate: 'afterkeydown'">
-                        <p>API Key:</p>
+                        <p>Name:   <span class="bg-danger" data-bind="validationMessage: Feed().Name"></span></p>
+                        <input type="text" autocomplete="off" class="form-control" id="feedNameInput" data-bind="value: Feed().Name, valueUpdate: 'afterkeydown'">
+                        <br />
+                                                <p>API Key:</p>
                         <input type="text" class="form-control" id="feedAPIKeyInput" data-bind="value: Feed().APIKey, valueUpdate: 'afterkeydown'">
                     </div>
                     <button type="submit" class="btn btn-danger" data-bind="click: Cancel">Cancel</button>
 
-                    <button type="submit" class="btn btn-primary" data-bind="click: SaveChanges, enable: Feed().Name() != null && Feed().Name().length > 0 && IsFormDirty()">Save</button>
+                    <button type="submit" class="btn btn-primary" data-bind="click: SaveChanges, enable: Feed().Name() != null && Feed().Name().length > 0 && Feed().Name.isValid()">Save</button>
                     <button type="submit" class="btn btn-danger float-right" data-bind="click: Delete, visible: ShowDeleteButton">Delete</button>
                 </form>
             </div>
