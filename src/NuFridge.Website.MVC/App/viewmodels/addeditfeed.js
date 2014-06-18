@@ -37,6 +37,8 @@
         this.IsFormDirty = ko.computed(function () {
             return self.Feed() != null && ((self.Feed().Name() != null && self.Feed().Name.isDirty() == true) || (self.Feed().APIKey() != null && self.Feed().APIKey.isDirty() == true));
         });
+
+        this.PackageSearchSuggestions = ko.observableArray();
     };
 
     ctor.prototype.LoadFeedVersion = function () {
@@ -49,29 +51,24 @@
         }).then(function (data) {
             ko.mapping.fromJS(data, LuceneFeedVersion.mapping, self.FeedVersion);
             self.VersionLoading(false);
-        }).fail(function() {
+        }).fail(function () {
             self.VersionLoading(false);
         });
     };
 
-    ctor.prototype.activate = function() {
-
+    ctor.prototype.activate = function () {
+        var self = this;
         shell.ShowNavigation(true);
         shell.ShowPageTitle(false);
 
         $('#viewFeedTabs').tab();
 
-
-        var self = this;
-
-        var re = new RegExp("([a-z0-9]{8}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{12})");
-
-        var createNew = false;
+        var createNew = true;
 
         if (router.activeInstruction().params.length == 1)
-            createNew = true;
+            createNew = false;
 
-        if (createNew) {
+        if (!createNew) {
             $.ajax({
                 url: "/api/feeds/GetFeed/" + router.activeInstruction().params[0]
             }).then(function (data) {
@@ -92,7 +89,7 @@
         }
     };
 
-    ctor.prototype.Delete = function() {
+    ctor.prototype.Delete = function () {
         var self = this;
 
         var result = self.ConfirmDeleteMessage().then(function (data) {
@@ -118,6 +115,7 @@
 
     ctor.prototype.SaveChanges = function () {
         var self = this;
+
 
         if (this.Feed().Id() != null) {
             $.ajax({
@@ -150,8 +148,20 @@
         }
     };
 
-    ctor.prototype.Cancel = function() {
+    ctor.prototype.Cancel = function () {
         router.navigate('#feeds');
+    };
+
+    ctor.prototype.GetMatchingPackages = function () {
+        var self = this;
+        $.ajax({
+            url: this.Feed().FeedURL() + "/api/v2/package-ids",
+            data: { partialId: self.SearchForPackagesValue(), maxResults: 10, includePrerelease: true },
+            dataType: 'json',
+            cache: false
+        }).then(function (data) {
+            self.PackageSearchSuggestions(data);
+        });
     };
 
 
@@ -174,6 +184,8 @@
         if (searchInput == null)
             searchInput = '';
 
+        self.PackageSearchSuggestions.removeAll();
+
         var offSet = (pageNumber - 1) * self.PackagePageSize();
         $.ajax({
             url: this.Feed().FeedURL() + "/api/packages",
@@ -185,6 +197,10 @@
             ko.mapping.fromJS(data.hits, LucenePackage.mapping, self.Feed().Packages);
             self.PackagesLoading(false);
             self.ErrorLoadingPackages(false);
+
+            if (data.totalHits == 0 && self.SearchForPackagesValue().length > 0) {
+                self.GetMatchingPackages();
+            }
         }).fail(function (response) {
             self.PackagesLoading(false);
             self.ErrorLoadingPackages(true);
@@ -195,6 +211,12 @@
         var self = viewModel || this;
         self.LoadPackagesFromFeed(1, self.SearchForPackagesValue());
     };
+
+    ctor.prototype.SearchForSuggestion = function (value) {
+        var self = this;
+        self.SearchForPackagesValue(value);
+        self.SearchForPackages();
+    }
 
 
     return ctor;

@@ -22,20 +22,27 @@
                 <p>Lucene.Net: <span data-bind="text: FeedVersion().luceneNet"></span></p>
             </div>
             <div id="tabPackages" class="modal-body tab-pane">
-                                <div class="search-row">
+                <div class="search-row">
                     <div class="input-group custom-search-form">
-                        <input type="text" class="form-control" data-bind="value: SearchForPackagesValue, returnAction: SearchForPackages, valueUpdate: 'afterkeydown'" autocomplete="off">
+                        <input type="text" class="form-control" placeholder="Search for packages" data-bind="value: SearchForPackagesValue, returnAction: SearchForPackages, valueUpdate: 'afterkeydown'" autocomplete="off">
                         <span class="input-group-btn">
-                            <a class="btn btn-primary" data-bind="click: SearchForPackages">
+                            <button type="button" class="btn btn-primary" data-bind="click: SearchForPackages, enable: SearchForPackagesValue().trim().length > 0 || PackageSearchSuggestions().length > 0">
                                 <span class="glyphicon glyphicon-search"></span>
-                            </a>
+                            </button>
                         </span>
                     </div>
                 </div>
 
                 <h4 data-bind="visible: PackagesLoading">Loading packages...</h4>
                 <h4 data-bind="visible: ErrorLoadingPackages">An error occurred loading the packages in the feed.</h4>
-                <h4 data-bind="visible: NoPackagesFound">No packages were found in the feed.</h4>
+                <h4 data-bind="visible: PackageSearchSuggestions().length <= 0 && NoPackagesFound">No packages were found in the feed.</h4>
+                <div data-bind="visible: PackageSearchSuggestions().length > 0 && NoPackagesFound">
+                    <h4>Did you mean:</h4>
+                    <!-- ko foreach: PackageSearchSuggestions -->
+                    <p><a data-bind="text: $data, click: function (value) { $root.SearchForSuggestion(value) }"></a>
+                        </p>
+                    <!-- /ko -->
+                </div>
                 <div class="well" data-bind="visible: Feed().Packages().length > 0">
                     <div class="list-group" data-bind="foreach: Feed().Packages ">
                         <div class="clearfix list-group-item package-grid-item">
@@ -46,7 +53,7 @@
                             </div>
                             <div class="col-md-8">
                                 <h4 class="list-group-item-heading">
-                                    <a data-bind="text: title, href: ViewUrl" />
+                                    <a data-bind="text: title() || id(), href: ViewUrl" />
                                     <span>by<span data-bind=" foreach: authors">
                                         <span data-bind="text: $data"></span></span>
                                     </span>
