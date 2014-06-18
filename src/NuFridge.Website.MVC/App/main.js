@@ -46,6 +46,18 @@ define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'knockoutmapp
         return target;
     };
 
+    ko.bindingHandlers.returnAction = {
+        init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+            var value = ko.utils.unwrapObservable(valueAccessor());
+
+            $(element).keydown(function (e) {
+                if (e.which === 13) {
+                    value(viewModel);
+                }
+            });
+        }
+    };
+
     //>>excludeStart("build", true);
     system.debug(true);
     //>>excludeEnd("build");

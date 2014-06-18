@@ -21,6 +21,8 @@
             return count > 0 ? count : 1;
         });
 
+        this.SearchForPackagesValue = ko.observable("");
+
         this.PackageCurrentPage = ko.observable(1);
 
         this.NoPackagesFound = ko.computed(function () {
@@ -163,16 +165,19 @@
         self.LoadPackagesFromFeed(pageNumber);
     };
 
-    ctor.prototype.LoadPackagesFromFeed = function (pageNumber) {
+    ctor.prototype.LoadPackagesFromFeed = function (pageNumber, searchInput) {
         var self = this;
 
         if (pageNumber == null)
             pageNumber = 1;
 
+        if (searchInput == null)
+            searchInput = '';
+
         var offSet = (pageNumber - 1) * self.PackagePageSize();
         $.ajax({
             url: this.Feed().FeedURL() + "/api/packages",
-            data: { query: '', offset: offSet, count: self.PackagePageSize(), originFilter: 'Any', sort: 'Score', order: 'Ascending', includePrerelease: true },
+            data: { query: searchInput, offset: offSet, count: self.PackagePageSize(), originFilter: 'Any', sort: 'Score', order: 'Ascending', includePrerelease: true },
             dataType: 'json',
             cache: false
         }).then(function (data) {
@@ -184,6 +189,11 @@
             self.PackagesLoading(false);
             self.ErrorLoadingPackages(true);
         });
+    };
+
+    ctor.prototype.SearchForPackages = function (viewModel) {
+        var self = viewModel || this;
+        self.LoadPackagesFromFeed(1, self.SearchForPackagesValue());
     };
 
 

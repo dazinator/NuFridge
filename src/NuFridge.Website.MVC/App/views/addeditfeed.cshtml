@@ -22,6 +22,17 @@
                 <p>Lucene.Net: <span data-bind="text: FeedVersion().luceneNet"></span></p>
             </div>
             <div id="tabPackages" class="modal-body tab-pane">
+                                <div class="search-row">
+                    <div class="input-group custom-search-form">
+                        <input type="text" class="form-control" data-bind="value: SearchForPackagesValue, returnAction: SearchForPackages, valueUpdate: 'afterkeydown'" autocomplete="off">
+                        <span class="input-group-btn">
+                            <a class="btn btn-primary" data-bind="click: SearchForPackages">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+
                 <h4 data-bind="visible: PackagesLoading">Loading packages...</h4>
                 <h4 data-bind="visible: ErrorLoadingPackages">An error occurred loading the packages in the feed.</h4>
                 <h4 data-bind="visible: NoPackagesFound">No packages were found in the feed.</h4>
