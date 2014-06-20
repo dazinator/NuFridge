@@ -22,8 +22,8 @@
                 <p>Lucene.Net: <span data-bind="text: FeedVersion().luceneNet"></span></p>
             </div>
             <div id="tabPackages" class="modal-body tab-pane">
-                <div class="search-row">
-                    <div class="input-group custom-search-form">
+                <div class="search-row row">
+                    <div class="input-group custom-search-form span9">
                         <input type="text" class="form-control" placeholder="Search for packages" data-bind="value: SearchForPackagesValue, returnAction: SearchForPackages, valueUpdate: 'afterkeydown'" autocomplete="off">
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-primary" data-bind="click: SearchForPackages, enable: SearchForPackagesValue().trim().length > 0 || PackageSearchSuggestions().length > 0">
@@ -31,8 +31,13 @@
                             </button>
                         </span>
                     </div>
+                     <div class="input-group span1">
+                         <button type="button" class="btn btn-primary">
+                               Add Package
+                         </button>
                 </div>
-
+                </div>
+        
                 <h4 data-bind="visible: PackagesLoading">Loading packages...</h4>
                 <h4 data-bind="visible: ErrorLoadingPackages">An error occurred loading the packages in the feed.</h4>
                 <h4 data-bind="visible: PackageSearchSuggestions().length <= 0 && NoPackagesFound">No packages were found in the feed.</h4>
