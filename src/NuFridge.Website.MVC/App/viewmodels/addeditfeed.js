@@ -56,11 +56,6 @@
         shell.ShowNavigation(true);
         shell.ShowPageTitle(false);
 
-        ko.validation.init({
-            registerExtenders: true,
-            insertMessages: false,
-        });
-
         $('#viewFeedTabs').tab();
 
         var createNew = true;

@@ -1,4 +1,11 @@
 ﻿define(['knockoutvalidation'], function (validation) {
+
+
+    ko.validation.init({
+        registerExtenders: true,
+        insertMessages: false,
+    });
+
     window.LuceneFeed = function (config) {
         var self = this, data;
 
