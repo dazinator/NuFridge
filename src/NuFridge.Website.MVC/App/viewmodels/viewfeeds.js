@@ -22,7 +22,7 @@
 
     ctor.prototype.compositionComplete = function () {
         if (this.ShowNoFeedsFound() == true) {
-            cssLoader.loadCss("../../Content/introjs.css");
+            cssLoader.loadCss("viewfeeds", "../../Content/introjs.css");
             introjs().start();
         }
     };
@@ -36,7 +36,7 @@
             introjs().exit();
         }
 
-        cssLoader.removeModuleCss();
+        cssLoader.removeModuleCss("viewfeeds");
     };
 
     ctor.prototype.activate = function() {

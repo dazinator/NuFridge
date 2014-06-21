@@ -214,8 +214,9 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\API\InstallationController.cs" />
     <Compile Include="Controllers\DurandalViewController.cs" />
-    <Compile Include="Controllers\FeedsController.cs" />
+    <Compile Include="Controllers\API\FeedsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -316,6 +317,17 @@
     <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
+    <Content Include="Content\themes\bootstrap\Cerulean\bootstrap.min.css" />
+    <Content Include="Content\themes\bootstrap\Cosmo\bootstrap.min.css" />
+    <Content Include="Content\themes\bootstrap\Cyborg\bootstrap.min.css" />
+    <Content Include="Content\themes\bootstrap\Darkly\bootstrap.min.css" />
+    <Content Include="Content\themes\bootstrap\Flatly\bootstrap.min.css" />
+    <Content Include="Content\themes\bootstrap\Journal\bootstrap.min.css" />
+    <Content Include="Content\themes\bootstrap\Lumen\bootstrap.min.css" />
+    <Content Include="Content\themes\bootstrap\Readable\bootstrap.min.css" />
+    <Content Include="Content\themes\bootstrap\Slate\bootstrap.min.css" />
+    <Content Include="Content\themes\bootstrap\Superhero\bootstrap.min.css" />
+    <Content Include="Content\themes\bootstrap\United\bootstrap.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\font\fontawesome-webfont.woff" />
@@ -346,6 +358,7 @@
     <Content Include="readme.md" />
     <Content Include="App\views\viewfeeds.cshtml" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\themes\bootstrap\fonts\glyphicons-halflings-regular.woff" />
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

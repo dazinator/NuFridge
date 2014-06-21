@@ -7,7 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
-namespace NuFridge.Website.MVC.Controllers
+namespace NuFridge.Website.MVC.Controllers.API
 {
     public class FeedsController : ApiController
     {

@@ -9,7 +9,7 @@ namespace NuFridge.Common.Managers.IIS
     public class WebsiteManager
     {
         internal ServerManager ServerManager { get; set; }
-        public static string WebsiteName { get; protected set; }
+        public string WebsiteName { get; protected set; }
 
         public const int DefaultWebsitePortNumber = 8420;
 

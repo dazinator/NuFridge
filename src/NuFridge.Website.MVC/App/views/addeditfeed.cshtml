@@ -48,12 +48,14 @@
                         </p>
                     <!-- /ko -->
                 </div>
+                <br />
                 <div class="well" data-bind="visible: Feed().Packages().length > 0">
                     <div class="list-group" data-bind="foreach: Feed().Packages ">
                         <div class="clearfix list-group-item package-grid-item">
                             <div class="media col-md-1">
                                 <figure class="pull-left">
-                                    <img class="media-object img-rounded img-responsive" data-bind="src: iconUrl">
+                                    <img class="media-object img-rounded img-responsive" data-bind="src: iconUrl, visible: iconUrl() != null">
+                                   <i class="glyphicon glyphicon-globe" data-bind="visible: iconUrl() == null"></i>
                                 </figure>
                             </div>
                             <div class="col-md-8">

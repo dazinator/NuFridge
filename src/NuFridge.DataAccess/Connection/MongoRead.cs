@@ -26,6 +26,21 @@ namespace NuFridge.DataAccess.Connection
             }
         }
 
+        public bool CanConnect
+        {
+            get
+            {
+                try
+                {
+                   return Server.DatabaseExists(Database.Name);
+                }
+                catch (MongoException)
+                {
+                    return false;
+                }
+            }
+        }
+
 
         public MongoDatabase Database
         {
