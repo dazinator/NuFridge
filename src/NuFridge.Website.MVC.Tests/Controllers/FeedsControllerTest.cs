@@ -84,10 +84,9 @@ namespace NuFridge.Website.MVC.Tests.Controllers
             _repository.Setup(rep => rep.GetById(It.IsAny<Guid>())).Returns((Guid i) => feedsInMemory.FirstOrDefault(fd => fd.Id == i));
 
 
-            _repository.Setup(rep => rep.Delete(It.IsAny<Feed>())).Callback((Guid id) =>
+            _repository.Setup(rep => rep.Delete(It.IsAny<Feed>())).Callback((Feed fd) =>
             {
-                var feed = feedsInMemory.Single(fd => fd.Id == id);
-                feedsInMemory.Remove(feed);
+                feedsInMemory.Remove(fd);
             });
 
             var returnedFeed = _repository.Object.GetById(feedsInMemory.Last().Id);
