@@ -7,10 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace NuFridge.Website.MVC.Tests.Controllers
+namespace NuFridge.Website.MVC.Tests.Repositories
 {
     [TestClass]
-    public class FeedsControllerTest
+    public class FeedRepositoryTest
     {
         private Mock<IRepository<Feed>> _repository;
         private List<Feed> feedsInMemory;
