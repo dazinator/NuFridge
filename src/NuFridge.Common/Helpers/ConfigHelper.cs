@@ -33,7 +33,7 @@ namespace NuFridge.Common.Helpers
             return nuFridgePortNumber;
         }
 
-        internal static bool GetFeedWebsiteName(out string message, out string nuFridgeWebsiteName)
+        public static bool GetFeedWebsiteName(out string message, out string nuFridgeWebsiteName)
         {
             message = null;
             nuFridgeWebsiteName = ConfigurationManager.AppSettings["IIS.FeedWebsite.Name"];

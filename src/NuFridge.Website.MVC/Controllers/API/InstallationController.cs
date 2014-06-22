@@ -1,4 +1,5 @@
-﻿using NuFridge.Common.Managers.IIS;
+﻿using NuFridge.Common.Helpers;
+using NuFridge.Common.Managers.IIS;
 using NuFridge.DataAccess.Connection;
 using System;
 using System.Collections.Generic;
@@ -12,14 +13,20 @@ namespace NuFridge.Website.MVC.Controllers.API
 {
     public class InstallationController : ApiController
     {
-         [System.Web.Http.AcceptVerbs("GET")]
+        [System.Web.Http.AcceptVerbs("GET")]
         [System.Web.Mvc.HttpGet]
         public HttpResponseMessage IsInstallationValid()
         {
             try
             {
+                string message;
+                string feedWebsiteName;
+
+                if (!ConfigHelper.GetFeedWebsiteName(out message, out feedWebsiteName))
+                    throw new Exception(message);
+
                 var canConnectToMongoDB = MongoRead.Instance.CanConnect;
-                var hasValidFeedWebsite = new WebsiteManager(ConfigurationManager.AppSettings["IIS.FeedWebsite.Name"]).WebsiteExists();
+                var hasValidFeedWebsite = new WebsiteManager(feedWebsiteName).WebsiteExists();
 
                 if (canConnectToMongoDB && hasValidFeedWebsite)
                 {
