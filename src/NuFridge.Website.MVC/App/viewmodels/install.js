@@ -8,7 +8,21 @@
             return self.ActiveStepIndex() > self.MinStepIndex();
         });
         this.CanGoToNextStep = ko.computed(function () {
-            return self.ActiveStepIndex() < self.MaxStepIndex();
+            var anotherStepAvailable = self.ActiveStepIndex() < self.MaxStepIndex();
+
+            if (anotherStepAvailable) {
+                if (self.ActiveStepIndex() == 2) {
+                    return self.MongoDBConnectionSuccessful() != null && self.MongoDBConnectionSuccessful() == true;
+                }
+                else if (self.ActiveStepIndex() == 3) {
+                    return self.IISStepIsValid() == true && ((self.IISWebsiteAlreadyExists() != null && self.IISWebsiteAlreadyExists() == true) || (self.PortNumber.isValid() && self.PhysicalDirectory.isValid()));
+                }
+                else {
+                    return true;
+                }
+            }
+
+            return false;
         });
 
         this.MongoDBServer = ko.observable("").extend({ required: true });
@@ -41,13 +55,7 @@
             self.IISTextChanged();
         });
 
-        this.PortNumber.subscribe(function () {
-            self.IISTextChanged();
-        });
-
-        this.PhysicalDirectory.subscribe(function () {
-            self.IISTextChanged();
-        });
+      
 
         //Shouldn't have to do this but I couldn't get the computed function to fire properly
         this.IISStepIsValid = ko.observable(false);

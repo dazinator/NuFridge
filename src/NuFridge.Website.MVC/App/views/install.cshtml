@@ -46,8 +46,9 @@
                 <form role="form">
                     <div class="form-group">
                         <p>
-                            Server:&nbsp;<span class="bg-danger" data-bind="validationMessage: MongoDBServer"></span></p>
-                            <input type="text" autocomplete="off" class="form-control" data-bind="attr: { 'readonly': TestingMongoDBConnection ()}, value: MongoDBServer, change: MongoDBTextChanged, valueUpdate: 'afterkeydown'">
+                            Server:&nbsp;<span class="bg-danger" data-bind="validationMessage: MongoDBServer"></span>
+                        </p>
+                        <input type="text" autocomplete="off" class="form-control" data-bind="attr: { 'readonly': TestingMongoDBConnection() }, value: MongoDBServer, change: MongoDBTextChanged, valueUpdate: 'afterkeydown'">
                         <p>Database:&nbsp;<span class="bg-danger" data-bind="validationMessage: MongoDBDatabase"></span></p>
                         <input type="text" class="form-control" data-bind="attr: { 'readonly': TestingMongoDBConnection() }, value: MongoDBDatabase, change: MongoDBTextChanged, valueUpdate: 'afterkeydown'">
                     </div>
@@ -79,20 +80,22 @@
                 <form role="form">
                     <div class="form-group">
                         <p>
-                            IIS Website Name:&nbsp;<span class="bg-danger" data-bind="validationMessage: IISWebsiteName"></span></p>
-                            <input type="text" autocomplete="off" class="form-control" data-bind="attr: { 'readonly': TestingIISConfiguration()}, value: IISWebsiteName, change: IISTextChanged, valueUpdate: 'afterkeydown'">
+                            IIS Website Name:&nbsp;<span class="bg-danger" data-bind="validationMessage: IISWebsiteName"></span>
+                        </p>
+                        <input type="text" autocomplete="off" class="form-control" data-bind="attr: { 'readonly': TestingIISConfiguration() }, value: IISWebsiteName, change: IISTextChanged, valueUpdate: 'afterkeydown'">
+                    </div>
+                    <button class="btn btn-default" data-bind="click: TestIISConfiguration, attr: { 'disabled': TestingIISConfiguration() == true || IISStepIsValid() == false }">Test Configuration</button>
+                    <i title="Connecting..." data-bind="    visible: TestingIISConfiguration" class="icon-spinner icon-2x icon-spin"></i>
+                    <p class="text-success" data-bind="visible: IISWebsiteAlreadyExists() != null && IISWebsiteAlreadyExists, text: 'An IIS website called ' + IISWebsiteName() + ' was found.'">.</p>
+                    <p class="text-warning" data-bind="visible: IISWebsiteAlreadyExists() != null && !IISWebsiteAlreadyExists(), text: 'An IIS website called ' + IISWebsiteName() + ' does not exist, it will be created during the install.'"></p>
+                    <div data-bind="visible: IISWebsiteAlreadyExists() != null && !IISWebsiteAlreadyExists()">
+                        <p>To create the IIS website to host the feeds we need some additional information.</p>
                         <p>Port Number: &nbsp;<span class="bg-danger" data-bind="validationMessage: PortNumber"></span></p>
                         <input type="text" class="form-control" data-bind="attr: { 'readonly': TestingIISConfiguration() }, value: PortNumber, change: IISTextChanged, valueUpdate: 'afterkeydown'">
-                          </div>
-                        <button class="btn btn-default" data-bind="click: TestIISConfiguration, attr: { 'disabled': TestingIISConfiguration() == true || IISStepIsValid() == false }">Test Configuration</button>
-                        <i title="Connecting..." data-bind="    visible: TestingIISConfiguration" class="icon-spinner icon-2x icon-spin"></i>
-                        <p class="text-success" data-bind="visible: IISWebsiteAlreadyExists() != null && IISWebsiteAlreadyExists, text: 'An IIS website called ' + IISWebsiteName() + ' was found.'">.</p>
-                        <p class="text-warning" data-bind="visible: IISWebsiteAlreadyExists() != null && !IISWebsiteAlreadyExists(), text: 'An IIS website called ' + IISWebsiteName() + ' does not exist, it will be created during the install.'"></p>
-                        <div data-bind="visible: IISWebsiteAlreadyExists() != null && !IISWebsiteAlreadyExists()">
-                            <p>Physical Directory: &nbsp;<span class="bg-danger" data-bind="validationMessage: PhysicalDirectory"></span></p>
-                            <input type="text" class="form-control" data-bind="attr: { 'readonly': TestingIISConfiguration() }, value: PhysicalDirectory, change: IISTextChanged, valueUpdate: 'afterkeydown'">
-                        </div>
-                  
+                        <p>Physical Directory: &nbsp;<span class="bg-danger" data-bind="validationMessage: PhysicalDirectory"></span></p>
+                        <input type="text" class="form-control" data-bind="attr: { 'readonly': TestingIISConfiguration() }, value: PhysicalDirectory, change: IISTextChanged, valueUpdate: 'afterkeydown'">
+                    </div>
+
                 </form>
             </div>
         </div>
@@ -108,8 +111,8 @@
         <div class="col-xs-12">
             <div class="col-md-12 well">
                 <button class="btn btn-primary" data-bind="click: GoToPreviousStep, visible: CanGoToPreviousStep">Previous</button>
-                <button class="btn btn-primary pull-right" data-bind="click: GoToNextStep, visible: CanGoToNextStep">Next</button>
-                <button class="btn btn-primary pull-right" data-bind="click: Finish, visible: !CanGoToNextStep()">Finish</button>
+                <button class="btn btn-primary pull-right" data-bind="click: GoToNextStep, attr: { 'disabled': !CanGoToNextStep() }, visible: ActiveStepIndex() != MaxStepIndex()">Next</button>
+                <button class="btn btn-primary pull-right" data-bind="click: Finish, visible: ActiveStepIndex() == MaxStepIndex()">Finish</button>
             </div>
         </div>
     </div>
