@@ -104,9 +104,19 @@
         <div class="col-xs-12">
             <div class="col-md-12 well">
                 <h1 class="text-center">Summary</h1>
+                <h3>MongoDB Database</h3>
+                <p>Server:&nbsp;<span data-bind="text: MongoDBServer"></span></p>
+                <p>Database:&nbsp;<span data-bind="text: MongoDBDatabase"></span></p>
+                <h3>Feed Website</h3>
+                <p>IIS Website Name:&nbsp;<span data-bind="text: IISWebsiteName"></span></p>
+                <div data-bind="visible: IISWebsiteAlreadyExists() != null && !IISWebsiteAlreadyExists()">
+                    <p>Port Number:&nbsp;<span data-bind="text: PortNumber"></span></p>
+                    <p>Physical Path:&nbsp;<span data-bind="text: PhysicalDirectory"></span></p>
+                </div>
             </div>
         </div>
     </div>
+
     <div class="row">
         <div class="col-xs-12">
             <div class="col-md-12 well">
