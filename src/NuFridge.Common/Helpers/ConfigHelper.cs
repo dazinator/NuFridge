@@ -21,7 +21,7 @@ namespace NuFridge.Common.Helpers
             return WebConfigurationManager.OpenMappedWebConfiguration(wcfm, "/");
         }
 
-        internal static int GetFeedWebsitePortNumber()
+        public static int GetFeedWebsitePortNumber()
         {
             var nuFridgePort = ConfigurationManager.AppSettings["IIS.FeedWebsite.PortNumber"];
 
@@ -31,6 +31,11 @@ namespace NuFridge.Common.Helpers
                 nuFridgePortNumber = WebsiteManager.DefaultWebsitePortNumber;
             }
             return nuFridgePortNumber;
+        }
+
+        public static string GetFeedWebsitePhysicalPath()
+        {
+           return ConfigurationManager.AppSettings["IIS.FeedWebsite.RootDirectory"];
         }
 
         public static bool GetFeedWebsiteName(out string message, out string nuFridgeWebsiteName)

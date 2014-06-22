@@ -90,6 +90,9 @@
         var self = this;
         self.GetMongoDBServer();
         self.GetMongoDBDatabase();
+        self.GetFeedIISWebsiteName();
+        self.GetFeedWebsitePortNumber();
+        self.GetFeedWebsitePhysicalPath();
     };
 
     ctor.prototype.GetMongoDBDatabase = function () {
@@ -100,6 +103,39 @@
             cache: false
         }).then(function (data) {
             self.MongoDBDatabase(data);
+        });
+    };
+
+    ctor.prototype.GetFeedIISWebsiteName = function () {
+        var self = this;
+        $.ajax({
+            url: "/api/website/GetFeedWebsiteName",
+            dataType: 'json',
+            cache: false
+        }).then(function (data) {
+            self.IISWebsiteName(data);
+        });
+    };
+
+    ctor.prototype.GetFeedWebsitePortNumber = function () {
+        var self = this;
+        $.ajax({
+            url: "/api/website/GetFeedWebsitePortNumber",
+            dataType: 'json',
+            cache: false
+        }).then(function (data) {
+            self.PortNumber(data);
+        });
+    };
+
+    ctor.prototype.GetFeedWebsitePhysicalPath = function () {
+        var self = this;
+        $.ajax({
+            url: "/api/website/GetFeedWebsitePhysicalPath",
+            dataType: 'json',
+            cache: false
+        }).then(function (data) {
+            self.PhysicalDirectory(data);
         });
     };
 
