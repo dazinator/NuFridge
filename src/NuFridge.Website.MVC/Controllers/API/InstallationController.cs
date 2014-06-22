@@ -2,6 +2,7 @@
 using NuFridge.Common.Helpers;
 using NuFridge.Common.Managers.IIS;
 using NuFridge.DataAccess.Connection;
+using NuFridge.Website.MVC.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -43,6 +44,35 @@ namespace NuFridge.Website.MVC.Controllers.API
             }
 
             return Request.CreateResponse<bool>(HttpStatusCode.OK, false);
+        }
+
+        [System.Web.Http.AcceptVerbs("GET")]
+        [System.Web.Mvc.HttpGet]
+        public HttpResponseMessage GetInstallation()
+        {
+            try
+            {
+                NuFridgeInstall install = new NuFridgeInstall();
+
+                string message;
+                string feedWebsiteName = string.Empty;
+
+                ConfigHelper.GetFeedWebsiteName(out message, out feedWebsiteName);
+
+                install.IISWebsiteName = feedWebsiteName;
+                install.PortNumber = ConfigHelper.GetFeedWebsitePortNumber();
+                install.PhysicalDirectory = ConfigHelper.GetFeedWebsitePhysicalPath();
+                install.MongoDBServer = ConfigHelper.GetMongoDBServerName();
+                install.MongoDBDatabase = ConfigHelper.GetMongoDBDatabaseName();
+
+                return Request.CreateResponse<NuFridgeInstall>(HttpStatusCode.OK, install);
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return Request.CreateResponse(HttpStatusCode.InternalServerError);
         }
     }
 }

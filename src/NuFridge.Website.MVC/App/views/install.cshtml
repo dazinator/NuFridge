@@ -46,19 +46,19 @@
                 <form role="form">
                     <div class="form-group">
                         <p>
-                            Server:&nbsp;<span class="bg-danger" data-bind="validationMessage: MongoDBServer"></span>
+                            Server:&nbsp;<span class="bg-danger" data-bind="validationMessage: Install().MongoDBServer"></span>
                         </p>
-                        <input type="text" autocomplete="off" class="form-control" data-bind="attr: { 'readonly': TestingMongoDBConnection() }, value: MongoDBServer, change: MongoDBTextChanged, valueUpdate: 'afterkeydown'">
-                        <p>Database:&nbsp;<span class="bg-danger" data-bind="validationMessage: MongoDBDatabase"></span></p>
-                        <input type="text" class="form-control" data-bind="attr: { 'readonly': TestingMongoDBConnection() }, value: MongoDBDatabase, change: MongoDBTextChanged, valueUpdate: 'afterkeydown'">
+                        <input type="text" autocomplete="off" class="form-control" data-bind="attr: { 'readonly': TestingMongoDBConnection() }, value: Install().MongoDBServer, change: MongoDBTextChanged, valueUpdate: 'afterkeydown'">
+                        <p>Database:&nbsp;<span class="bg-danger" data-bind="validationMessage: Install().MongoDBDatabase"></span></p>
+                        <input type="text" class="form-control" data-bind="attr: { 'readonly': TestingMongoDBConnection() }, value: Install().MongoDBDatabase, change: MongoDBTextChanged, valueUpdate: 'afterkeydown'">
                     </div>
                     <button class="btn btn-default" data-bind="click: TestMongoDBConnection, enabled: TestingMongoDBConnection() == false">Test Connection</button>
                     <i title="Connecting..." data-bind="    visible: TestingMongoDBConnection" class="icon-spinner icon-2x icon-spin"></i>
                     <p class="text-success" data-bind="visible: MongoDBConnectionSuccessful() != null && MongoDBConnectionSuccessful">A connection was succesfully made to the MongoDB server.</p>
                     <p class="text-danger" data-bind="visible: MongoDBConnectionSuccessful() != null && !MongoDBConnectionSuccessful()">Could not connect to the MongoDB server.</p>
                     <p data-bind="css: MongoDBDatabaseExists() == true ? 'text-success' : 'text-warning', visible: MongoDBDatabaseExists() != null">
-                        <span data-bind="visible: MongoDBDatabaseExists, text: 'An existing database called ' + MongoDBDatabase() + ' was found.'"></span>
-                        <span data-bind="visible: !MongoDBDatabaseExists(), text: 'No database called ' + MongoDBDatabase() + ' was found, it will be created during the install.'"></span>
+                        <span data-bind="visible: MongoDBDatabaseExists, text: 'An existing database called ' + Install().MongoDBDatabase() + ' was found.'"></span>
+                        <span data-bind="visible: !MongoDBDatabaseExists(), text: 'No database called ' + Install().MongoDBDatabase() + ' was found, it will be created during the install.'"></span>
                     </p>
                 </form>
             </div>
@@ -76,20 +76,20 @@
                 <form role="form">
                     <div class="form-group">
                         <p>
-                            IIS Website Name:&nbsp;<span class="bg-danger" data-bind="validationMessage: IISWebsiteName"></span>
+                            IIS Website Name:&nbsp;<span class="bg-danger" data-bind="validationMessage: Install().IISWebsiteName"></span>
                         </p>
-                        <input type="text" autocomplete="off" class="form-control" data-bind="attr: { 'readonly': TestingIISConfiguration() }, value: IISWebsiteName, change: IISTextChanged, valueUpdate: 'afterkeydown'">
+                        <input type="text" autocomplete="off" class="form-control" data-bind="attr: { 'readonly': TestingIISConfiguration() }, value: Install().IISWebsiteName, change: IISTextChanged, valueUpdate: 'afterkeydown'">
                     </div>
                     <button class="btn btn-default" data-bind="click: TestIISConfiguration, attr: { 'disabled': TestingIISConfiguration() == true || IISStepIsValid() == false }">Test Configuration</button>
                     <i title="Connecting..." data-bind="    visible: TestingIISConfiguration" class="icon-spinner icon-2x icon-spin"></i>
-                    <p class="text-success" data-bind="visible: IISWebsiteAlreadyExists() != null && IISWebsiteAlreadyExists, text: 'An IIS website called ' + IISWebsiteName() + ' was found.'">.</p>
-                    <p class="text-warning" data-bind="visible: IISWebsiteAlreadyExists() != null && !IISWebsiteAlreadyExists(), text: 'An IIS website called ' + IISWebsiteName() + ' does not exist, it will be created during the install.'"></p>
+                    <p class="text-success" data-bind="visible: IISWebsiteAlreadyExists() != null && IISWebsiteAlreadyExists, text: 'An IIS website called ' + Install().IISWebsiteName() + ' was found.'">.</p>
+                    <p class="text-warning" data-bind="visible: IISWebsiteAlreadyExists() != null && !IISWebsiteAlreadyExists(), text: 'An IIS website called ' + Install().IISWebsiteName() + ' does not exist, it will be created during the install.'"></p>
                     <div data-bind="visible: IISWebsiteAlreadyExists() != null && !IISWebsiteAlreadyExists()">
                         <p>To create the IIS website to host the feeds we need some additional information.</p>
-                        <p>Port Number: &nbsp;<span class="bg-danger" data-bind="validationMessage: PortNumber"></span></p>
-                        <input type="text" class="form-control" data-bind="attr: { 'readonly': TestingIISConfiguration() }, value: PortNumber, change: IISTextChanged, valueUpdate: 'afterkeydown'">
-                        <p>Physical Directory: &nbsp;<span class="bg-danger" data-bind="validationMessage: PhysicalDirectory"></span></p>
-                        <input type="text" class="form-control" data-bind="attr: { 'readonly': TestingIISConfiguration() }, value: PhysicalDirectory, change: IISTextChanged, valueUpdate: 'afterkeydown'">
+                        <p>Port Number: &nbsp;<span class="bg-danger" data-bind="validationMessage: Install().PortNumber"></span></p>
+                        <input type="text" class="form-control" data-bind="attr: { 'readonly': TestingIISConfiguration() }, value: Install().PortNumber, change: IISTextChanged, valueUpdate: 'afterkeydown'">
+                        <p>Physical Directory: &nbsp;<span class="bg-danger" data-bind="validationMessage: Install().PhysicalDirectory"></span></p>
+                        <input type="text" class="form-control" data-bind="attr: { 'readonly': TestingIISConfiguration() }, value: Install().PhysicalDirectory, change: IISTextChanged, valueUpdate: 'afterkeydown'">
                     </div>
 
                 </form>
@@ -101,13 +101,13 @@
             <div class="col-md-12 well">
                 <h1 class="text-center">Summary</h1>
                 <h3>MongoDB Database</h3>
-                <p>Server:&nbsp;<span data-bind="text: MongoDBServer"></span></p>
-                <p>Database:&nbsp;<span data-bind="text: MongoDBDatabase"></span></p>
+                <p>Server:&nbsp;<span data-bind="text: Install().MongoDBServer"></span></p>
+                <p>Database:&nbsp;<span data-bind="text: Install().MongoDBDatabase"></span></p>
                 <h3>Feed Website</h3>
-                <p>IIS Website Name:&nbsp;<span data-bind="text: IISWebsiteName"></span></p>
+                <p>IIS Website Name:&nbsp;<span data-bind="text: Install().IISWebsiteName"></span></p>
                 <div data-bind="visible: IISWebsiteAlreadyExists() != null && !IISWebsiteAlreadyExists()">
-                    <p>Port Number:&nbsp;<span data-bind="text: PortNumber"></span></p>
-                    <p>Physical Path:&nbsp;<span data-bind="text: PhysicalDirectory"></span></p>
+                    <p>Port Number:&nbsp;<span data-bind="text: Install().PortNumber"></span></p>
+                    <p>Physical Path:&nbsp;<span data-bind="text: Install().PhysicalDirectory"></span></p>
                 </div>
             </div>
         </div>
