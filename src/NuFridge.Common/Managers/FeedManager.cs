@@ -195,12 +195,11 @@ namespace NuFridge.Common.Manager
                 application.Path = applicationPath;
                 application.VirtualDirectories[0].PhysicalPath = newPath;
 
-                //Save the application in IIS
-                ApplicationManager.UpdateApplication(application);
-
-
                 //Move the directory from the old directory folder to the new one
                 Directory.Move(oldPath, newPath);
+
+                //Save the application in IIS
+                ApplicationManager.UpdateApplication(application);
             }
 
             if (applicationPath == null)

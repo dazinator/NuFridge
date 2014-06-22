@@ -9,7 +9,7 @@
         'jQuery': '../Scripts/jquery-1.9.1',
         'introjs': '../Scripts/intro',
         'knockoutvalidation': '../Scripts/knockout.validation',
-        'fuelux': 'http://www.fuelcdn.com/fuelux/2.6.1/'
+        'fuelux': '../Content/fuelfx/js/fuelux.min'
     }
 });
 

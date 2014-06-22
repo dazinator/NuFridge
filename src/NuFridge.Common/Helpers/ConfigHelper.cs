@@ -46,5 +46,15 @@ namespace NuFridge.Common.Helpers
             }
             return true;
         }
+
+        public static string GetMongoDBDatabaseName()
+        {
+            return ConfigurationManager.AppSettings["MongoDB.DatabaseName"];
+        }
+
+        public static string GetMongoDBServerName()
+        {
+            return ConfigurationManager.AppSettings["MongoDB.ServerName"];
+        }
     }
 }

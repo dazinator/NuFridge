@@ -22,10 +22,7 @@ namespace NuFridge.DataAccess.Repositories
     {
         private MongoCollection<TEntity> collection;
 
-        private MongoRead Context
-        {
-            get { return MongoRead.Instance; }
-        }
+        private MongoRead Context = new MongoRead();
 
         public MongoDbRepository()
         {

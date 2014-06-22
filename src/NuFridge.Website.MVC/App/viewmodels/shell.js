@@ -33,29 +33,41 @@
             router.activate();
 
             router.on('router:navigation:complete', function (instance, instruction, router) {
+                var hasRunNavComplete = false;
+
                 if (self.IsInstallationValid() == null) {
+                    var hasRunNavComplete = true;
+
                     $.ajax({
                         url: '/api/installation/IsInstallationValid',
                         timeout: 5000,
                         dataType: 'json',
                         cache: false,
-                        async: false
+                        async: true
                     }).complete(function (response) {
-                        if (response.status == 200) {
+                        if (response.status == 200 && response.responseText == 'true') {
                             self.IsInstallationValid(true);
                         } else {
                             self.IsInstallationValid(false);
                         }
+
+                        self.NavCompleteCheckInstall(instruction);
                     });
                 }
+                if (!hasRunNavComplete) {
+                    self.NavCompleteCheckInstall(instruction);
+                }
 
-                if (self.IsInstallationValid() == false) {
-                    router.navigate("#install");
-                }
-                else if (instruction.config.hash == "#install") {
-                    router.navigate("");
-                }
             });
+        },
+        NavCompleteCheckInstall: function (instruction) {
+            var self = this;
+            if (self.IsInstallationValid() == false) {
+                router.navigate("#install");
+            }
+            else if (instruction.config.hash == "#install") {
+                router.navigate("");
+            }
         },
         ChangeShellSkin: function (skinName) {
             if (this.bootstrapSkinSelected() != skinName) {

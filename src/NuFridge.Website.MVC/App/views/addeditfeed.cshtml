@@ -22,46 +22,29 @@
                 <p>Lucene.Net: <span data-bind="text: FeedVersion().luceneNet"></span></p>
             </div>
             <div id="tabPackages" class="modal-body tab-pane">
-        @*        <div class="row">
-                    <form class="form-inline">
-                         <div class="form-group col-lg-7">
-                        <input type="text" class="form-control" placeholder="Search for packages" data-bind="value: SearchForPackagesValue, returnAction: SearchForPackages, valueUpdate: 'afterkeydown'" autocomplete="off">
-                        <button type="button" class="btn btn-primary" data-bind="click: SearchForPackages, enable: SearchForPackagesValue().trim().length > 0 || PackageSearchSuggestions().length > 0">
-                            <span class="glyphicon glyphicon-search"></span>
-                        </button>
-                             </div>
-                          <div class="form-group col-lg-2">
-                        <button type="button" class="btn btn-primary">
-                            Add Package
-                        </button>
-                              </div>
-                    </form>
-
-                </div>*@
-
-<div class="container">
-	<div class="row">
-		<div class="col-lg-6">
-            <div class="input-group custom-search-form">
-              <input type="text" class="form-control" placeholder="Search for packages" data-bind="value: SearchForPackagesValue, returnAction: SearchForPackages, valueUpdate: 'afterkeydown'" autocomplete="off">
-              <span class="input-group-btn">
-              <button class="btn btn-primary" type="button" data-bind="click: SearchForPackages, enable: SearchForPackagesValue().trim().length > 0 || PackageSearchSuggestions().length > 0">
-              <span class="glyphicon glyphicon-search"></span>
-             </button>
-             </span>
-             </div>
-        </div>
-        		<div class="col-lg-2">
-            <div class="input-group custom-search-form">
-              <span class="input-group">
-    <button type="button" class="btn btn-primary">
-                            Add Package
-                        </button>
-             </span>
-             </div>
-        </div>
-	</div>
-</div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search for packages" data-bind="value: SearchForPackagesValue, returnAction: SearchForPackages, valueUpdate: 'afterkeydown'" autocomplete="off">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="button" data-bind="click: SearchForPackages, enable: SearchForPackagesValue().trim().length > 0 || PackageSearchSuggestions().length > 0">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="input-group custom-search-form">
+                                <span class="input-group">
+                                    <button type="button" class="btn btn-primary">
+                                        Add Package
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <h4 data-bind="visible: PackagesLoading">Loading packages...</h4>
                 <h4 data-bind="visible: ErrorLoadingPackages">An error occurred loading the packages in the feed.</h4>

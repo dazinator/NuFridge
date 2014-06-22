@@ -1,9 +1,11 @@
-﻿using NuFridge.Common.Helpers;
+﻿using MongoDB.Driver;
+using NuFridge.Common.Helpers;
 using NuFridge.Common.Managers.IIS;
 using NuFridge.DataAccess.Connection;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -25,22 +27,22 @@ namespace NuFridge.Website.MVC.Controllers.API
                 if (!ConfigHelper.GetFeedWebsiteName(out message, out feedWebsiteName))
                     throw new Exception(message);
 
-                var canConnectToMongoDB = MongoRead.Instance.CanConnect;
+                var mongoRead = new MongoRead(false);
+                var canConnectToMongoDB = mongoRead.Connect();
+
                 var hasValidFeedWebsite = new WebsiteManager(feedWebsiteName).WebsiteExists();
 
                 if (canConnectToMongoDB && hasValidFeedWebsite)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK);
+                    return Request.CreateResponse<bool>(HttpStatusCode.OK, true);
                 }
             }
             catch (Exception ex)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, new HttpError(ex, true));
+
             }
 
-            return Request.CreateResponse(HttpStatusCode.InternalServerError);
-
+            return Request.CreateResponse<bool>(HttpStatusCode.OK, false);
         }
-
     }
 }
