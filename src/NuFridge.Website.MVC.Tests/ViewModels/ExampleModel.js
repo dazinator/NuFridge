@@ -1,4 +1,4 @@
-﻿///<reference path="../../NuFridge.Website.MVC/Scripts/knockout-2.3.0.js"/>
+﻿///<reference path="../../NuFridge.Website.MVC/Scripts/knockout-3.1.0.js"/>
 
 function ExampleViewModel() {
     var self = this;
