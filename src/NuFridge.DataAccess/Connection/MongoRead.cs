@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
+using NuFridge.DataAccess.Model;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -71,10 +72,10 @@ namespace NuFridge.DataAccess.Connection
 
         public MongoRead(bool ConnectToDatabase)
         {
-            MongoClient client = new MongoClient(ConfigurationManager.AppSettings["MongoDB_ConnectionString"]);
+            MongoClient client = new MongoClient(ConfigurationManager.AppSettings["MongoDB.ConnectionString"]);
             Server = client.GetServer();
 
-            DatabaseName = ConfigurationManager.AppSettings["MongoDB_DatabaseName"];
+            DatabaseName = ConfigurationManager.AppSettings["MongoDB.DatabaseName"];
 
             if (ConnectToDatabase)
             {
@@ -89,6 +90,14 @@ namespace NuFridge.DataAccess.Connection
             : this(true)
         {
 
+        }
+
+        public static void CreateDatabase(string connectionString, string databaseName)
+        {
+                MongoClient client = new MongoClient(connectionString);
+                var server = client.GetServer();
+                var database = server.GetDatabase(databaseName);
+                database.CreateCollection(typeof(Feed).Name);
         }
     }
 }

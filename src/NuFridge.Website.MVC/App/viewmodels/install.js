@@ -171,7 +171,21 @@
     };
 
     ctor.prototype.Finish = function () {
-        router.navigate("");
+        var self = this;
+        $.ajax({
+            url: "/api/installation/PostInstallation",
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            data: self.Install(),
+            success: function (result) {
+                shell.IsInstallationValid(null); //Force the shell to check the install status again
+                router.navigate('');
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
     };
 
     ctor.prototype.GoToNextStep = function () {

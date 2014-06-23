@@ -12,6 +12,13 @@ namespace NuFridge.Common.Helpers
 {
     public static class ConfigHelper
     {
+        public static string FeedWebsitePortNumberKey = "IIS.FeedWebsite.PortNumber";
+        public static string FeedWebsitePathKey = "IIS.FeedWebsite.RootDirectory";
+        public static string FeedWebsiteNameKey = "IIS.FeedWebsite.Name";
+        public static string MongoDBDatabaseNameKey = "MongoDB.DatabaseName";
+        public static string MongoDBConnectionStringKey = "MongoDB.ConnectionString";
+        public static string MongoDBServerNameKey = "MongoDB.ServerName";
+
         public static Configuration OpenConfigFile(string configPath)
         {
             var configFile = new FileInfo(configPath);
@@ -23,7 +30,7 @@ namespace NuFridge.Common.Helpers
 
         public static int GetFeedWebsitePortNumber()
         {
-            var nuFridgePort = ConfigurationManager.AppSettings["IIS.FeedWebsite.PortNumber"];
+            var nuFridgePort = ConfigurationManager.AppSettings[FeedWebsitePortNumberKey];
 
             int nuFridgePortNumber;
             if (!int.TryParse(nuFridgePort, out nuFridgePortNumber))
@@ -35,13 +42,13 @@ namespace NuFridge.Common.Helpers
 
         public static string GetFeedWebsitePhysicalPath()
         {
-           return ConfigurationManager.AppSettings["IIS.FeedWebsite.RootDirectory"];
+            return ConfigurationManager.AppSettings[FeedWebsitePathKey];
         }
 
         public static bool GetFeedWebsiteName(out string message, out string nuFridgeWebsiteName)
         {
             message = null;
-            nuFridgeWebsiteName = ConfigurationManager.AppSettings["IIS.FeedWebsite.Name"];
+            nuFridgeWebsiteName = ConfigurationManager.AppSettings[FeedWebsiteNameKey];
 
 
             if (string.IsNullOrWhiteSpace(nuFridgeWebsiteName))
@@ -54,12 +61,12 @@ namespace NuFridge.Common.Helpers
 
         public static string GetMongoDBDatabaseName()
         {
-            return ConfigurationManager.AppSettings["MongoDB.DatabaseName"];
+            return ConfigurationManager.AppSettings[MongoDBDatabaseNameKey];
         }
 
         public static string GetMongoDBServerName()
         {
-            return ConfigurationManager.AppSettings["MongoDB.ServerName"];
+            return ConfigurationManager.AppSettings[MongoDBServerNameKey];
         }
     }
 }
