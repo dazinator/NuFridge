@@ -8,8 +8,7 @@
         'knockoutmapping': '../Scripts/knockout.mapping',
         'jQuery': '../Scripts/jquery-1.9.1',
         'introjs': '../Scripts/intro',
-        'knockoutvalidation': '../Scripts/knockout.validation',
-        'fuelux': '../Content/fuelfx/js/fuelux.min'
+        'knockoutvalidation': '../Scripts/knockout.validation'
     }
 });
 

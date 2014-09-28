@@ -1,0 +1,42 @@
+﻿<div class="row addpackage-modal">
+    <div class="col-md-12 modal-content">
+        <h2 class="pull-left">Add Package</h2>
+        <a data-bind="click: CloseModal"><span class="glyphicon glyphicon-remove pull-right"></span></a>
+
+        <div style="clear: both;">
+            <ul class="ds-btn" data-bind="visible: UploadMode() == false && DownloadURLMode() == false">
+                <li>
+                    <a class="btn btn-primary pull-left" data-bind="click: ActionUploadSelected">
+                        <i class="glyphicon glyphicon-upload pull-left"></i><span>Upload</span></a>
+                </li>
+                <li>
+                    <a class="btn btn-primary pull-right" data-bind="click: ActionDownloadSelected">
+                        <i class="glyphicon glyphicon-cloud-download pull-left"></i><span>From URL</span></a>
+                </li>
+            </ul>
+        </div>
+        <div data-bind="visible: UploadMode() == true && DownloadURLMode() == false" style="width:400px;">
+            <br />
+        <div class="input-group">
+                <span class="input-group-btn">
+                    <span class="btn btn-primary btn-file">
+                        Browse&hellip; <input type="file" id="packageFileUpload">
+                    </span>
+                </span>
+                <input type="text" class="form-control" readonly>
+            </div>
+            <br />
+            <a class="btn btn-primary pull-left" data-bind="click: UploadPackage">
+                <i class="glyphicon glyphicon-upload pull-left"></i><span>Upload</span></a><i title="Connecting..." data-bind="visible: UploadingPackage()" class="pull-left icon-spinner icon-2x icon-spin"></i><br /><br />
+                               <p data-bind="visible: UploadError() != null" class="text-danger" style="clear:both;">
+                                   <br />
+                        <span data-bind="text: UploadError()"></span>
+                         
+                     </p>
+            <br />
+        </div>
+        <div data-bind="visible: UploadMode() == false && DownloadURLMode() == true">
+            <p>Not implemented</p>
+        </div>
+    </div>
+</div>

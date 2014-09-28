@@ -37,7 +37,7 @@
                         <div class="col-lg-2">
                             <div class="input-group custom-search-form">
                                 <span class="input-group">
-                                    <button type="button" class="btn btn-primary">
+                                    <button type="button" class="btn btn-primary" data-bind="click: AddPackage">
                                         Add Package
                                     </button>
                                 </span>
@@ -79,7 +79,8 @@
                             </div>
                             <div class="col-md-3 text-center">
                                 <h2><span data-bind="text: downloadCount"></span><small>&nbsp;downloads</small></h2>
-                                <a class="btn btn-primary btn-sm btn-block" data-bind="href: ViewUrl">View </a>
+                                <a class="btn btn-primary btn-sm " data-bind="href: ViewUrl">View </a>
+                                 <a class="btn btn-primary btn-sm " data-bind="href: DownloadUrl">Download </a>
                             </div>
                         </div>
                     </div>

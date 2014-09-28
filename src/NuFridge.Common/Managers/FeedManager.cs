@@ -25,6 +25,7 @@ using NuFridge.Common.Feeds.Configuration;
 using NuFridge.DataAccess.Model;
 using NuFridge.Common.Validators;
 using FluentValidation;
+using NuGet;
 
 namespace NuFridge.Common.Manager
 {
@@ -366,6 +367,42 @@ namespace NuFridge.Common.Manager
 
             message = "Successfully removed the feed and deleted all packages for " + feed.Name;
             return true;
+        }
+
+        public bool UploadPackage(Feed item, int contentLength, Stream stream, out string message)
+        {
+            message = null;
+            var testProgetUri = new Uri(string.Format("{0}/api/odata", item.FeedURL));
+            var repos = new DataServicePackageRepository(testProgetUri);
+
+            var packageServer = new PackageServer(string.Format("{0}/api/packages", item.FeedURL), "NuFridge");
+
+            var packageToUpload = new ZipPackage(stream);
+            if (repos.Exists(packageToUpload.Id, packageToUpload.Version))
+            {
+                message = string.Format("The package called '{0}' with the version '{1}' already exists in the feed.", packageToUpload.Id, packageToUpload.Version);
+                return false;
+            }
+
+            
+            packageServer.PushPackage(item.APIKey, packageToUpload, contentLength, 50000, false);
+
+            message = "The package was successfully uploaded.";
+            return true;
+        }
+
+        public Stream DownloadPackage(Guid feedId, string packageId, string version)
+        {
+            var item = GetById(feedId);
+
+            var testProgetUri = new Uri(string.Format("{0}/api/odata", item.FeedURL));
+            var repos = new DataServicePackageRepository(testProgetUri);
+
+            var package = repos.FindPackage(packageId, SemanticVersion.Parse(version));
+            if (package != null)
+                return package.GetStream();
+
+            return null;
         }
     }
 }

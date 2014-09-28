@@ -18,7 +18,7 @@
                     return self.MongoDBConnectionSuccessful() != null && self.MongoDBConnectionSuccessful() == true;
                 }
                 else if (self.ActiveStepIndex() == 3) {
-                    return self.IISStepIsValid() == true && ((self.IISWebsiteAlreadyExists() != null && self.IISWebsiteAlreadyExists() == true) || (self.Install().PortNumber.isValid() && self.Install().PhysicalDirectory.isValid()));
+                    return self.IISConfigurationError() == false && self.IISStepIsValid() == true && ((self.IISWebsiteAlreadyExists() != null && self.IISWebsiteAlreadyExists() == true) || (self.Install().PortNumber.isValid() && self.Install().PhysicalDirectory.isValid()));
                 }
                 else {
                     return true;
@@ -33,6 +33,7 @@
         this.MongoDBConnectionSuccessful = ko.observable(null);
         this.IISWebsiteAlreadyExists = ko.observable(null);
         this.MongoDBDatabaseExists = ko.observable(null);
+        this.IISConfigurationError = ko.observable(false);
 
         this.Install().MongoDBServer.subscribe(function () {
             self.MongoDBTextChanged();
@@ -131,8 +132,10 @@
         }).then(function (result) {
             self.TestingIISConfiguration(false);
             self.IISWebsiteAlreadyExists(result);
+            self.IISConfigurationError(false);
         }).fail(function () {
             self.TestingIISConfiguration(false);
+            self.IISConfigurationError(true);
         });
     };
 

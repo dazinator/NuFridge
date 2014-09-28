@@ -91,7 +91,10 @@
                         <p>Physical Directory: &nbsp;<span class="bg-danger" data-bind="validationMessage: Install().PhysicalDirectory"></span></p>
                         <input type="text" class="form-control" data-bind="attr: { 'readonly': TestingIISConfiguration() }, value: Install().PhysicalDirectory, change: IISTextChanged, valueUpdate: 'afterkeydown'">
                     </div>
-
+                   <p data-bind="visible: IISConfigurationError()" class="text-danger">
+                       <br />
+                        <span data-bind="text: 'There was an error trying to check the IIS configuration.'"></span>
+                     </p>
                 </form>
             </div>
         </div>

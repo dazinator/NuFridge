@@ -104,6 +104,11 @@
         });
     };
 
+    ctor.prototype.AddPackage = function () {
+        var self = this;
+        app.showDialog("viewmodels/addpackage");       
+    };
+
     ctor.prototype.ConfirmDeleteMessage = function () {
         return app.showMessage('Are you sure you want to delete this feed? You will lose all packages stored in this feed.', 'Delete Feed', ['No', 'Yes']);
     };

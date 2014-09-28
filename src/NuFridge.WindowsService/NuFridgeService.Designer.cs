@@ -1,6 +1,6 @@
 ﻿namespace NuFridge.WindowsService
 {
-    partial class FeedManagerService
+    partial class NuFridgeService
     {
         /// <summary> 
         /// Required designer variable.

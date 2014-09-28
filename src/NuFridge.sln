@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuFridge.WindowsService", "NuFridge.WindowsService\NuFridge.WindowsService.csproj", "{DB43B4BB-C5DF-4BE5-9943-606A89A02095}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuFridge.DataAccess", "NuFridge.DataAccess\NuFridge.DataAccess.csproj", "{81DA5570-9DD9-4281-8D94-CA5EDDE46144}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuFridge.Common", "NuFridge.Common\NuFridge.Common.csproj", "{EDF3AE48-9747-45AD-8AB5-5D83F0822701}"
@@ -24,10 +22,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DB43B4BB-C5DF-4BE5-9943-606A89A02095}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DB43B4BB-C5DF-4BE5-9943-606A89A02095}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DB43B4BB-C5DF-4BE5-9943-606A89A02095}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DB43B4BB-C5DF-4BE5-9943-606A89A02095}.Release|Any CPU.Build.0 = Release|Any CPU
 		{81DA5570-9DD9-4281-8D94-CA5EDDE46144}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{81DA5570-9DD9-4281-8D94-CA5EDDE46144}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81DA5570-9DD9-4281-8D94-CA5EDDE46144}.Release|Any CPU.ActiveCfg = Release|Any CPU

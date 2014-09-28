@@ -13,7 +13,7 @@ namespace NuFridge.WindowsService
         /// </summary>
         static void Main()
         {
-            var service = new FeedManagerService();
+            var service = new NuFridgeService();
 
             log4net.LogManager.GetLogger(typeof (Program)).Info("Starting program");
 

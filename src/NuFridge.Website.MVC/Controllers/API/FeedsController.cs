@@ -4,7 +4,9 @@ using NuFridge.DataAccess.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Linq;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 
 namespace NuFridge.Website.MVC.Controllers.API
@@ -72,6 +74,54 @@ namespace NuFridge.Website.MVC.Controllers.API
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, message);
             }
+        }
+
+        [HttpGet]
+        public HttpResponseMessage DownloadPackage(Guid feedId, string packageId, string version)
+        {
+            var stream = _feedManager.DownloadPackage(feedId, packageId, version);
+            if (stream == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound, "No NuGet package could be found");
+            }
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+            response.Content = new StreamContent(stream);
+            response.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
+            response.Content.Headers.ContentDisposition.FileName = string.Format("{0}.{1}.nupkg", packageId, version);
+
+            return response;
+        }
+
+        [HttpPost]
+        public HttpResponseMessage UploadPackage(Guid feedId)
+        {
+
+                // Get the uploaded image from the Files collection
+                var httpPostedFile = HttpContext.Current.Request.Files["package"];
+
+                if (httpPostedFile != null)
+                {
+                    // Validate the uploaded image(optional)
+
+                    if (!httpPostedFile.FileName.EndsWith(".nupkg"))
+                    {
+                        return Request.CreateResponse(HttpStatusCode.Forbidden, "Only NuGet packages can be uploaded. Please check the file type.");
+                    }
+                    
+                    string message;
+                    var result = _feedManager.UploadPackage(_feedManager.GetById(feedId), httpPostedFile.ContentLength, httpPostedFile.InputStream, out message);
+                    if (!result)
+                    {
+                    return Request.CreateResponse(HttpStatusCode.Conflict, message);
+                    }
+
+                    return Request.CreateResponse(HttpStatusCode.OK, message);
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.Forbidden, "No NuGet package was specified in the request.");
+                }
         }
 
         [System.Web.Mvc.HttpPut]

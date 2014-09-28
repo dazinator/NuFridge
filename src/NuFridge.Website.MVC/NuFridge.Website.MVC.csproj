@@ -31,6 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -43,6 +44,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Web.Administration.7.0.0.0\lib\net20\Microsoft.Web.Administration.dll</HintPath>
+    </Reference>
     <Reference Include="MongoDB.Bson">
       <HintPath>..\packages\mongocsharpdriver.1.9.1\lib\net35\MongoDB.Bson.dll</HintPath>
     </Reference>
@@ -229,6 +234,7 @@
   <ItemGroup>
     <Content Include="App\main.js" />
     <Content Include="App\viewmodels\addeditfeed.js" />
+    <Content Include="App\viewmodels\addpackage.js" />
     <Content Include="App\viewmodels\databinding\NuFridgeInstall.js" />
     <Content Include="App\viewmodels\databinding\LuceneFeed.js" />
     <Content Include="App\viewmodels\databinding\LuceneFeedVersion.js" />
@@ -244,6 +250,7 @@
     <Content Include="App\views\addeditfeed.cshtml" />
     <Content Include="App\views\install.cshtml" />
     <Content Include="App\views\viewpackage.cshtml" />
+    <Content Include="App\views\addpackage.cshtml" />
     <None Include="App\views\shell.cshtml" />
     <None Include="App\views\home.cshtml" />
     <None Include="App\views\viewretentionpolicies.cshtml" />

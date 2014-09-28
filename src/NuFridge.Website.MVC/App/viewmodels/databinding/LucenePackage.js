@@ -39,6 +39,9 @@
             po.ViewUrl = ko.computed(function () {
                 return '#feeds/view/' + router.activeInstruction().params[0] + "/package/" + po.id();
             });
+            po.DownloadUrl = ko.computed(function () {
+                return "/api/feeds/DownloadPackage?feedId=" + router.activeInstruction().params[0] + "&packageId=" + po.id() + "&version=" + po.version();
+            });
             return po;
         }
     };
