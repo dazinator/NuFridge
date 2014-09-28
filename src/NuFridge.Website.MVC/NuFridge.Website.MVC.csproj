@@ -251,11 +251,11 @@
     <Content Include="App\views\install.cshtml" />
     <Content Include="App\views\viewpackage.cshtml" />
     <Content Include="App\views\addpackage.cshtml" />
-    <None Include="App\views\shell.cshtml" />
-    <None Include="App\views\home.cshtml" />
-    <None Include="App\views\viewretentionpolicies.cshtml" />
+    <Content Include="App\views\shell.cshtml" />
+    <Content Include="App\views\home.cshtml" />
+    <Content Include="App\views\viewretentionpolicies.cshtml" />
     <Content Include="App\views\Web.config" />
-    <None Include="App\views\signin.cshtml" />
+    <Content Include="App\views\signin.cshtml" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\durandal.css" />
     <Content Include="Content\font-awesome.min.css" />
@@ -380,6 +380,7 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\_splash.cshtml" />
+    <None Include="Properties\PublishProfiles\nufridge.pubxml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
