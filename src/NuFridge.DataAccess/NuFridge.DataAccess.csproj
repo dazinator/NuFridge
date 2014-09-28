@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NuFridge.DataAccess</RootNamespace>
     <AssemblyName>NuFridge.DataAccess</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
@@ -26,6 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -37,8 +38,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ExtendedMongoMembership">
-      <HintPath>..\packages\ExtMongoMembership.1.7.0-beta\lib\ExtendedMongoMembership.dll</HintPath>
+    <Reference Include="FluentValidation">
+      <HintPath>..\packages\FluentValidation.5.3.0.0\lib\Net40\FluentValidation.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB.Bson">
       <HintPath>..\packages\mongocsharpdriver.1.9.1\lib\net35\MongoDB.Bson.dll</HintPath>
@@ -74,6 +75,7 @@
     <Compile Include="Entity\Feeds\FeedEntity.cs" />
     <Compile Include="Entity\RetentionPolicyEntity.cs" />
     <Compile Include="Entity\RetentionPolicyHistoryEntity.cs" />
+    <Compile Include="Model\Feed.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\MongoDbRepository.cs" />
     <Compile Include="Connection\MongoRead.cs" />

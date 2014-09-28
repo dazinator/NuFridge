@@ -1,0 +1,115 @@
+﻿<section>
+    <div class="modal-content">
+        <i title="Connecting..." data-bind="visible: LoadingData" class="pull-right icon-spinner icon-2x icon-spin"></i>
+        <div class="modal-header feed-heading">
+
+            <h3 class="feed-heading-title"><span data-bind="text: EditFeedTitle"></span></h3>
+            <span class="pull-right">
+                <ul id="viewFeedTabs" class="nav nav-tabs panel-tabs" data-tabs="tabs">
+                    <li data-bind="visible: IsEditMode(), css: IsEditMode() ? 'active' : ''"><a href="#tabOverview" data-toggle="tab">Overview</a></li>
+                    <li data-bind="visible: IsEditMode()"><a href="#tabPackages" data-toggle="tab">Packages</a></li>
+                    <li data-bind="css: IsEditMode() ? '' : 'active'"><a href="#tabSettings" data-toggle="tab">Settings</a></li>
+                </ul>
+            </span>
+        </div>
+        <div class="tab-content">
+            <div id="tabOverview" class="modal-body tab-pane" data-bind="css: IsEditMode() ? 'active in' : ''">
+                <h4><a data-bind="text: Feed().FeedURL, href: Feed().FeedURL" target="_blank"></a></h4>
+                <p>Klondike: <span data-bind="text: FeedVersion().klondike"></span></p>
+                <p>NuGet.Lucene: <span data-bind="text: FeedVersion().nuGetLucene"></span></p>
+                <p>NuGet.Core: <span data-bind="text: FeedVersion().nuGetCore"></span></p>
+                <p>Lucene.Net.Linq: <span data-bind="text: FeedVersion().luceneNetLinq"></span></p>
+                <p>Lucene.Net: <span data-bind="text: FeedVersion().luceneNet"></span></p>
+            </div>
+            <div id="tabPackages" class="modal-body tab-pane">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search for packages" data-bind="value: SearchForPackagesValue, returnAction: SearchForPackages, valueUpdate: 'afterkeydown'" autocomplete="off">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="button" data-bind="click: SearchForPackages, enable: SearchForPackagesValue().trim().length > 0 || PackageSearchSuggestions().length > 0">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="input-group custom-search-form">
+                                <span class="input-group">
+                                    <button type="button" class="btn btn-primary" data-bind="click: AddPackage">
+                                        Add Package
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 data-bind="visible: PackagesLoading">Loading packages...</h4>
+                <h4 data-bind="visible: ErrorLoadingPackages">An error occurred loading the packages in the feed.</h4>
+                <h4 data-bind="visible: PackageSearchSuggestions().length <= 0 && NoPackagesFound">No packages were found in the feed.</h4>
+                <div data-bind="visible: PackageSearchSuggestions().length > 0 && NoPackagesFound">
+                    <h4>Did you mean:</h4>
+                    <!-- ko foreach: PackageSearchSuggestions -->
+                    <p>
+                        <a data-bind="text: $data, click: function (value) { $root.SearchForSuggestion(value) }"></a>
+                    </p>
+                    <!-- /ko -->
+                </div>
+                <br />
+                <div class="well" data-bind="visible: Feed().Packages().length > 0">
+                    <div class="list-group" data-bind="foreach: Feed().Packages ">
+                        <div class="clearfix list-group-item package-grid-item">
+                            <div class="media col-md-1">
+                                <figure class="pull-left">
+                                    <img class="media-object img-rounded img-responsive" data-bind="src: iconUrl, visible: iconUrl() != null">
+                                    <i class="glyphicon glyphicon-globe" data-bind="visible: iconUrl() == null"></i>
+                                </figure>
+                            </div>
+                            <div class="col-md-8">
+                                <h4 class="list-group-item-heading">
+                                    <a data-bind="text: title() || id(), href: ViewUrl" />
+                                    <span>by<span data-bind=" foreach: authors">
+                                        <span data-bind="text: $data"></span></span>
+                                    </span>
+                                </h4>
+                                <p class="list-group-item-text" data-bind="text: description">
+                                </p>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <h2><span data-bind="text: downloadCount"></span><small>&nbsp;downloads</small></h2>
+                                <a class="btn btn-primary btn-sm " data-bind="href: ViewUrl">View </a>
+                                 <a class="btn btn-primary btn-sm " data-bind="href: DownloadUrl">Download </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center" data-bind="visible: !NoPackagesFound() && !PackagesLoading()">
+                        <ul class="pagination">
+                            <li data-bind="css: PackageActivePageIndex() - 1 > 0 ? 'enabled' : 'disabled'"><a data-bind="    click: $root.PackagePageChanged.bind($root, PackageActivePageIndex() - 1)">« Previous</a></li>
+                            <!-- ko foreach: new Array(PackagePageCount()) -->
+                            <li data-bind="css: ($index() + 1) == $root.PackageActivePageIndex() ? 'active enabled' : 'enabled'"><a data-bind="    click: $root.PackagePageChanged.bind($root, $index() + 1), text: $index() + 1"></a></li>
+                            <!-- /ko -->
+                            <li data-bind="css: PackageActivePageIndex() + 1 <= PackagePageCount() ? 'enabled' : 'disabled'"><a data-bind="    click: $root.PackagePageChanged.bind($root, PackageActivePageIndex() + 1)">Next »</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div id="tabSettings" class="modal-body tab-pane" data-bind="css: IsEditMode() ? '' : 'active in'">
+                <form role="form">
+                    <div class="form-group">
+                        <p>Name:   <span class="bg-danger" data-bind="validationMessage: Feed().Name"></span></p>
+                        <input type="text" autocomplete="off" class="form-control" id="feedNameInput" data-bind="value: Feed().Name, valueUpdate: 'afterkeydown'">
+                        <br />
+                        <p>API Key:</p>
+                        <input type="text" class="form-control" id="feedAPIKeyInput" data-bind="value: Feed().APIKey, valueUpdate: 'afterkeydown'">
+                    </div>
+                    <button type="submit" class="btn btn-danger" data-bind="click: Cancel">Cancel</button>
+
+                    <button type="submit" class="btn btn-primary" data-bind="click: SaveChanges, enable: Feed().Name() != null && Feed().Name().length > 0 && Feed().Name.isValid()">Save</button>
+                    <button type="submit" class="btn btn-danger float-right" data-bind="click: Delete, visible: ShowDeleteButton">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

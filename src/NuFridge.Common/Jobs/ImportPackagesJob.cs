@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NuFridge.DataAccess.Entity;
+using NuFridge.DataAccess.Model;
 using NuFridge.DataAccess.Repositories;
 using NuFridge.Common.Manager;
 using NuGet;
@@ -20,6 +21,13 @@ namespace NuFridge.Common.Jobs
         public const string ApiKey = "FeedApiKey";
         internal readonly static string UserAgent = "NuFridge Import";
 
+        private IRepository<Feed> _repository { get; set; } 
+
+        public ImportPackagesJob(IRepository<Feed> repository)
+        {
+            _repository = repository;
+        }
+
         public void Execute(IJobExecutionContext context)
         {
 
@@ -32,7 +40,7 @@ namespace NuFridge.Common.Jobs
 
                 var sourceFeedUri = new Uri(sourceFeedUrl);
 
-                var targetFeed = FeedManager.FindFeed(feedName);
+                var targetFeed = _repository.GetAll().Single(fd => fd.Name == feedName);
 
                 var historyRepository = new MongoDbRepository<ImportPackagesHistoryEntity>();
                 var history = new ImportPackagesHistoryEntity
@@ -51,7 +59,7 @@ namespace NuFridge.Common.Jobs
                 {
 
                     var sourceRepos = new DataServicePackageRepository(sourceFeedUri);
-                    var targetFeedUri = new Uri(targetFeed.PublishPackagesUrl);
+                    var targetFeedUri = new Uri(targetFeed.FeedURL);
                     var targetRepos = new DataServicePackageRepository(targetFeedUri);
 
                     var packagesInfo = sourceRepos.GetPackages().OrderBy(a => a.Id).ThenBy(a => a.Version).ToList();
@@ -59,11 +67,10 @@ namespace NuFridge.Common.Jobs
                     //    Select(p => new { p.Id, p.Title, p.Version }).ToList();
                     //packagesInfo = packagesInfo.OrderBy(a => a.Id).ThenBy(a => a.Version).
 
-                    var packageServer = new PackageServer(targetFeed.PublishPackagesUrl, UserAgent);
+                    var packageServer = new PackageServer(targetFeed.FeedURL, UserAgent);
 
                     foreach (var packageInfo in packagesInfo)
                     {
-                        //TODO: attempt to upload the package to the target feed.
                         var packageExists = targetRepos.Exists(packageInfo.Id, packageInfo.Version);
                         if (packageExists)
                         {

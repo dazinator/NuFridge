@@ -4,16 +4,14 @@ namespace NuFridge.Common.Manager
 {
     public class CreateWebsiteArgs : EventArgs
     {
-        public CreateWebsiteArgs(string websiteName, string physicalPath)
+        public CreateWebsiteArgs(string physicalPath)
         {
-            this.Name = websiteName;
             this.PhysicalPath = physicalPath;
             this.Protocol = HttpProtocol.Http;
             this.PortNumber = 80;
             this.HostName = "*";
         }
 
-        public string Name { get; set; }
         public HttpProtocol Protocol { get; set; }
         public int PortNumber { get; set; }
         public string HostName { get; set; }

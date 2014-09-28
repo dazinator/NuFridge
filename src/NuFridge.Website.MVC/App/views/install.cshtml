@@ -1,0 +1,128 @@
+﻿<div class="container">
+    <div class="row form-group">
+        <div class="col-xs-12">
+            <ul class="nav nav-pills nav-justified thumbnail setup-panel">
+                <li data-bind="css: ActiveStepIndex() == 1 ? 'active' : 'disabled'"><a href="#step-1">
+                    <h4 class="list-group-item-heading">Welcome to NuFridge</h4>
+                    <p class="list-group-item-text">Getting Started</p>
+                </a></li>
+                <li data-bind="css: ActiveStepIndex() == 2 ? 'active' : 'disabled'"><a href="#step-2">
+                    <h4 class="list-group-item-heading">Database</h4>
+                    <p class="list-group-item-text">Configure MongoDB</p>
+                </a></li>
+                <li data-bind="css: ActiveStepIndex() == 3 ? 'active' : 'disabled'"><a href="#step-3">
+                    <h4 class="list-group-item-heading">Feed Website</h4>
+                    <p class="list-group-item-text">Configure IIS</p>
+                </a></li>
+                <li data-bind="css: ActiveStepIndex() == 4 ? 'active' : 'disabled'"><a href="#step-3">
+                    <h4 class="list-group-item-heading">Summary</h4>
+                    <p class="list-group-item-text">Review Settings</p>
+                </a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row setup-content" id="step-1" data-bind="visible: ActiveStepIndex() == 1">
+        <div class="col-xs-12">
+            <div class="col-md-12 well text-center">
+                <h1>Welcome to NuFridge</h1>
+                <p>NuFridge is a web application for managing your NuGet feeds. </p>
+                <p>
+                    To get started click on the Next button.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="row setup-content" id="step-2" data-bind="visible: ActiveStepIndex() == 2">
+        <div class="col-xs-12">
+            <div class="col-md-12 well">
+                <h1 class="text-center">Database</h1>
+                <p>NuFridge requires MongoDB for its database operations.</p>
+                <h3>Configure MongoDB</h3>
+                <ol>
+                    <li>Download MongoDB 2.6.x by visiting the following URL: <a href="http://www.mongodb.org/downloads" target="_blank">MongoDB Downloads</a></li>
+                    <li>Install MongoDB using the following guide: <a href="http://docs.mongodb.org/manual/tutorial/install-mongodb-on-windows/" target="_blank">Install MongoDB on Windows</a></li>
+                </ol>
+
+                <form role="form">
+                    <div class="form-group">
+                        <p>
+                            Server:&nbsp;<span class="bg-danger" data-bind="validationMessage: Install().MongoDBServer"></span>
+                        </p>
+                        <input type="text" autocomplete="off" class="form-control" data-bind="attr: { 'readonly': TestingMongoDBConnection() }, value: Install().MongoDBServer, change: MongoDBTextChanged, valueUpdate: 'afterkeydown'">
+                        <p>Database:&nbsp;<span class="bg-danger" data-bind="validationMessage: Install().MongoDBDatabase"></span></p>
+                        <input type="text" class="form-control" data-bind="attr: { 'readonly': TestingMongoDBConnection() }, value: Install().MongoDBDatabase, change: MongoDBTextChanged, valueUpdate: 'afterkeydown'">
+                    </div>
+                    <button class="btn btn-default" data-bind="click: TestMongoDBConnection, enabled: TestingMongoDBConnection() == false">Test Connection</button>
+                    <i title="Connecting..." data-bind="    visible: TestingMongoDBConnection" class="icon-spinner icon-2x icon-spin"></i>
+                    <p class="text-success" data-bind="visible: MongoDBConnectionSuccessful() != null && MongoDBConnectionSuccessful">A connection was succesfully made to the MongoDB server.</p>
+                    <p class="text-danger" data-bind="visible: MongoDBConnectionSuccessful() != null && !MongoDBConnectionSuccessful()">Could not connect to the MongoDB server.</p>
+                    <p data-bind="css: MongoDBDatabaseExists() == true ? 'text-success' : 'text-warning', visible: MongoDBDatabaseExists() != null">
+                        <span data-bind="visible: MongoDBDatabaseExists, text: 'An existing database called ' + Install().MongoDBDatabase() + ' was found.'"></span>
+                        <span data-bind="visible: !MongoDBDatabaseExists(), text: 'No database called ' + Install().MongoDBDatabase() + ' was found, it will be created during the install.'"></span>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row setup-content" id="step-3" data-bind="visible: ActiveStepIndex() == 3">
+        <div class="col-xs-12">
+            <div class="col-md-12 well">
+                <h1 class="text-center">Feed Website</h1>
+                <p>NuFridge uses IIS to host a separate website for its feeds.</p>
+                <p>Each feed created will result in a new application being added to the feed website.</p>
+                <p>The form below is <span style="text-decoration: underline;">not</span> for the NuFridge website.</p>
+                <h3>Configure IIS</h3>
+
+                <form role="form">
+                    <div class="form-group">
+                        <p>
+                            IIS Website Name:&nbsp;<span class="bg-danger" data-bind="validationMessage: Install().IISWebsiteName"></span>
+                        </p>
+                        <input type="text" autocomplete="off" class="form-control" data-bind="attr: { 'readonly': TestingIISConfiguration() }, value: Install().IISWebsiteName, change: IISTextChanged, valueUpdate: 'afterkeydown'">
+                    </div>
+                    <button class="btn btn-default" data-bind="click: TestIISConfiguration, attr: { 'disabled': TestingIISConfiguration() == true || IISStepIsValid() == false }">Test Configuration</button>
+                    <i title="Connecting..." data-bind="    visible: TestingIISConfiguration" class="icon-spinner icon-2x icon-spin"></i>
+                    <p class="text-success" data-bind="visible: IISWebsiteAlreadyExists() != null && IISWebsiteAlreadyExists, text: 'An IIS website called ' + Install().IISWebsiteName() + ' was found.'">.</p>
+                    <p class="text-warning" data-bind="visible: IISWebsiteAlreadyExists() != null && !IISWebsiteAlreadyExists(), text: 'An IIS website called ' + Install().IISWebsiteName() + ' does not exist, it will be created during the install.'"></p>
+                    <div data-bind="visible: IISWebsiteAlreadyExists() != null && !IISWebsiteAlreadyExists()">
+                        <p>To create the IIS website to host the feeds we need some additional information.</p>
+                        <p>Port Number: &nbsp;<span class="bg-danger" data-bind="validationMessage: Install().PortNumber"></span></p>
+                        <input type="text" class="form-control" data-bind="attr: { 'readonly': TestingIISConfiguration() }, value: Install().PortNumber, change: IISTextChanged, valueUpdate: 'afterkeydown'">
+                        <p>Physical Directory: &nbsp;<span class="bg-danger" data-bind="validationMessage: Install().PhysicalDirectory"></span></p>
+                        <input type="text" class="form-control" data-bind="attr: { 'readonly': TestingIISConfiguration() }, value: Install().PhysicalDirectory, change: IISTextChanged, valueUpdate: 'afterkeydown'">
+                    </div>
+                   <p data-bind="visible: IISConfigurationError()" class="text-danger">
+                       <br />
+                        <span data-bind="text: 'There was an error trying to check the IIS configuration.'"></span>
+                     </p>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row setup-content" id="step-4" data-bind="visible: ActiveStepIndex() == 4">
+        <div class="col-xs-12">
+            <div class="col-md-12 well">
+                <h1 class="text-center">Summary</h1>
+                <h3>MongoDB Database</h3>
+                <p>Server:&nbsp;<span data-bind="text: Install().MongoDBServer"></span></p>
+                <p>Database:&nbsp;<span data-bind="text: Install().MongoDBDatabase"></span></p>
+                <h3>Feed Website</h3>
+                <p>IIS Website Name:&nbsp;<span data-bind="text: Install().IISWebsiteName"></span></p>
+                <div data-bind="visible: IISWebsiteAlreadyExists() != null && !IISWebsiteAlreadyExists()">
+                    <p>Port Number:&nbsp;<span data-bind="text: Install().PortNumber"></span></p>
+                    <p>Physical Path:&nbsp;<span data-bind="text: Install().PhysicalDirectory"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="col-md-12 well">
+                <button class="btn btn-primary" data-bind="click: GoToPreviousStep, visible: CanGoToPreviousStep">Previous</button>
+                <button class="btn btn-primary pull-right" data-bind="click: GoToNextStep, attr: { 'disabled': !CanGoToNextStep() }, visible: ActiveStepIndex() != MaxStepIndex()">Next</button>
+                <button class="btn btn-primary pull-right" data-bind="click: Finish, visible: ActiveStepIndex() == MaxStepIndex()">Finish</button>
+            </div>
+        </div>
+    </div>
+</div>

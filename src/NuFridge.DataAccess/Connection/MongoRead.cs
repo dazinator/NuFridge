@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
+using NuFridge.DataAccess.Model;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -11,56 +12,92 @@ namespace NuFridge.DataAccess.Connection
 {
     public class MongoRead
     {
-        MongoServer Server;
+        internal MongoServer Server { get; set; }
+        internal MongoDatabase Database { get; set; }
+        protected static string DatabaseName { get; set; }
 
-        public MongoRead(MongoServer server)
+        public static bool TestConnectionString(string connectionString)
         {
-            Server = server;
-        }
-
-        public string FullConnectionString
-        {
-            get
+            try
             {
-                return ConfigurationManager.ConnectionStrings["MongoDB_ConnectionStringDatabase"].ConnectionString;
+                MongoClient client = new MongoClient(connectionString);
+                var server = client.GetServer();
+                var result = server.DatabaseExists("NuFridge test for connection");
+
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
 
-
-        public MongoDatabase Database
+        public static bool TestDatabaseExists(string connectionString, string databaseName)
         {
-            get { return Server.GetDatabase(ConfigurationManager.AppSettings["MongoDB_DatabaseName"]); }
-        }
-
-        public MongoCollection Logs
-        {
-            get { return Database.GetCollection("logs"); }
-        }
-
-        private static MongoRead _instance = null;
-
-        public static MongoRead Instance
-        {
-            get
+            try
             {
-                if (_instance == null)
+                MongoClient client = new MongoClient(connectionString);
+                var server = client.GetServer();
+               return server.DatabaseExists(databaseName);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool Connect()
+        {
+            if (Database == null)
+            {
+                try
                 {
-                    _instance = RegisterMongoDb();
-
+                    if (Server.DatabaseExists(DatabaseName))
+                    {
+                        Database = Server.GetDatabase(DatabaseName);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                    return true;
                 }
-
-                return _instance;
+                catch
+                {
+                    return false;
+                }
             }
-
+            return true;
         }
 
-        private static MongoRead RegisterMongoDb()
+        public MongoRead(bool ConnectToDatabase)
         {
-            MongoClient client = new MongoClient(ConfigurationManager.AppSettings["MongoDB_ConnectionString"]);
-            var readServer = client.GetServer();
-            var read = new MongoRead(readServer);
-            return read;
+            MongoClient client = new MongoClient(ConfigurationManager.AppSettings["MongoDB.ConnectionString"]);
+            Server = client.GetServer();
+
+            DatabaseName = ConfigurationManager.AppSettings["MongoDB.DatabaseName"];
+
+            if (ConnectToDatabase)
+            {
+                if (!Connect())
+                {
+                    throw new Exception("Could not connect to the database.");
+                }
+            }
         }
 
+        public MongoRead()
+            : this(true)
+        {
+
+        }
+
+        public static void CreateDatabase(string connectionString, string databaseName)
+        {
+                MongoClient client = new MongoClient(connectionString);
+                var server = client.GetServer();
+                var database = server.GetDatabase(databaseName);
+                database.CreateCollection(typeof(Feed).Name);
+        }
     }
 }

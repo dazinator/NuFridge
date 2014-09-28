@@ -1,0 +1,9 @@
+﻿<section>
+    <div class="package-heading">
+    <h2 data-bind="text: Package().title"></h2> <h3 data-bind="text: Package().version"></h3>
+        </div>
+    <br />
+    <p data-bind="text: Package().description"></p>
+    <p data-bind="text: 'To install ' + Package().title() + ', run the command below in the Package Manager Console.'"></p>
+    <code>Install-Package <span data-bind="text: Package().id"></span></code>
+</section>
