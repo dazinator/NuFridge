@@ -27,7 +27,8 @@
         }
     };
 
-    ctor.prototype.AddFeed = function() {
+    ctor.prototype.AddFeed = function () {
+        shell.ShowPageTitle(false);
         router.navigate('#feeds/create');
     };
 
@@ -42,7 +43,8 @@
     ctor.prototype.activate = function() {
         shell.ShowNavigation(true);
         var self = this;
-
+        shell.ShowNavigation(true);
+        shell.ShowPageTitle(true);
         self.IsLoadingFeeds(true);
 
         $.ajax({

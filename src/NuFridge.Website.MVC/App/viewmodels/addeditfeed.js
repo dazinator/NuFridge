@@ -106,7 +106,10 @@
 
     ctor.prototype.AddPackage = function () {
         var self = this;
-        app.showDialog("viewmodels/addpackage");       
+        app.showDialog("viewmodels/addpackage").done(function() {
+            self.LoadPackagesFromFeed();
+        });
+
     };
 
     ctor.prototype.ConfirmDeleteMessage = function () {
