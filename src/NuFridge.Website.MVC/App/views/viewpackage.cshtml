@@ -1,9 +1,30 @@
 ﻿<section>
     <div class="package-heading">
-    <h2 data-bind="text: Package().title"></h2> <h3 data-bind="text: Package().version"></h3>
-        </div>
+        <h2 data-bind="text: Package().title"></h2>
+        <h3 data-bind="text: Package().version"></h3>
+    </div>
     <br />
-    <p data-bind="text: Package().description"></p>
+    <div data-bind="visible: Package().description() != null">
+        <h3>Description</h3>
+        <p data-bind="text: Package().description"></p>
+    </div>
+    <h3>Install</h3>
     <p data-bind="text: 'To install ' + Package().title() + ', run the command below in the Package Manager Console.'"></p>
     <code>Install-Package <span data-bind="text: Package().id"></span></code>
+    <br />
+    <h3>Previous Versions</h3>
+        <div class="col-md-3" style="padding-left:0;">
+        <table class="table table-condensed">
+            <tbody data-bind="foreach: PreviousVersions">
+                <tr>
+                    <td data-bind="text: $data" style="vertical-align: middle;"></td>
+                    <td>
+                        <a class="btn btn-primary btn-sm " style="text-decoration: none;" data-bind="href: $root.getDownloadUrl($data)">
+                            Download      
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+            </div>
 </section>

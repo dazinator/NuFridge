@@ -3,16 +3,22 @@
     var ctor = function () {
         this.Feed = ko.observable(new LuceneFeed());
         this.Package = ko.observable(new LucenePackage());
-
+        this.PreviousVersions = ko.observableArray();
         this.FeedId = ko.observable();
         this.PackageId = ko.observable();
+        
+    };
+
+    ctor.prototype.getDownloadUrl = function(version) {
+        var self = this;
+        return "/api/feeds/DownloadPackage?feedId=" + self.FeedId() + "&packageId=" + self.PackageId() + "&version=" + version;
     };
 
     ctor.prototype.activate = function () {
         var self = this;
 
-        self.FeedId(router.activeInstruction().params[0])
-        self.PackageId(router.activeInstruction().params[1])
+        self.FeedId(router.activeInstruction().params[0]);
+        self.PackageId(router.activeInstruction().params[1]);
 
         shell.ShowNavigation(true);
         shell.ShowPageTitle(false);
@@ -23,10 +29,9 @@
         }).then(function (data) {
             ko.mapping.fromJS(data, LuceneFeed.mapping, self.Feed);
 
-            var feedURL = self.Feed().FeedURL();
 
             $.ajax({
-                url: feedURL + "/api/packages/" + self.PackageId(),
+                url: self.Feed().FeedURL() + "/api/packages/" + self.PackageId(),
                 cache: false,
                 dataType: 'json'
             }).then(function (data) {
@@ -34,9 +39,23 @@
             }).fail(function (response) {
                 alert("An error occurred loading the package.");
             });
+            
+            $.ajax({
+                url: self.Feed().FeedURL() + "/api/v2/package-versions/" + self.PackageId(),
+                cache: false,
+                dataType: 'json'
+            }).then(function (dataReturned) {
+                self.PreviousVersions(dataReturned);
+            }).fail(function (response) {
+                alert("An error occurred loading the package history.");
+            });
+
+
         }).fail(function () {
             alert("An error occurred loading the feed.");
         });
+        
+
     };
 
     return ctor;
