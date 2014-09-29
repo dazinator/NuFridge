@@ -235,6 +235,7 @@
     <Content Include="App\main.js" />
     <Content Include="App\viewmodels\addeditfeed.js" />
     <Content Include="App\viewmodels\addpackage.js" />
+    <Content Include="App\viewmodels\databinding\FeedGroup.js" />
     <Content Include="App\viewmodels\databinding\NuFridgeInstall.js" />
     <Content Include="App\viewmodels\databinding\LuceneFeed.js" />
     <Content Include="App\viewmodels\databinding\LuceneFeedVersion.js" />

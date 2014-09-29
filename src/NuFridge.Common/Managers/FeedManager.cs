@@ -31,26 +31,40 @@ namespace NuFridge.Common.Manager
 {
     public class FeedManager
     {
-        private IRepository<Feed> Repository { get; set; }
+        private IRepository<Feed> FeedRepository { get; set; }
+        private IRepository<FeedGroup> FeedGroupRepository { get; set; }
 
         private WebsiteManager WebsiteManager { get; set; }
         private ApplicationManager ApplicationManager { get; set; }
 
-        public FeedManager(IRepository<Feed> repository)
+        public FeedManager(IRepository<Feed> feedRepository, IRepository<FeedGroup> feedGroupRepository)
         {
-            Repository = repository;
-
+            FeedRepository = feedRepository;
+            FeedGroupRepository = feedGroupRepository;
             Init();
         }
 
         public IEnumerable<Feed> GetAll()
         {
-            var feeds = Repository.GetAll();
+            var feeds = FeedRepository.GetAll();
 
             var website = WebsiteManager.GetWebsite();
 
+            List<FeedGroup> groups = new List<FeedGroup>();
+
             foreach (var feed in feeds)
             {
+                if (groups.Any(grp => grp.Id == feed.GroupId))
+                {
+                    feed.GroupName = groups.Single(grp => grp.Id == feed.GroupId).Name;
+                }
+                else
+                {
+                    var group = FeedGroupRepository.GetById(feed.GroupId);
+                    feed.GroupName = group.Name;
+                    groups.Add(group);
+                }
+
                 feed.FeedURL = string.Format("{0}/{1}", website.Bindings[0].Url, feed.Name);
             }
 
@@ -59,13 +73,14 @@ namespace NuFridge.Common.Manager
 
         public Feed GetById(Guid id)
         {
-            var feed = Repository.GetById(id);
+            var feed = FeedRepository.GetById(id);
             if (feed != null)
             {
                 var website = WebsiteManager.GetWebsite();
 
-
+                var group = FeedGroupRepository.GetById(feed.GroupId);
                 feed.FeedURL = string.Format("{0}/{1}", website.Bindings[0].Url, feed.Name);
+                feed.GroupName = group.Name;
             }
             return feed;
         }
@@ -212,9 +227,30 @@ namespace NuFridge.Common.Manager
             IFeedConfig feedConfig = new KlondikeFeedConfig(Path.Combine(application.VirtualDirectories[0].PhysicalPath, @"Web.config"));
             feedConfig.UpdateAPIKey(feed.APIKey);
 
-            Repository.Update(feed);
+            PutFeedInGroup(feed);
+
+            FeedRepository.Update(feed);
+
+        
+
 
             return true;
+        }
+
+        private void PutFeedInGroup(Feed newEntity)
+        {
+            var groupName = newEntity.GroupName;
+            var group = FeedGroupRepository.GetAll().FirstOrDefault(grp => grp.Name.ToLower() == groupName.ToLower());
+            if (group != null)
+            {
+                newEntity.GroupId = group.Id;
+            }
+            else
+            {
+                group = new FeedGroup() {  Name = groupName, Id = Guid.NewGuid() };
+                FeedGroupRepository.Insert(group);
+                newEntity.GroupId = group.Id;
+            }
         }
 
 
@@ -294,7 +330,11 @@ namespace NuFridge.Common.Manager
             //Create the application in IIS
             ApplicationManager.CreateApplication(appPath, feedDirectory);
 
-            Repository.Insert(feed);
+            PutFeedInGroup(feed);
+
+            FeedRepository.Insert(feed);
+
+
 
             message = "Successfully created a feed called " + feed.Name;
 
@@ -363,7 +403,7 @@ namespace NuFridge.Common.Manager
             //Delete the feed directory
             Directory.Delete(feedDirectory, true);
 
-            Repository.Delete(feed);
+            FeedRepository.Delete(feed);
 
             message = "Successfully removed the feed and deleted all packages for " + feed.Name;
             return true;

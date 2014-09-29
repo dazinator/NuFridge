@@ -8,8 +8,11 @@
         this.ShowDeleteButton = ko.observable(true);
         this.EditFeedTitle = ko.observable();
         this.IsEditMode = ko.observable(false);
+        this.SaveError = ko.observable(null);
 
         this.PackagesLoading = ko.observable(true);
+        this.SavingFeed = ko.observable(false);
+        this.DeletingFeed = ko.observable(false);
         this.VersionLoading = ko.observable(true);
         this.ErrorLoadingPackages = ko.observable(false);
 
@@ -29,8 +32,8 @@
             return self.PackagesLoading() == false && self.ErrorLoadingPackages() == false && self.Feed().Packages().length <= 0;
         });
 
-        this.LoadingData = ko.computed(function () {
-            return self.IsEditMode() && (self.PackagesLoading() || self.VersionLoading());
+        this.IsBusy = ko.computed(function () {
+            return (self.IsEditMode() && (self.PackagesLoading() || self.VersionLoading()  || self.DeletingFeed())) || self.SavingFeed();
         });
 
         this.PackageSearchSuggestions = ko.observableArray();
@@ -89,13 +92,16 @@
 
         var result = self.ConfirmDeleteMessage().then(function (data) {
             if (data == "Yes") {
+                self.DeletingFeed(true);
                 $.ajax({
                     type: 'DELETE',
                     url: "/api/feeds/DeleteFeed/" + self.Feed().Id(),
                     cache: false
                 }).then(function (item) {
+                    self.DeletingFeed(false);
                     router.navigate('#feeds');
                 }).fail(function (data) {
+                    self.DeletingFeed(false);
                     self.ShowDeleteButton(false);
                     alert("An error occurred deleting the feed.");
                     router.navigate('#feeds');
@@ -118,8 +124,8 @@
 
     ctor.prototype.SaveChanges = function () {
         var self = this;
-
-
+        self.SaveError(null);
+        self.SavingFeed(true);
         if (this.Feed().Id() != null) {
             $.ajax({
                 url: "/api/feeds/PutFeed/" + self.Feed().Id(),
@@ -128,10 +134,12 @@
                 dataType: 'json',
                 cache: false,
                 success: function (result) {
+                    self.SavingFeed(false);
                     router.navigate('#feeds');
                 },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    alert(errorThrown);
+                error: function (XMLHttpResponse, textStatus, errorThrown) {
+                    self.reportSaveError(XMLHttpResponse);
+                    self.SavingFeed(false);
                 }
             });
         } else {
@@ -142,12 +150,33 @@
                 dataType: 'json',
                 data: self.Feed(),
                 success: function (result) {
+                    self.SavingFeed(false);
                     router.navigate('#feeds');
                 },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    alert(errorThrown);
+                error: function (XMLHttpResponse, textStatus, errorThrown) {
+                    self.SavingFeed(false);
+                    self.reportSaveError(XMLHttpResponse);
                 }
             });
+        }
+    };
+
+    ctor.prototype.reportSaveError = function (response) {
+        var self = this;
+        if (response.responseText != "") {
+            var responseText = JSON.parse(response.responseText);
+            if (responseText.ExceptionMessage) {
+                self.SaveError(responseText.ExceptionMessage);
+            }
+            else if (responseText.Message) {
+                self.SaveError(responseText.Message);
+            }
+            else {
+                self.SaveError(responseText);
+            }
+        }
+        else {
+            self.SaveError("An unknown error has occurred.");
         }
     };
 

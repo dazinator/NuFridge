@@ -1,12 +1,20 @@
 ﻿define(['plugins/router', 'durandal/app', 'knockout', 'viewmodels/shell', 'viewmodels/databinding/LuceneFeed', 'viewmodels/databinding/LucenePackage'], function (router, app, ko, shell, feed, feedPackage) {
 
     var ctor = function () {
+        var self = this;
         this.Feed = ko.observable(new LuceneFeed());
         this.Package = ko.observable(new LucenePackage());
         this.PreviousVersions = ko.observableArray();
         this.FeedId = ko.observable();
         this.PackageId = ko.observable();
-        
+        this.CalculatedPackageName = ko.computed(function () {
+            if (self.Package().title() != null) {
+                return self.Package().title();
+            }
+            else {
+                return self.Package().id();
+            }
+        });
     };
 
     ctor.prototype.getDownloadUrl = function(version) {

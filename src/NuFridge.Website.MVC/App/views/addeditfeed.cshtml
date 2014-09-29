@@ -1,6 +1,6 @@
 ﻿<section>
     <div class="modal-content">
-        <i title="Connecting..." data-bind="visible: LoadingData" class="pull-right icon-spinner icon-2x icon-spin"></i>
+        <i title="Connecting..." data-bind="visible: IsBusy" class="pull-right icon-spinner icon-2x icon-spin"></i>
         <div class="modal-header feed-heading">
 
             <h3 class="feed-heading-title"><span data-bind="text: EditFeedTitle"></span></h3>
@@ -26,7 +26,7 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="input-group custom-search-form">
-                                <input type="text" class="form-control" placeholder="Search for packages" data-bind="value: SearchForPackagesValue, returnAction: SearchForPackages, valueUpdate: 'afterkeydown'" autocomplete="off">
+                                <input type="text" class="form-control" placeholder="Search for packages" data-bind="value: SearchForPackagesValue, enable: !IsBusy(), returnAction: SearchForPackages, valueUpdate: 'afterkeydown'" autocomplete="off">
                                 <span class="input-group-btn">
                                     <button class="btn btn-primary" type="button" data-bind="click: SearchForPackages, enable: SearchForPackagesValue().trim().length > 0 || PackageSearchSuggestions().length > 0">
                                         <span class="glyphicon glyphicon-search"></span>
@@ -37,8 +37,9 @@
                         <div class="col-lg-2">
                             <div class="input-group custom-search-form">
                                 <span class="input-group">
-                                    <button type="button" class="btn btn-primary" data-bind="click: AddPackage">
+                                    <button type="button" class="btn btn-primary" data-bind="click: AddPackage, enable: !IsBusy()">
                                         Add Package
+                                   
                                     </button>
                                 </span>
                             </div>
@@ -80,7 +81,7 @@
                             <div class="col-md-3 text-center">
                                 <h2><span data-bind="text: downloadCount"></span><small>&nbsp;downloads</small></h2>
                                 <a class="btn btn-primary btn-sm " data-bind="href: ViewUrl">View </a>
-                                 <a class="btn btn-primary btn-sm " data-bind="href: DownloadUrl">Download </a>
+                                <a class="btn btn-primary btn-sm " data-bind="href: DownloadUrl">Download </a>
                             </div>
                         </div>
                     </div>
@@ -98,16 +99,24 @@
             <div id="tabSettings" class="modal-body tab-pane" data-bind="css: IsEditMode() ? '' : 'active in'">
                 <form role="form">
                     <div class="form-group">
-                        <p>Name:   <span class="bg-danger" data-bind="validationMessage: Feed().Name"></span></p>
-                        <input type="text" autocomplete="off" class="form-control" id="feedNameInput" data-bind="value: Feed().Name, valueUpdate: 'afterkeydown'">
+                        <p>Feed Name:   <span class="bg-danger" data-bind="validationMessage: Feed().Name"></span></p>
+                        <input type="text" autocomplete="off" class="form-control" id="feedNameInput" data-bind="value: Feed().Name, enable: !IsBusy(), valueUpdate: 'afterkeydown'">
+                        <br />
+                        <p>Group Name:  <span class="bg-danger" data-bind="validationMessage: Feed().GroupName"></span></p>
+                        <input type="text" class="form-control" id="feedGroupNameInput" data-bind="value: Feed().GroupName, enable: !IsBusy(), valueUpdate: 'afterkeydown'">
                         <br />
                         <p>API Key:</p>
-                        <input type="text" class="form-control" id="feedAPIKeyInput" data-bind="value: Feed().APIKey, valueUpdate: 'afterkeydown'">
+                        <input type="text" class="form-control" id="feedAPIKeyInput" data-bind="value: Feed().APIKey, enable: !IsBusy(), valueUpdate: 'afterkeydown'">
                     </div>
-                    <button type="submit" class="btn btn-danger" data-bind="click: Cancel">Cancel</button>
+                    <button type="submit" class="btn btn-danger" data-bind="click: Cancel, enable: !IsBusy()">Cancel</button>
 
-                    <button type="submit" class="btn btn-primary" data-bind="click: SaveChanges, enable: Feed().Name() != null && Feed().Name().length > 0 && Feed().Name.isValid()">Save</button>
-                    <button type="submit" class="btn btn-danger float-right" data-bind="click: Delete, visible: ShowDeleteButton">Delete</button>
+                    <button type="submit" class="btn btn-primary" data-bind="click: SaveChanges, enable: Feed().GroupName() != null && Feed().GroupName().length > 0 && Feed().GroupName.isValid() && Feed().Name() != null && Feed().Name().length > 0 && Feed().Name.isValid() && !IsBusy()">Save</button>
+                    <button type="submit" class="btn btn-danger float-right" data-bind="click: Delete, visible: ShowDeleteButton, enable: !IsBusy()">Delete</button>
+                                        <p data-bind="visible: SaveError() != null" class="text-danger" style="clear:both;">
+                        <br />
+                        <span data-bind="text: SaveError()"></span>
+
+                    </p>
                 </form>
             </div>
         </div>

@@ -159,7 +159,7 @@ vertical-align:bottom;
 .ds-btn li a span{padding-left: 2px;width:100%;display:inline-block; text-align:left;}
 .ds-btn li a .glyphicon{ margin-top:3px;}
 .ds-btn li a span small{width:100%; display:inline-block; text-align:left;}
-.viewFeedsSection {padding-left: 20px;}
+.viewFeedsSection {padding-left: 8px;}
 .float-right { float: right;}
 .messageBox .modal-body p.message { color: #000;}
 .panel-tabs {

@@ -63,6 +63,7 @@ namespace NuFridge.Website.MVC.App_Start
         private static void RegisterServices(IKernel kernel)
         {
             kernel.Bind<IRepository<Feed>>().To<MongoDbRepository<Feed>>();
+            kernel.Bind<IRepository<FeedGroup>>().To<MongoDbRepository<FeedGroup>>();
             kernel.Bind<FeedManager>().ToSelf();
         }
     }

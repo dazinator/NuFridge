@@ -27,7 +27,7 @@
                 { route: 'feeds/view/:id', title: 'View Feed', moduleId: 'viewmodels/addeditfeed', nav: false },
                 { route: 'feeds/view/:id/package/:packageid', title: 'View Package', moduleId: 'viewmodels/viewpackage', nav: false },
                 { route: 'feeds/create', title: 'Add Feed', moduleId: 'viewmodels/addeditfeed', nav: false },
-                { route: 'retentionpolicies', title: 'Retention Policies', moduleId: 'viewmodels/viewretentionpolicies', nav: true, glyph: 'glyphicon glyphicon-calendar' }
+                { route: 'retentionpolicies', title: 'Retention Policies', moduleId: 'viewmodels/viewretentionpolicies', nav: false, glyph: 'glyphicon glyphicon-calendar' }
             ]).buildNavigationModel();
 
             router.activate();

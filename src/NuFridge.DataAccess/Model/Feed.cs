@@ -17,5 +17,11 @@ namespace NuFridge.DataAccess.Model
 
         [BsonIgnore]
         public string FeedURL { get; set; }
+
+        [BsonIgnore]
+        public string GroupName { get; set; }
+
+        [BsonRequired]
+        public Guid GroupId { get; set; }
     }
 }

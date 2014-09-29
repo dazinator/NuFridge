@@ -76,6 +76,7 @@
     <Compile Include="Entity\RetentionPolicyEntity.cs" />
     <Compile Include="Entity\RetentionPolicyHistoryEntity.cs" />
     <Compile Include="Model\Feed.cs" />
+    <Compile Include="Model\FeedGroup.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\MongoDbRepository.cs" />
     <Compile Include="Connection\MongoRead.cs" />
