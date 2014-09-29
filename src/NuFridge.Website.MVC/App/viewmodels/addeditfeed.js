@@ -63,7 +63,7 @@
 
         var createNew = true;
 
-        if (router.activeInstruction().params.length == 1)
+        if (router.activeInstruction().fragment.indexOf("feeds/view") >= 0)
             createNew = false;
 
         if (!createNew) {
@@ -80,7 +80,9 @@
                 alert("An error occurred loading the feed.");
             });
         } else {
-
+            if (router.activeInstruction().params.length == 1) {
+                self.Feed().GroupName(router.activeInstruction().params[0]);
+            }
             self.ShowDeleteButton(false);
             self.EditFeedTitle = "Create Feed";
             self.IsEditMode(false);

@@ -8,6 +8,7 @@
         'knockoutmapping': '../Scripts/knockout.mapping',
         'jQuery': '../Scripts/jquery-1.9.1',
         'introjs': '../Scripts/intro',
+        'masonry': '../Scripts/masonry',
         'knockoutvalidation': '../Scripts/knockout.validation'
     }
 });

@@ -1,20 +1,28 @@
 ﻿<section class="viewFeedsSection">
-    <div class="row">
-        <p>This page allows you to manage the feeds available on NuFridge.</p>
-        <button data-step="1" data-intro="No feeds were found, click the 'Add Feed' button to get started." type="submit" class="btn btn-info addFeedButton" data-bind="click: AddFeed, visible: !ShowError() && !IsLoadingFeeds()">Add Feed</button>
+    <div class="row" data-bind="visible: !ShowError() && !IsLoadingFeeds()">
+        <p data-bind="">This page allows you to manage the feeds available on NuFridge. To create a new NuGet feed <a data-step="1" data-intro="No NuGet feeds were found, click here to get started." data-bind="click: AddFeed">click here</a>.</p>
+    </div>
+    <div class="row" data-bind="visible: !ShowNoFeedsFound()">
+        <div data-bind="foreach: Groups()">
+            <!-- ko if: $root.FeedsInGroup($data).length > 0 -->
+            <div class="group">
+                <h3 data-bind="text: $data"></h3>
+                <ul class="ds-btn" data-bind="foreach: $root.FeedsInGroup($data)">
+                    <li>
+                        <a data-bind="attr: { href: EditUrl, title: Name }, css: { 'btn': true, 'btn-primary': !IsAddNewButton(), 'btn-default': IsAddNewButton(), 'btn-sm': IsAddNewButton() }">
+                            <i class="glyphicon pull-left" data-bind="css: {'glyphicon-briefcase': !IsAddNewButton(), 'glyphicon-plus': IsAddNewButton()}"></i><span><span data-bind="    text: Name"></span></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /ko -->
+        </div>
     </div>
     <div class="row">
-        <div data-bind="visible: Feeds() != null && Feeds().length > 0">
-            <ul class="ds-btn" data-bind="foreach: Feeds()">
-                <li>
-                    <a class="btn btn-lg btn-primary" data-bind="attr: { href: EditUrl, title: Name }">
-                        <i class="glyphicon glyphicon-briefcase pull-left"></i><span><span data-bind="text: Name"></span></span></a>
-                </li>
-            </ul>
-        </div>
         <div class="bg-danger" data-bind="visible: ShowError">
             <h3 data-bind="text: ErrorMessage"></h3>
             <p class="bg-danger" data-bind="text: ExceptionMessage, visible: ExceptionMessage != null"></p>
         </div>
     </div>
+    <br /><br />
 </section>

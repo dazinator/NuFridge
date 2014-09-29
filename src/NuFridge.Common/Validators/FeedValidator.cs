@@ -12,7 +12,7 @@ namespace NuFridge.Common.Validators
         public FeedValidator()
         {
             RuleFor(feed => feed.Name).NotEmpty().WithMessage("Feed name is mandatory");
-            RuleFor(feed => feed.Name).Matches("^[0-9A-Za-z ]+$").WithMessage("Only alphanumeric characters are allowed in the feed name");
+            RuleFor(feed => feed.Name).Matches(@"^[A-Za-z\d\s\-\.]+$").WithMessage("Only alphanumeric characters are allowed in the feed name");
             RuleFor(feed => feed.Name).Length(4, 64);
         }
     }

@@ -5,6 +5,7 @@
 
         this.DisplayName = ko.observable('View Feeds');
         this.Feeds = ko.observableArray();
+        this.Groups = ko.observableArray();
         
         this.IsLoadingFeeds = ko.observable(false);
         this.LoadError = ko.observable(false);
@@ -18,6 +19,21 @@
         this.ShowError = ko.computed(function () {
             return self.LoadError() == true && self.IsLoadingFeeds() == false;
         });
+
+        this.FeedsInGroup = function (groupName) {
+            var groupedFeeds = [];
+            ko.utils.arrayForEach(self.Feeds(), function (feed) {
+                if (feed.GroupName() == groupName) {
+                    groupedFeeds.push(feed);
+                }
+            });
+            var addNewFeedButton = new window.LuceneFeed();
+            addNewFeedButton.Name("Create Feed");
+            addNewFeedButton.EditUrl = '#feeds/create/' + groupName;
+            addNewFeedButton.IsAddNewButton(true);
+            groupedFeeds.push(addNewFeedButton);
+            return groupedFeeds;
+        };
     };
 
     ctor.prototype.compositionComplete = function () {
@@ -26,6 +42,8 @@
             introjs().start();
         }
     };
+
+
 
     ctor.prototype.AddFeed = function () {
         shell.ShowPageTitle(false);
@@ -44,7 +62,7 @@
         shell.ShowNavigation(true);
         var self = this;
         shell.ShowNavigation(true);
-        shell.ShowPageTitle(true);
+        shell.ShowPageTitle(false);
         self.IsLoadingFeeds(true);
 
         $.ajax({
@@ -55,6 +73,17 @@
             self.IsLoadingFeeds(false);
             self.LoadError(false);
             ko.mapping.fromJS(data, LuceneFeed.mapping, self.Feeds);
+
+            ko.utils.arrayForEach(self.Feeds(), function (feed) {
+                if (self.Groups.indexOf(feed.GroupName()) < 0) {
+                    self.Groups.push(feed.GroupName());
+                }
+            });
+
+            self.Groups.sort(function (l, r) {
+                return l > r;
+            });
+
         }).fail(function (response) {
             var responseText = JSON.parse(response.responseText);
 

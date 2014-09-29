@@ -15,19 +15,19 @@
                 required: true,
                 minLength: 4,
                 maxLength: 64,
-                pattern: { message: 'Only alphanumeric characters are allowed in the feed name', params: /^[A-Za-z\d\s]+$/ }
+                pattern: { message: 'Only alphanumeric characters are allowed in the feed name', params: /^[A-Za-z\d\s\-\.]+$/ }
             }),
             GroupName: ko.observable("").extend({
                 required: true,
                 minLength: 4,
-                maxLength: 64,
-                pattern: { message: 'Only alphanumeric characters are allowed in the feed group name', params: /^[A-Za-z\d\s]+$/ }
+                maxLength: 64
             }),
             GroupId: ko.observable(),
             APIKey: ko.observable(""),
             FeedURL: ko.observable(""),
             Id: ko.observable(),
-            Packages: ko.observableArray()
+            Packages: ko.observableArray(),
+            IsAddNewButton: ko.observable(false)
         }, config);
 
         ko.mapping.fromJS(data, {}, self);
