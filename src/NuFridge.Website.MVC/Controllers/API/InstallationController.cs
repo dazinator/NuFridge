@@ -79,40 +79,56 @@ namespace NuFridge.Website.MVC.Controllers.API
         [System.Web.Mvc.HttpPost]
         public HttpResponseMessage PostInstallation(NuFridgeInstall install)
         {
-            var configFile = ConfigHelper.OpenConfigFile(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile);
-
-            WebsiteManager websiteManager = new WebsiteManager(install.IISWebsiteName);
-            if (!websiteManager.WebsiteExists())
+            try
             {
-                var websiteInfo = new CreateWebsiteArgs(install.PhysicalDirectory)
+                WebsiteManager websiteManager = new WebsiteManager(install.IISWebsiteName);
+                if (!websiteManager.WebsiteExists())
                 {
-                    HostName = "*",
-                    PortNumber = install.PortNumber
-                };
-                websiteManager.CreateWebsite(websiteInfo);
+                    var websiteInfo = new CreateWebsiteArgs(install.PhysicalDirectory)
+                        {
+                            HostName = "*",
+                            PortNumber = install.PortNumber
+                        };
+                    websiteManager.CreateWebsite(websiteInfo);
+                }
+
+                var configFile = ConfigHelper.OpenConfigFile(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile, install.IISWebsiteName);
 
                 configFile.AppSettings.Settings[ConfigHelper.FeedWebsitePortNumberKey].Value = install.PortNumber.ToString();
                 configFile.AppSettings.Settings[ConfigHelper.FeedWebsitePathKey].Value = install.PhysicalDirectory;
+
+                configFile.AppSettings.Settings[ConfigHelper.FeedWebsiteNameKey].Value = install.IISWebsiteName;
+                configFile.AppSettings.Settings[ConfigHelper.MongoDBDatabaseNameKey].Value = install.MongoDBDatabase;
+                configFile.AppSettings.Settings[ConfigHelper.MongoDBServerNameKey].Value = install.MongoDBServer;
+                configFile.AppSettings.Settings[ConfigHelper.MongoDBConnectionStringKey].Value =
+                    string.Format("mongodb://{0}", install.MongoDBServer);
+
+                if (
+                    !MongoRead.TestConnectionString(
+                        configFile.AppSettings.Settings[ConfigHelper.MongoDBConnectionStringKey].Value))
+                {
+                    return Request.CreateResponse(HttpStatusCode.InternalServerError,
+                                                  new HttpError("Could not connect to the MongoDB server."));
+                }
+
+                if (
+                    !MongoRead.TestDatabaseExists(
+                        configFile.AppSettings.Settings[ConfigHelper.MongoDBConnectionStringKey].Value,
+                        configFile.AppSettings.Settings[ConfigHelper.MongoDBDatabaseNameKey].Value))
+                {
+                    MongoRead.CreateDatabase(
+                        configFile.AppSettings.Settings[ConfigHelper.MongoDBConnectionStringKey].Value,
+                        configFile.AppSettings.Settings[ConfigHelper.MongoDBDatabaseNameKey].Value);
+                }
+
+                configFile.Save(ConfigurationSaveMode.Minimal);
+
+                ConfigurationManager.RefreshSection("appSettings");
             }
-
-            configFile.AppSettings.Settings[ConfigHelper.FeedWebsiteNameKey].Value = install.IISWebsiteName;
-            configFile.AppSettings.Settings[ConfigHelper.MongoDBDatabaseNameKey].Value = install.MongoDBDatabase;
-            configFile.AppSettings.Settings[ConfigHelper.MongoDBServerNameKey].Value = install.MongoDBServer;
-            configFile.AppSettings.Settings[ConfigHelper.MongoDBConnectionStringKey].Value = string.Format("mongodb://{0}", install.MongoDBServer);
-
-            if (!MongoRead.TestConnectionString(configFile.AppSettings.Settings[ConfigHelper.MongoDBConnectionStringKey].Value))
+            catch (Exception ex)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, new HttpError("Could not connect to the MongoDB server."));
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.ToString());
             }
-
-            if (!MongoRead.TestDatabaseExists(configFile.AppSettings.Settings[ConfigHelper.MongoDBConnectionStringKey].Value, configFile.AppSettings.Settings[ConfigHelper.MongoDBDatabaseNameKey].Value))
-            {
-                MongoRead.CreateDatabase(configFile.AppSettings.Settings[ConfigHelper.MongoDBConnectionStringKey].Value, configFile.AppSettings.Settings[ConfigHelper.MongoDBDatabaseNameKey].Value);
-            }
-
-            configFile.Save(ConfigurationSaveMode.Minimal);
-
-            ConfigurationManager.RefreshSection("appSettings");
 
             return Request.CreateResponse<NuFridgeInstall>(HttpStatusCode.OK, install);
         }

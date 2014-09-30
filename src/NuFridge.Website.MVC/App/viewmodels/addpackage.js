@@ -96,7 +96,7 @@
     ctor.prototype.activate = function () {
         var self = this;
         dialog.getContext().blockoutOpacity = 0.6;
-        self.FeedId(router.activeInstruction().params[0])
+        self.FeedId(router.activeInstruction().params[0]);
 
         $.ajax({
             url: "/api/feeds/GetFeed/" + self.FeedId(),

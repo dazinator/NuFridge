@@ -224,7 +224,7 @@ namespace NuFridge.Common.Manager
             if (application == null)
                 application = ApplicationManager.GetApplication(applicationPath);
 
-            IFeedConfig feedConfig = new KlondikeFeedConfig(Path.Combine(application.VirtualDirectories[0].PhysicalPath, @"Web.config"));
+            IFeedConfig feedConfig = new KlondikeFeedConfig(Path.Combine(application.VirtualDirectories[0].PhysicalPath, @"Web.config"), WebsiteManager.WebsiteName);
             feedConfig.UpdateAPIKey(feed.APIKey);
 
             PutFeedInGroup(feed);
@@ -324,7 +324,7 @@ namespace NuFridge.Common.Manager
             CreateFilesInFeed(feedDirectory);
 
             //Update the feed config
-            IFeedConfig feedConfig = new KlondikeFeedConfig(Path.Combine(feedDirectory, @"Web.config"));
+            IFeedConfig feedConfig = new KlondikeFeedConfig(Path.Combine(feedDirectory, @"Web.config"), website.Name);
             feedConfig.UpdateAPIKey(feed.APIKey);
 
             //Create the application in IIS

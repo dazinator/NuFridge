@@ -13,16 +13,18 @@ namespace NuFridge.Common.Feeds.Configuration
     public class KlondikeFeedConfig : IFeedConfig
     {
         private string ConfigPath { get; set; }
+        private string WebsiteName { get; set; }
         private const string APIKeySettingKey = "NuGet.Lucene.Web:localAdministratorApiKey";
 
-        public KlondikeFeedConfig(string configPath)
+        public KlondikeFeedConfig(string configPath, string websiteName)
         {
             ConfigPath = configPath;
+            WebsiteName = websiteName;
         }
 
         public string GetAPIKey()
         {
-            var config = ConfigHelper.OpenConfigFile(ConfigPath);
+            var config = ConfigHelper.OpenConfigFile(ConfigPath, WebsiteName);
             if (!config.AppSettings.Settings.AllKeys.Contains(APIKeySettingKey))
             {
                 return null;
@@ -33,7 +35,7 @@ namespace NuFridge.Common.Feeds.Configuration
 
         public void UpdateAPIKey(string APIKey)
         {
-            var config = ConfigHelper.OpenConfigFile(ConfigPath);
+            var config = ConfigHelper.OpenConfigFile(ConfigPath, WebsiteName);
             if (!config.AppSettings.Settings.AllKeys.Contains(APIKeySettingKey))
             {
                 config.AppSettings.Settings.Add(APIKeySettingKey, APIKey);

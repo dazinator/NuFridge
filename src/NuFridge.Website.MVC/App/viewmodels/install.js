@@ -5,6 +5,8 @@
         this.Install = ko.observable(new NuFridgeInstall());
         
         this.ActiveStepIndex = ko.observable(1);
+        this.SaveError = ko.observable();
+        this.IsInstalling = ko.observable(false);
         this.MaxStepIndex = ko.observable(4);
         this.MinStepIndex = ko.observable(1);
         this.CanGoToPreviousStep = ko.computed(function () {
@@ -60,6 +62,25 @@
 
         self.ConfigureWizard();
         self.GetData();
+    };
+    
+    ctor.prototype.reportSaveError = function (response) {
+        var self = this;
+        if (response.responseText != "") {
+            var responseText = JSON.parse(response.responseText);
+            if (responseText.ExceptionMessage) {
+                self.SaveError(responseText.ExceptionMessage);
+            }
+            else if (responseText.Message) {
+                self.SaveError(responseText.Message);
+            }
+            else {
+                self.SaveError(responseText);
+            }
+        }
+        else {
+            self.SaveError("An unknown error has occurred.");
+        }
     };
 
     ctor.prototype.MongoDBTextChanged = function () {
@@ -175,6 +196,8 @@
 
     ctor.prototype.Finish = function () {
         var self = this;
+        self.IsInstalling(true);
+        self.SaveError();
         $.ajax({
             url: "/api/installation/PostInstallation",
             type: 'POST',
@@ -182,11 +205,13 @@
             dataType: 'json',
             data: self.Install(),
             success: function (result) {
+                self.IsInstalling(false);
                 shell.IsInstallationValid(null); //Force the shell to check the install status again
                 router.navigate('');
             },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                alert(errorThrown);
+            error: function (XMLHttpResponse, textStatus, errorThrown) {
+                self.IsInstalling(false);
+                self.reportSaveError(XMLHttpResponse);
             }
         });
     };

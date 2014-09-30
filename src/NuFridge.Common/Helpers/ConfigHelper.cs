@@ -19,13 +19,13 @@ namespace NuFridge.Common.Helpers
         public static string MongoDBConnectionStringKey = "MongoDB.ConnectionString";
         public static string MongoDBServerNameKey = "MongoDB.ServerName";
 
-        public static Configuration OpenConfigFile(string configPath)
+        public static Configuration OpenConfigFile(string configPath, string websiteName)
         {
             var configFile = new FileInfo(configPath);
             var vdm = new VirtualDirectoryMapping(configFile.DirectoryName, true, configFile.Name);
             var wcfm = new WebConfigurationFileMap();
             wcfm.VirtualDirectories.Add("/", vdm);
-            return WebConfigurationManager.OpenMappedWebConfiguration(wcfm, "/");
+            return WebConfigurationManager.OpenMappedWebConfiguration(wcfm, "/", websiteName);
         }
 
         public static int GetFeedWebsitePortNumber()
